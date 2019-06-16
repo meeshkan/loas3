@@ -35,9 +35,9 @@ paths:
 
 Because sometimes you need to write an OpenAPI spec.
 
-## How does it work.
+## How does it work?
 
-[Lazy types](src/model/LazyOpenApi.ts) in. [Unlazy types](src/model/OpenApi.ts) out.  Feel free to mix and match.
+[Lazy OpenAPI](src/model/LazyOpenApi.ts) in. [Unlazy OpenAPI](src/model/OpenApi.ts) out.  Feel free to mix and match.
 
 ## Examples
 
