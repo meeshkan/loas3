@@ -54,3 +54,58 @@ test("lazy openapi correctly expands parameters", () => {
     }
   });
 });
+
+test("lazy openapi correctly expands segmented parameters", () => {
+  expect(
+    loai3(
+      yaml.load(`paths:
+    '/foo':
+        get:
+            parameters:
+                query:
+                  foo: bar
+                header:
+                  bar: foo
+            responses:
+                200: 1
+`)
+    ).paths
+  ).toEqual({
+    ["/foo"]: {
+      get: {
+        parameters: [
+          {
+            name: "foo",
+            in: "query",
+            schema: {
+              type: "string",
+              default: "bar"
+            }
+          },
+          {
+            name: "bar",
+            in: "header",
+            schema: {
+              type: "string",
+              default: "foo"
+            }
+          }
+        ],
+        responses: {
+          200: {
+            description: "too lazy",
+            content: {
+              ["application/json"]: {
+                schema: {
+                  type: "integer",
+                  format: "int64",
+                  default: 1
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  });
+});

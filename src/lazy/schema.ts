@@ -11,9 +11,11 @@ const _ = (o: JSONValue): SchemaObject =>
     ? {
         type: "object",
         ...(Object.keys(o as object).length !== 0
-          ? Object.entries(o as object)
-              .map(([k, v]) => ({ [k]: _(v) }))
-              .reduce((a, b) => ({ ...a, ...b }), {})
+          ? {
+              properties: Object.entries(o as object)
+                .map(([k, v]) => ({ [k]: _(v) }))
+                .reduce((a, b) => ({ ...a, ...b }), {})
+            }
           : {})
       }
     : {
