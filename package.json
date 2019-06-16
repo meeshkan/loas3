@@ -17,6 +17,7 @@
   },
   "dependencies": {},
   "scripts": {
+    "lint:fix": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "lint": "prettier --check \"src/**/*.ts\" \"test/**/*.ts\"",
     "test": "jest"
   }
