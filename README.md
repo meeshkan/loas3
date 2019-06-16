@@ -1,4 +1,5 @@
 [![CircleCI](https://circleci.com/gh/unmock/loai3.svg?style=svg)](https://circleci.com/gh/unmock/loai3)
+[![codecov](https://codecov.io/gh/unmock/loai3/branch/dev/graph/badge.svg)](https://codecov.io/gh/unmock/loai3)
 
 # loai3
 
