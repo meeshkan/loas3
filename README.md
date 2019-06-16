@@ -41,7 +41,7 @@ Because sometimes you need to write an OpenAPI spec.
 
 ## Examples
 
-See the [tests](test/lazy).
+See the [tests](test/lazy/).
 
 ## Thanks
 
