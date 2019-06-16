@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/unmock/loai3.svg?style=svg)](https://circleci.com/gh/unmock/loai3)
+
 # loai3
 
 OpenAPI 3 for lazy people.
