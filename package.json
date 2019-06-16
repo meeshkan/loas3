@@ -9,6 +9,7 @@
   "devDependencies": {
     "@types/jest": "^24.0.14",
     "@types/js-yaml": "^3.12.1",
+    "codecov": "^3.5.0",
     "jest": "^24.8.0",
     "js-yaml": "^3.13.1",
     "prettier": "^1.18.2",
@@ -19,6 +20,9 @@
   "scripts": {
     "lint:fix": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "lint": "prettier --check \"src/**/*.ts\" \"test/**/*.ts\"",
-    "test": "jest"
+    "test": "jest",
+    "test:ci": "yarn run coverage -- --ci --maxWorkers=2  --reporters=default --reporters=jest-junit",
+    "coverage": "yarn test -- --coverage",
+    "coverage:upload": "codecov"
   }
 }
