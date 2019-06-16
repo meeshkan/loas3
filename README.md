@@ -38,6 +38,11 @@ paths:
 
 Because sometimes you need to write an OpenAPI spec.
 
+## TODO
+
+- [io-js](https://github.com/gcanti/io-ts/) for types
+- Stronger typing convention for `x-???` extension syntax
+
 ## How does it work?
 
 [Lazy OpenAPI](src/model/LazyOpenApi.ts) in. [Unlazy OpenAPI](src/model/OpenApi.ts) out.  Feel free to mix and match.
