@@ -1,5 +1,5 @@
 import yaml from "js-yaml";
-import loai3 from "../../src/index";
+import loai3 from "../../src/";
 
 test("lazy openapi correctly expands operations", () => {
   expect(

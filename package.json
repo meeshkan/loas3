@@ -2,7 +2,7 @@
   "name": "loai3",
   "version": "0.0.0",
   "description": "OpenAPI 3.0.0 for lazy people",
-  "main": "index.js",
+  "main": "dist/src/index.js",
   "repository": "https://github.com/unmock/loai3",
   "author": "Mike Solomon",
   "license": "MIT",
@@ -18,9 +18,11 @@
   },
   "dependencies": {},
   "scripts": {
+    "compile": "tsc --outDir dist",
     "lint:fix": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "lint": "prettier --check \"src/**/*.ts\" \"test/**/*.ts\"",
     "test": "jest",
+    "prepublish": "yarn compile && yarn lint && yarn test",
     "test:ci": "yarn run coverage -- --ci --maxWorkers=2  --reporters=default --reporters=jest-junit",
     "coverage": "yarn test -- --coverage",
     "coverage:upload": "codecov"

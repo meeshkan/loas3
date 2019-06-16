@@ -1,5 +1,5 @@
 import yaml from "js-yaml";
-import loai3 from "../../src/index";
+import loai3 from "../../src/";
 
 test("lazy openapi provides default version", () => {
   expect(loai3(yaml.load(``)).openapi).toBe("3.0.0");
