@@ -41,7 +41,7 @@ Because sometimes you need to write an OpenAPI spec.
 
 ## Examples
 
-See the tests.
+See the [tests](test/).
 
 ## Thanks
 
