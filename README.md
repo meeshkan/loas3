@@ -45,4 +45,4 @@ See the tests.
 
 ## Thanks
 
-Thanks to (metadevpro)[https://github.com/metadevpro] for providing the unlazy types.
+Thanks to [metadevpro](https://github.com/metadevpro) for providing the unlazy types.
