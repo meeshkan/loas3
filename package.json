@@ -1,0 +1,23 @@
+{
+  "name": "loai3",
+  "version": "0.0.0",
+  "description": "OpenAPI 3.0.0 for lazy people",
+  "main": "index.js",
+  "repository": "https://github.com/unmock/loai3",
+  "author": "Mike Solomon",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/jest": "^24.0.14",
+    "@types/js-yaml": "^3.12.1",
+    "jest": "^24.8.0",
+    "js-yaml": "^3.13.1",
+    "prettier": "^1.18.2",
+    "ts-jest": "^24.0.2",
+    "typescript": "^3.5.2"
+  },
+  "dependencies": {},
+  "scripts": {
+    "lint": "prettier --check \"src/**/*.ts\" \"test/**/*.ts\"",
+    "test": "jest"
+  }
+}
