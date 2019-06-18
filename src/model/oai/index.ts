@@ -8,16 +8,16 @@ import { TagObject } from "./tag";
 import { ExternalDocumentObject } from "./external-document";
 
 export const OpenAPIObject = t.intersection([
-    t.type({
-        openapi: t.string,
-        info: InfoObject,
-        paths: PathsObject
-    }),
-    t.partial({
-        components: ComponentsObject,
-        security: t.array(SecurityRequirementObject),
-        tags: t.array(TagObject),
-        externalDocs: ExternalDocumentObject
-    })
+  t.type({
+    openapi: t.string,
+    info: InfoObject,
+    paths: PathsObject
+  }),
+  t.partial({
+    components: ComponentsObject,
+    security: t.array(SecurityRequirementObject),
+    tags: t.array(TagObject),
+    externalDocs: ExternalDocumentObject
+  })
 ]);
 export type OpenAPIObject = t.TypeOf<typeof OpenAPIObject>;
