@@ -1,5 +1,4 @@
 import {
-  EnumIntegerObject,
   SchemaObject
 } from "../../../src/model/oai/schema";
 
@@ -74,7 +73,7 @@ test("string schema validates", () => {
 
 test("test int enum", () => {
   expect(
-    EnumIntegerObject.is({
+    SchemaObject.is({
       type: "integer",
       format: "int64",
       enum: [1, 2, 3]

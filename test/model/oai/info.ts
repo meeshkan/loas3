@@ -2,23 +2,23 @@ import { InfoObject } from "../../../src/model/oai/info";
 
 test("info object validates", () => {
   expect(
-    InfoObject.decode({
+    InfoObject.is({
       title: "foo",
       version: "0.0.0",
       license: { name: "a" }
-    })._tag
-  ).toBe("Right");
+    })
+  ).toBe(true);
   expect(
-    InfoObject.decode({
+    InfoObject.is({
       title: "foo",
       version: "0.0.0",
       license: {}
-    })._tag
-  ).toBe("Left");
+    })
+  ).toBe(false);
   expect(
-    InfoObject.decode({
+    InfoObject.is({
       title: "foo",
       license: { name: "a" }
-    })._tag
-  ).toBe("Left");
+    })
+  ).toBe(false);
 });
