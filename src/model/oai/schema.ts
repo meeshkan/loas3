@@ -152,12 +152,12 @@ const isEnumValid = <T extends "string" | "number", Q extends string | number>(
   _is(
     {
       type: new L(tp),
-      ...(tp === "number"
+      ...(tp === "integer"
         ? { format: ["int32", "int64"].map(i => new L(i)) }
         : {}),
       enum: v =>
         v instanceof Array &&
-        v.map(i => typeof i === tp).reduce((a, b) => a && b, true)
+        v.map(i => typeof i === (tp === "integer" ? "number" : tp)).reduce((a, b) => a && b, true)
     },
     {
       required: "boolean",
@@ -167,8 +167,8 @@ const isEnumValid = <T extends "string" | "number", Q extends string | number>(
     }
   )(u);
 
-const isEnumIntegerObject = isEnumValid<"number", number>("number");
-const EnumIntegerObject = _type<EnumIntegerObject>(
+const isEnumIntegerObject = isEnumValid<"number", number>("integer");
+export const EnumIntegerObject = _type<EnumIntegerObject>(
   "EnumIntegerObject",
   isEnumIntegerObject
 );

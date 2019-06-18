@@ -1,5 +1,5 @@
 import {
-  OpenAPIPrimitiveDataType,
+  EnumIntegerObject,
   SchemaObject
 } from "../../../src/model/oai/schema";
 
@@ -72,16 +72,16 @@ test("string schema validates", () => {
   ).toBe(false);
 });
 
-test.skip("test int enum", () => {
+test("test int enum", () => {
   expect(
-    SchemaObject.is({
+    EnumIntegerObject.is({
       type: "integer",
       format: "int64",
       enum: [1, 2, 3]
     })
   ).toBe(true);
   expect(
-    SchemaObject.decode({
+    SchemaObject.is({
       type: "integer",
       format: "int64",
       enum: [1, 2, "foo"]
