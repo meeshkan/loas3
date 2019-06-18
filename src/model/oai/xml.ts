@@ -1,4 +1,4 @@
-import t from "io-ts";
+import * as t from "io-ts";
 import {SpecificationExtension} from "./specification-extension";
 
 export const XMLObject = t.intersection([

@@ -1,200 +1,274 @@
-import t, { Type } from "io-ts";
+import * as t from "io-ts";
 import { DiscriminatorObject } from "./discriminator";
 import { ReferenceObject } from "./reference";
 import { XMLObject } from "./xml";
 import { SpecificationExtension } from "./specification-extension";
+import { _is, L, _type } from "./util";
 
-const BaseSchemaObject = t.partial({
-    title: t.string,
-    description: t.string,
-    nullable: t.boolean,
-    externalDocs: t.string,
-    deprecated: t.boolean
-});
-type BaseSchemaObject = t.TypeOf<typeof BaseSchemaObject>;
+const isBaseSchemaObject = {
+    title: "string",
+    description: "string",
+    nullable: "boolean",
+    externalDocs: "string",
+    deprecated: "boolean"
+};
 
-const BaseIntegerObject = t.intersection([
-    BaseSchemaObject,
-    t.type({
-        type: t.literal("integer"),
-        format: t.union([t.literal("int32"), t.literal("int64")])
-    }),
-    t.partial({
-        required: t.boolean,
-        default: t.Int,
-        example: t.Int,
-    })
-]);
-type BaseIntegerObject = t.TypeOf<typeof BaseIntegerObject>;
+type BaseSchemaObject = {
+    title?: string;
+    description?: string;
+    nullable?: boolean;
+    externalDocs?: string;
+    deprecated?: boolean;
+}
+
+type BaseNumericObject = BaseSchemaObject
+    & {
+        required?: boolean;
+        default?: number;
+        example?: number;
+        multipleOf?: number;
+        maximum?: number;
+        exclusiveMaximum?: number;
+        minimum?: number;
+        exclusiveMinimum?: number;
+    };
 
 
-const BaseNumberObject = t.intersection([
-    BaseSchemaObject,
-    t.type({
-        type: t.literal("number"),
-        format: t.union([t.literal("float"), t.literal("double")])
-    }),
-    t.partial({
-        required: t.boolean,
-        default: t.number,
-        example: t.number,
-    })
-]);
-type BaseNumberObject = t.TypeOf<typeof BaseNumberObject>;
+const isBaseNumericObject = {
+        required: "boolean",
+        default: "number",
+        example: "number",
+        multipleOf: "number",
+        maximum: "number",
+        exclusiveMaximum: "number",
+        minimum: "number",
+        exclusiveMinimum: "number",
+        ...isBaseSchemaObject
+};
 
-const BaseStringObject = t.intersection([
-    BaseSchemaObject,
-    t.type({
-        type: t.literal("string"),
-    }),
-    t.partial({
-        required: t.boolean,
-        default: t.string,
-        example: t.string,
-    })
-]);
-type BaseStringObject = t.TypeOf<typeof BaseStringObject>;
+type BaseIntegerObject = BaseNumericObject
+    & {
+        type: "integer";
+        format: "int32" | "int64";
+    };
 
-const isEnumValid = <T>(f: (t: T) => boolean) => (u: unknown): u is {
-    enum: T[];
-    default?: T;
-} =>
-    typeof u === "object" &&
-        Object.keys(u as object).indexOf("enum") !== -1 &&
-        (!(u as { enum: T[]; default?: T; }).default || (u as { enum: T[]; default?: T; }).enum.indexOf((u as { enum: T[]; default?: T; }).default as T) !== -1) &&
-        (u as {
-            enum: T[];
-            default?: T;
-        }).enum.map(i => f(i)).reduce((a, b) => a && b, true);
+const isBaseIntegerObject = (u: unknown): u is BaseIntegerObject =>
+    _is({
+        type: new L("integer"),
+        format: ["int32", "int64"].map(i => new L(i))
+    }, isBaseNumericObject)(u);
 
-const isEnumInteger = isEnumValid<number>(t => Number.isInteger(t));
-const isEnumNumber = isEnumValid<number>(t => typeof t === "number");
-const isEnumString = isEnumValid<string>(t => typeof t === "string");
 
-const makeEnumObject = <T>(name: string, validator: (u: unknown) => u is {
-    enum: T[];
-    default?: T;
-}) => new t.Type<{
-    enum: T[];
-    default?: T;
-    example?: T;
-}>(
-    name,
-    validator,
-    (u, c) => (validator(u) ? t.success(u) : t.failure(u, c)),
-    t.identity
+const BaseIntegerObject = _type<BaseIntegerObject>(
+    "BaseIntegerObject",
+    isBaseIntegerObject
 );
 
-const EnumIntegerObject = t.intersection([
-    BaseIntegerObject,
-    makeEnumObject<number>("EnumInteger", isEnumInteger)
-]);
-type EnumIntegerObject = t.TypeOf<typeof EnumIntegerObject>;
+type BaseNumberObject = BaseNumericObject
+    & {
+        type: "number",
+        format: "double" | "float"
+    };
 
-const EnumNumberObject = t.intersection([
-    BaseNumberObject,
-    makeEnumObject<number>("EnumNumber", isEnumNumber)
-]);
-type EnumNumberObject = t.TypeOf<typeof EnumNumberObject>;
+const isBaseNumberObject = (u: unknown): u is BaseNumberObject =>
+    _is({
+        type: new L("number"),
+        format: ["double", "float"].map(i => new L(i))
+    }, isBaseNumericObject)(u);
 
-const EnumStringObject = t.intersection([
-    BaseStringObject,
-    makeEnumObject<string>("EnumString", isEnumString)
-]);
-type EnumStringObject = t.TypeOf<typeof EnumStringObject>;
+const BaseNumberObject = _type<BaseNumberObject>(
+    "BaseNumberObject",
+    isBaseNumberObject
+);
 
-const makeNumberBoundsObject = <T extends Type<any>> (c: T) => t.partial({
-    multipleOf: c,
-    maximum: c,
-    exclusiveMaximum: c,
-    minimum: t.number,
-    exclusiveMinimum: t.Int,
-});
+type BaseStringObject = BaseSchemaObject
+    & {
+        type: "string",
+        required?: boolean,
+        default?: number,
+        example?: number,
+    };
 
-const BoundedIntObject = t.intersection([
-    BaseIntegerObject,
-    makeNumberBoundsObject(t.Int)
-]);
-type BoundedIntObject = t.TypeOf<typeof BoundedIntObject>;
+const isBaseStringObject = (u: unknown): u is BaseStringObject =>
+    _is({
+        type: new L("string"),
+    }, {
+        required: "boolean",
+        default: "string",
+        example: "string",
+        ...isBaseSchemaObject
+    })(u);
 
-const BoundedNumberObject = t.intersection([
-    BaseNumberObject,
-    makeNumberBoundsObject(t.number)
-]);
-type BoundedNumberObject = t.TypeOf<typeof BoundedNumberObject>;
+const BaseStringObject = _type<BaseStringObject>(
+    "BaseStringObject",
+    isBaseStringObject
+);
 
-const FormattedStringObject = t.intersection([
-    BaseStringObject,
-    t.partial({
-        format: t.union([t.literal("binary"), t.literal("byte"), t.literal("date"), t.literal("date-time"), t.literal("password")])
-    })
-]);
-type FormattedStringObject = t.TypeOf<typeof FormattedStringObject>;
+type BaseBooleanObject = BaseSchemaObject
+    & {
+        type: "boolean",
+        required?: boolean,
+        default?: boolean,
+        example?: boolean,
+    };
 
-const RegexStringObject = t.intersection([
-    BaseStringObject,
-    t.partial({
-        pattern: t.string, // TODO: show valid regex?
-    })
-]);
-type RegexStringObject = t.TypeOf<typeof RegexStringObject>;
+const isBaseBooleanObject = (u: unknown): u is BaseBooleanObject =>
+    _is({
+        type: new L("boolean"),
+    }, {
+        required: "boolean",
+        default: "boolean",
+        example: "boolean",
+        ...isBaseSchemaObject
+    })(u);
 
-const BaseBooleanObject = t.intersection([
-    BaseSchemaObject,
-    t.type({
-        type: t.literal("boolean")
-    }),
-    t.partial({
-        required: t.boolean,
-        default: t.boolean,
-        example: t.boolean
-    })
-]);
-type BaseBooleanObject = t.TypeOf<typeof BaseBooleanObject>;
+const BaseBooleanObject = _type<BaseBooleanObject>(
+    "BaseBooleanObject",
+    isBaseBooleanObject
+);
 
-const OpenAPIPrimitiveDataType = t.union([
-    RegexStringObject,
-    FormattedStringObject,
-    BoundedNumberObject,
-    BoundedIntObject,
-    EnumIntegerObject,
-    EnumNumberObject,
-    EnumStringObject,
-    BaseBooleanObject,
-]);
+type BaseEnumType<T extends "string" | "number", Q extends string | number> = BaseSchemaObject
+    & {
+        type: T,
+        enum: Q[]
+    };
 
-type OpenAPIPrimitiveDataType = t.TypeOf<typeof OpenAPIPrimitiveDataType>;
+type EnumStringObject = BaseEnumType<"string", string>;
+type EnumIntegerObject = BaseEnumType<"number", number>;
 
-const PropertyAddons = t.partial({
-    readOnly: t.boolean,
-    writeOnly: t.boolean,
-    xml: XMLObject
-});
-type PropertyAddons = t.TypeOf<typeof PropertyAddons>;
+const enumCheck = <T extends "string" | "number", Q extends string | number>(v: unknown): boolean =>
+    (v as BaseEnumType<T, Q>).enum.indexOf(v as Q) !== -1;
 
+const isEnumValid = <T extends "string" | "number", Q extends string | number>(tp: string) => (u: unknown): u is BaseEnumType<T, Q> =>
+    _is({
+        type: new L(tp),
+        ...(tp === "number" ? ({format: ["int32", "int64"].map(i => new L(i))}) : {}),
+        enum: (v) => v instanceof Array && v.map(i => typeof i === tp).reduce((a, b) => a && b, true)
+    }, {
+        required: "boolean",
+        default: enumCheck,
+        example: enumCheck,
+        ...isBaseSchemaObject
+    })(u);
+
+const isEnumIntegerObject = isEnumValid<"number", number>("number");
+const EnumIntegerObject = _type<EnumIntegerObject>(
+    "EnumIntegerObject",
+    isEnumIntegerObject
+);
+
+const isEnumStringObject = isEnumValid<"string", string>("string");
+const EnumStringObject = _type<EnumStringObject>(
+    "EnumStringObject",
+    isEnumStringObject
+);
+
+type FormattedStringObject = BaseStringObject & {
+    format: "binary" | "byte" | "date" | "date-time" | "password" 
+}
+
+
+const isFormattedStringObject = (u: unknown): u is FormattedStringObject =>
+    _is({
+        type: new L("string"),
+        format: ["binary", "byte", "date", "date-time", "password"].map(i => new L(i)),
+    }, {
+        required: "boolean",
+        default: "string",
+        example: "string",
+        ...isBaseSchemaObject
+    })(u);
+
+const FormattedStringObject = _type<FormattedStringObject>(
+    "FormattedStringObject",
+    isFormattedStringObject
+);
+    
+type RegexStringObject = BaseStringObject & {
+    pattern?: "string" 
+}
+
+const isRegexStringObject = (u: unknown): u is RegexStringObject =>
+    _is({
+        type: new L("string"),
+        pattern: "string",
+    }, {
+        required: "boolean",
+        default: "string",
+        example: "string",
+        ...isBaseSchemaObject
+    })(u);
+
+const RegexStringObject = _type<RegexStringObject>(
+    "RegexStringObject",
+    isRegexStringObject
+);
+
+type OpenAPIPrimitiveDataType = BaseStringObject
+    | RegexStringObject
+    | FormattedStringObject
+    | BaseNumberObject
+    | BaseIntegerObject
+    | EnumIntegerObject
+    | EnumStringObject
+    | BaseBooleanObject;
+
+const isOpenAPIPrimitiveDataType = (u: unknown): u is OpenAPIPrimitiveDataType =>
+    isBaseStringObject(u)
+    || isRegexStringObject(u)
+    || isFormattedStringObject(u)
+    || isBaseNumberObject(u)
+    || isBaseIntegerObject(u)
+    || isEnumIntegerObject(u)
+    || isEnumStringObject(u)
+    || isBaseBooleanObject(u);
+
+export const OpenAPIPrimitiveDataType = _type<OpenAPIPrimitiveDataType>(
+    "OpenAPIPrimitiveDataType",
+    isOpenAPIPrimitiveDataType
+);
+
+type PropertyAddons = {
+    readOnly?: boolean;
+    writeOnly?: boolean;
+    xml?: XMLObject;
+}
 type OpenAPIObjectType = BaseSchemaObject & {
-    properties: {[s: string]: SchemaObject & PropertyAddons }
-    additionalProperties: {[s: string]: SchemaObject & PropertyAddons }
+    properties?: {[s: string]: SchemaObject } // & PropertyAddons
+    additionalProperties?: {[s: string]: SchemaObject } // & PropertyAddons
     default?: any; // hack, fix on the validator...
     example?: any; // hack, fix on the validator...
     maxProperties?: number;
     minProperties?: number;
 }
 
+const isPropertyAddons = {
+    readOnly: t.boolean,
+    writeOnly: t.boolean,
+    xml: XMLObject
+};
+
+const tailIsSchemaObject = (l: any[]): boolean =>
+    l.length === 0 ? true : isSchemaObject(l[0]) ? tailIsSchemaObject(l.slice(1)) : false;
+
+const isOpenAPIObjectType = (u: unknown): u is OpenAPIObjectType =>
+    _is({
+        type: new L("object"),
+    }, {
+        properties: (v) => v && tailIsSchemaObject(Object.values(v as any)), // & PropertyAddons
+        additionalProperties: (v) => v && tailIsSchemaObject(Object.values(v as any)),
+        default: "object", // hack, fix on the validator...
+        example: "object", // hack, fix on the validator...
+        maxProperties: "number",
+        minProperties: "number",
+        ...isBaseSchemaObject
+    })(u);
+
 const OpenAPIObjectType: t.Type<OpenAPIObjectType> = t.recursion("OpenAPIObjectType", () =>
-    t.intersection([
-        BaseSchemaObject,
-        t.type({
-            properties: t.record(t.string, t.intersection([SchemaObject, PropertyAddons])),
-            additionalProperties: t.record(t.string, t.intersection([SchemaObject, PropertyAddons])),
-        }),
-        t.partial({
-            default: t.any, // hack, fix on the validator...
-            example: t.any,// hack, fix on the validator...
-            maxProperties: t.number,
-            minProperties: t.number,
-        })
-    ])
+    _type<OpenAPIObjectType>(
+        "OpenAPIObjectType",
+        isOpenAPIObjectType
+    )
 );
 
 type OpenApiArrayType = BaseSchemaObject & {
@@ -209,25 +283,30 @@ type OpenApiArrayType = BaseSchemaObject & {
     maxItems?: number;
 }
 
+const isOpenApiArrayType = (u: unknown): u is OpenApiArrayType =>
+    _is({
+        type: new L("array"),
+    }, {
+        items: isSchemaObject,
+        default: "object", // hack, fix on the validator...
+        example: "object", // hack, fix on the validator...
+        required: "boolean",
+        uniqueItems: "boolean",
+        minLength: "number",
+        maxLength: "number",
+        minItems: "number",
+        maxItems: "number",
+        ...isBaseSchemaObject,
+    })(u);
+
 const OpenApiArrayType: t.Type<OpenApiArrayType> = t.recursion("OpenApiArrayType", () =>
-    t.intersection([
-        BaseSchemaObject,
-        t.type({
-            items: SchemaObject,
-        }),
-        t.partial({
-            default: t.any, // hack, fix on the validator...
-            example: t.any,// hack, fix on the validator...
-            required: t.boolean,
-            uniqueItems: t.boolean,
-            minLength: t.number,
-            maxLength: t.number,
-            minItems: t.number,
-            maxItems: t.number,
-        })
-    ])
+    _type<OpenApiArrayType>(
+        "OpenApiArrayType",
+        isOpenApiArrayType
+    )
 );
 
+/*
 type DiscriminatorSchema = BaseSchemaObject & Partial<DiscriminatorObject>;
 
 const DiscriminatorPartial = t.partial({
@@ -291,20 +370,20 @@ type OneOfType = DiscriminatorSchema & {
     oneOf: SchemaObject | SchemaObject[];
 }
 
-export const SchemaObject = t.intersection([t.union([OpenApiArrayType,
-    OpenAPIObjectType,
-    OpenAPIPrimitiveDataType,
-    OneOfType,
-    NotType,
-    AnyOfType,
-    AllOfType,
-    ReferenceObject]), SpecificationExtension]);
+*/
+export type SchemaObject = OpenAPIObjectType
+    | OpenApiArrayType
+    | OpenAPIPrimitiveDataType;
+    // | OneOfType
+    // | NotType
+    // | AnyOfType
+    // | AllOfType
+    // | ReferenceObject;
 
-export type SchemaObject = (OpenApiArrayType
-    | OpenAPIObjectType
-    | OpenAPIPrimitiveDataType
-    | OneOfType
-    | NotType
-    | AnyOfType
-    | AllOfType
-    | ReferenceObject) & SpecificationExtension;
+const isSchemaObject = (u: unknown): u is SchemaObject => isOpenAPIObjectType(u)
+    || isOpenApiArrayType(u)
+    || isOpenAPIPrimitiveDataType(u);
+
+export const SchemaObject: t.Type<SchemaObject> = t.recursion("SchemaObject", () =>
+    _type<SchemaObject>("SchemaObject", isSchemaObject)
+);

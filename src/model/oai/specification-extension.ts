@@ -1,4 +1,4 @@
-import t from "io-ts";
+import * as t from "io-ts";
 
 const isSpecificationExtension = (u: unknown): u is SpecificationExtension =>
     typeof u === "object" &&

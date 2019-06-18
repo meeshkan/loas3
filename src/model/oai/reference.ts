@@ -1,4 +1,4 @@
-import t from "io-ts";
+import * as t from "io-ts";
 
 export const ReferenceObject = t.type({
     $ref: t.string
