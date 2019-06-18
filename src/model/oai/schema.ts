@@ -1,5 +1,4 @@
 import * as t from "io-ts";
-import { DiscriminatorObject } from "./discriminator";
 import { ReferenceObject } from "./reference";
 import { XMLObject } from "./xml";
 import { _is, L, _type } from "./util";
@@ -157,7 +156,9 @@ const isEnumValid = <T extends "string" | "number", Q extends string | number>(
         : {}),
       enum: v =>
         v instanceof Array &&
-        v.map(i => typeof i === (tp === "integer" ? "number" : tp)).reduce((a, b) => a && b, true)
+        v
+          .map(i => typeof i === (tp === "integer" ? "number" : tp))
+          .reduce((a, b) => a && b, true)
     },
     {
       required: "boolean",
@@ -339,39 +340,50 @@ const OpenApiArrayType: t.Type<OpenApiArrayType> = t.recursion(
   () => _type<OpenApiArrayType>("OpenApiArrayType", isOpenApiArrayType)
 );
 
+type DiscriminatorSchema = BaseSchemaObject & {
+  propertyName?: string;
+  mapping?: { [key: string]: string };
+};
 
-type DiscriminatorSchema = BaseSchemaObject & Partial<DiscriminatorObject>;
-
-const isDiscriminator = {
-    propertyName: "string",
-    mapping: (v: any) => v && typeof v === "object" && Object.values(v).map(i => typeof i === "string").reduce((a, b) => a && b, true)
-}
+const isDiscriminator = (u: unknown) => ({
+  propertyName: "string",
+  mapping: (v: any) =>
+    v &&
+    u &&
+    typeof u === "object" &&
+    typeof v === "object" &&
+    typeof (u as any).propertyName === "string" &&
+    Object.values(v)
+      .map(i => typeof i === "string")
+      .reduce((a, b) => a && b, true)
+});
 
 type NotType = DiscriminatorSchema & {
   not: SchemaObject | SchemaObject[];
-}
+};
 
 type OneOfType = DiscriminatorSchema & {
   not: SchemaObject | SchemaObject[];
-}
+};
 
 type AllOfType = DiscriminatorSchema & {
   not: SchemaObject | SchemaObject[];
-}
+};
 
 type AnyOfType = DiscriminatorSchema & {
   not: SchemaObject | SchemaObject[];
-}
+};
 
 const isAggType = <T>(name: string) => (u: unknown): u is T =>
   _is(
     {
-      [name]: (v) => v instanceof Array ? tailIsSchemaObject(v) : isSchemaObject(v)
+      [name]: v =>
+        v instanceof Array ? tailIsSchemaObject(v) : isSchemaObject(v)
     },
     {
       required: "boolean",
       ...isBaseSchemaObject,
-      ...isDiscriminator
+      ...isDiscriminator(u)
     }
   )(u);
 const isNotType = isAggType<NotType>("not");

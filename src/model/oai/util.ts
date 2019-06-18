@@ -11,7 +11,10 @@ export class L implements _L {
   }
 }
 
-const evalUnion = (obj: any, l: Array<string | det | _L>): boolean =>
+const evalUnion = (
+  obj: any,
+  l: Array<"string" | "number" | "object" | "boolean" | det | _L>
+): boolean =>
   l.length === 0
     ? false
     : obj &&
@@ -26,10 +29,9 @@ const evalUnion = (obj: any, l: Array<string | det | _L>): boolean =>
 // TODO: combine?
 import * as t from "io-ts";
 
-const doYes = (
-  obj: any,
-  l: Array<[string, string | det | _L | Array<string | det | _L>]>
-): boolean =>
+type small = Array<"string" | "number" | "object" | "boolean" | det | _L>;
+type big = "string" | "number" | "object" | "boolean" | det | _L | small;
+const doYes = (obj: any, l: Array<[string, big]>): boolean =>
   l.length === 0
     ? true
     : obj[l[0][0]] &&
@@ -39,14 +41,11 @@ const doYes = (
         ? l[0][1](obj[l[0][0]])
         : l[0][1] instanceof L
         ? l[0][1].l === obj[l[0][0]]
-        : evalUnion(obj[l[0][0]], l[0][1] as Array<string | det | _L>))
+        : evalUnion(obj[l[0][0]], l[0][1] as small))
     ? doYes(obj, l.slice(1))
     : false;
 // TODO: combine?
-const doMaybe = (
-  obj: any,
-  l: Array<[string, string | det | _L | Array<string | det | _L>]>
-): boolean =>
+const doMaybe = (obj: any, l: Array<[string, big]>): boolean =>
   l.length === 0
     ? true
     : !obj[l[0][0]] ||
@@ -56,7 +55,7 @@ const doMaybe = (
         ? l[0][1](obj[l[0][0]])
         : l[0][1] instanceof L
         ? l[0][1].l === obj[l[0][0]]
-        : evalUnion(obj[l[0][0]], l[0][1] as Array<string | det | _L>))
+        : evalUnion(obj[l[0][0]], l[0][1] as small))
     ? doMaybe(obj, l.slice(1))
     : false;
 
@@ -65,8 +64,8 @@ const x = (u: unknown, good: string[]) =>
     i => good.indexOf(i) === -1 && i.substring(0, 2) !== "x-"
   ).length === 0;
 export const _is = <T>(
-  yes: { [s: string]: string | det | _L | Array<string | det | _L> },
-  maybe: { [s: string]: string | det | _L | Array<string | det | _L> }
+  yes: { [s: string]: big },
+  maybe: { [s: string]: big }
 ) => (u: unknown): u is T =>
   typeof u === "object" &&
   doYes(u, Object.entries(yes)) &&
@@ -82,3 +81,15 @@ export const _type = <T>(name: string, validator: Validator<T>) =>
     (u, c) => (validator(u) ? t.success(u) : t.failure(u, c)),
     t.identity
   );
+
+export const _choose = (tp: Array<t.Type<any>>) => (v: any) =>
+  v &&
+  typeof v === "object" &&
+  tp.map(x => x.is(v)).reduce((a, b) => a || b, false);
+
+export const _choose_val = (tp: Array<t.Type<any>>) => (v: any) =>
+  v &&
+  typeof v === "object" &&
+  Object.values(v)
+    .map(i => tp.map(x => x.is(i)).reduce((a, b) => a || b, false))
+    .reduce((a, b) => a && b, true);

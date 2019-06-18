@@ -1,6 +1,4 @@
-import {
-  SchemaObject
-} from "../../../src/model/oai/schema";
+import { SchemaObject } from "../../../src/model/oai/schema";
 
 test("int schema validates", () => {
   expect(

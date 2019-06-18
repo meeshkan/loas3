@@ -1,17 +1,25 @@
-import t from "io-ts";
-import { SpecificationExtension } from "./specification-extension";
-import { KnownHeaderObject } from "./parameter";
+import { _is, _type, _choose_val } from "./util";
 import { ReferenceObject } from "./reference";
+import { KnownHeaderObject } from "./parameter";
 
-export const EncodingObject = t.intersection([
-  t.partial({
-    contentType: t.string,
-    headers: t.record(t.string, t.union([KnownHeaderObject, ReferenceObject])),
-    style: t.string,
-    explode: t.boolean,
-    allowReserved: t.boolean
-  }),
-  SpecificationExtension
-]);
-
-export type EncodingObject = t.TypeOf<typeof EncodingObject>;
+const isEncodingObject = _is<EncodingObject>(
+  {},
+  {
+    contentType: "string",
+    headers: _choose_val([KnownHeaderObject, ReferenceObject]),
+    style: "string",
+    explode: "boolean",
+    allowReserved: "boolean"
+  }
+);
+export type EncodingObject = {
+  contentType?: string;
+  headers?: { [key: string]: KnownHeaderObject | ReferenceObject };
+  style?: string;
+  explode?: boolean;
+  allowReserved?: boolean;
+};
+export const EncodingObject = _type<EncodingObject>(
+  "EncodingObject",
+  isEncodingObject
+);

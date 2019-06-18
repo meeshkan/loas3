@@ -1,26 +1,46 @@
-import t from "io-ts";
-import { SpecificationExtension } from "./specification-extension";
+import { _is, _type, _choose } from "./util";
 
-export const OAuthFlowObject = t.intersection([
-  t.type({
-    authorizationUrl: t.string,
-    tokenUrl: t.string,
-    scopes: t.record(t.string, t.string)
-  }),
-  t.partial({
-    refreshUrl: t.string
-  }),
-  SpecificationExtension
-]);
-export type OAuthFlowObject = t.TypeOf<typeof OAuthFlowObject>;
+const isOAuthFlowObject = _is<OAuthFlowObject>(
+  {
+    authorizationUrl: "string",
+    tokenUrl: "string",
+    scopes: (v: any) =>
+      typeof v === "object" &&
+      Object.values(v)
+        .map(i => typeof i === "string")
+        .reduce((a, b) => a && b, true)
+  },
+  {
+    refreshUrl: "string"
+  }
+);
+export type OAuthFlowObject = {
+  authorizationUrl: string;
+  tokenUrl: string;
+  scopes: { [key: string]: string };
+  refreshUrl?: string;
+};
+export const OAuthFlowObject = _type<OAuthFlowObject>(
+  "OAuthFlowObject",
+  isOAuthFlowObject
+);
 
-export const OAuthFlowsObject = t.intersection([
-  t.partial({
-    implicit: OAuthFlowObject,
-    password: OAuthFlowObject,
-    clientCredentials: OAuthFlowObject,
-    authorizationCode: OAuthFlowObject
-  }),
-  SpecificationExtension
-]);
-export type OAuthFlowsObject = t.TypeOf<typeof OAuthFlowsObject>;
+const isOAuthFlowsObject = _is<OAuthFlowsObject>(
+  {},
+  {
+    implicit: _choose([OAuthFlowObject]),
+    password: _choose([OAuthFlowObject]),
+    clientCredentials: _choose([OAuthFlowObject]),
+    authorizationCode: _choose([OAuthFlowObject])
+  }
+);
+export type OAuthFlowsObject = {
+  implicit?: OAuthFlowObject;
+  password?: OAuthFlowObject;
+  clientCredentials?: OAuthFlowObject;
+  authorizationCode?: OAuthFlowObject;
+};
+export const OAuthFlowsObject = _type<OAuthFlowsObject>(
+  "OAuthFlowsObject",
+  isOAuthFlowsObject
+);

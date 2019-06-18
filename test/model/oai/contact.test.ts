@@ -2,17 +2,25 @@ import { ContactObject } from "../../../src/model/oai/contact";
 
 test("contact object validates", () => {
   expect(
-    ContactObject.decode({
+    ContactObject.is({
       name: "Mike",
       email: "mike@meeshkan.com",
       url: "https://meeshkan.com"
-    })._tag
-  ).toBe("Right");
+    })
+  ).toBe(true);
   expect(
-    ContactObject.decode({
+    ContactObject.is({
+      name: "Mike",
+      email: "mike@meeshkan.com",
+      url: "https://meeshkan.com",
+      notallowed: "crash"
+    })
+  ).toBe(false);
+  expect(
+    ContactObject.is({
       name: "Mike",
       email: "mike@meeshkan.com",
       url: 1
-    })._tag
-  ).toBe("Left");
+    })
+  ).toBe(false);
 });

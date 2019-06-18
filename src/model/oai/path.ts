@@ -28,4 +28,4 @@ const PathItemObject = t.intersection([
 type PathItemObject = t.TypeOf<typeof PathItemObject>;
 
 export const PathsObject = t.record(t.string, PathItemObject);
-type PathsObject = t.TypeOf<typeof PathsObject>;
+export type PathsObject = t.TypeOf<typeof PathsObject>;

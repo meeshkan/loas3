@@ -3,13 +3,13 @@ import loai3 from "../../src/";
 
 test("lazy openapi fully expands", () => {
   expect(loai3(yaml.load(`paths: { '/foo': 1}`)).paths).toEqual({
-    ["/foo"]: {
+    "/foo": {
       get: {
         responses: {
           default: {
             description: "too lazy",
             content: {
-              ["application/json"]: {
+              "application/json": {
                 schema: {
                   type: "integer",
                   format: "int64",

@@ -1,11 +1,19 @@
 import t from "io-ts";
+import { _is, _type } from "./util";
 
-export const LicenseObject = t.intersection([
-  t.type({
-    name: t.string
-  }),
-  t.partial({
-    url: t.string
-  })
-]);
-export type LicenseObject = t.TypeOf<typeof LicenseObject>;
+export const isLicenseObject = _is<LicenseObject>(
+  {
+    name: "string"
+  },
+  {
+    url: "string"
+  }
+);
+export type LicenseObject = {
+  name: string;
+  url?: string;
+};
+export const LicenseObject = _type<LicenseObject>(
+  "LicenseObject",
+  isLicenseObject
+);

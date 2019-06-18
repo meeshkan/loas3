@@ -1,6 +1,8 @@
-import { _is, L, _type } from "./util";
-import { type } from "io-ts";
+import { _is, _type } from "./util";
 
 const isReference = _is<ReferenceObject>({ $ref: "string" }, {});
 export type ReferenceObject = { $ref: string };
-export const ReferenceObject = _type<ReferenceObject>("ReferenceObject", isReference);
+export const ReferenceObject = _type<ReferenceObject>(
+  "ReferenceObject",
+  isReference
+);

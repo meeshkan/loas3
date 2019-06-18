@@ -1,20 +1,29 @@
 import t from "io-ts";
 import { SpecificationExtension } from "./specification-extension";
 import { SchemaObject } from "./schema";
-import { ExamplesObject } from "./examples";
+import { ExampleObject } from "./example";
 import { EncodingObject } from "./encoding";
 import { ReferenceObject } from "./reference";
+import { _is, _type, _choose, _choose_val } from "./util";
 
-export const MediaTypeObject = t.intersection([
-  t.type({
-    schema: SchemaObject
-  }),
-  t.partial({
-    example: t.any,
-    examples: t.union([ExamplesObject, t.string, ReferenceObject]),
-    encoding: t.record(t.string, EncodingObject)
-  }),
-  SpecificationExtension
-]);
+const isMediaObject = _is<MediaObject>(
+  {
+    schema: _choose([SchemaObject])
+  },
+  {
+    example: "object",
+    examples: v =>
+      _choose_val([ExampleObject])(v) ||
+      _choose([ReferenceObject])(v) ||
+      typeof v === "string",
+    encoding: _choose_val([EncodingObject])
+  }
+);
 
-export type MediaTypeObject = t.TypeOf<typeof MediaTypeObject>;
+export type MediaObject = {
+  schema: SchemaObject;
+  example?: any;
+  examples?: { [key: string]: ExampleObject } | ReferenceObject | string;
+  encoding?: EncodingObject;
+};
+export const MediaObject = _type<MediaObject>("MediaObject", isMediaObject);

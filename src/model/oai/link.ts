@@ -2,40 +2,50 @@ import t from "io-ts";
 import { ServerObject } from "./server";
 import { SpecificationExtension } from "./specification-extension";
 import { ReferenceObject } from "./reference";
+import { _is, _type } from "./util";
 
-const BaseLink = t.intersection([
-  t.partial({
-    parameters: t.record(t.string, t.any),
-    requestBody: t.any,
-    description: t.any,
-    server: ServerObject
-  }),
-  SpecificationExtension
-]);
+export const isBaseLinkObject = {
+  parameters: "object", // is this correct?
+  requestBody: "object",
+  description: "object",
+  server: (v: any) => v && typeof v === "object" && ServerObject.is(v)
+};
 
-const OperationRefObject = t.intersection([
-  BaseLink,
-  t.type({
-    operationRef: t.string
-  })
-]);
-type OperationRefObject = t.TypeOf<typeof OperationRefObject>;
+const isOperationRefObject = _is({ operationRef: "string" }, isBaseLinkObject);
+type OperationRefObject = {
+  operationRef: string;
+  parameters: any; // is this correct?
+  requestBody: any;
+  description: any;
+  server: ServerObject;
+};
 
-const OperationIdObject = t.intersection([
-  BaseLink,
-  t.type({
-    operationId: t.string
-  })
-]);
+const isOperationIdObject = _is({ operationId: "string" }, isBaseLinkObject);
+type OperationIdObject = {
+  operationId: string;
+  parameters: any; // is this correct?
+  requestBody: any;
+  description: any;
+  server: ServerObject;
+};
 
-type OperationIdObject = t.TypeOf<typeof OperationIdObject>;
+export type LinkObject =
+  | OperationIdObject
+  | OperationRefObject
+  | ReferenceObject;
+const isLinkObject = (u: unknown): u is LinkObject =>
+  u &&
+  typeof u === "object" &&
+  (isOperationRefObject(u) || isOperationIdObject(u) || ReferenceObject.is(u));
 
-export const LinkObject = t.union([
-  OperationIdObject,
-  OperationRefObject,
-  ReferenceObject
-]);
-export type LinkObject = t.TypeOf<typeof LinkObject>;
+export const LinkObject = _type<LinkObject>("LinkObject", isLinkObject);
 
-export const LinksObject = t.record(t.string, LinkObject);
-export type LinksObject = t.TypeOf<typeof LinksObject>;
+const isLinksObject = (u: unknown): u is LinksObject =>
+  u &&
+  typeof u === "object" &&
+  Object.values(u as any)
+    .map(i => isLinkObject(i))
+    .reduce((a, b) => a && b, true);
+
+export type LinksObject = { [key: string]: LinkObject };
+export const LinksObject = _type<LinksObject>("LinksObject", isLinksObject);

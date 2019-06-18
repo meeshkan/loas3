@@ -1,8 +1,19 @@
-import * as t from "io-ts";
+import { _is, _type } from "./util";
 
-export const ContactObject = t.partial({
-  name: t.string,
-  url: t.string,
-  email: t.string
-});
-export type ContactObject = t.TypeOf<typeof ContactObject>;
+export const isContactObject = _is<ContactObject>(
+  {},
+  {
+    name: "string",
+    url: "string",
+    email: "string"
+  }
+);
+export type ContactObject = {
+  name?: string;
+  url?: string;
+  email?: string;
+};
+export const ContactObject = _type<ContactObject>(
+  "ContactObject",
+  isContactObject
+);
