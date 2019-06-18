@@ -1,4 +1,4 @@
-import t from "io-ts";
+import * as t from "io-ts";
 
 export const ContactObject = t.partial({
     name: t.string,
