@@ -1,6 +1,6 @@
-import * as t from "io-ts";
+import { _is, L, _type } from "./util";
+import { type } from "io-ts";
 
-export const ReferenceObject = t.type({
-  $ref: t.string
-});
-export type ReferenceObject = t.TypeOf<typeof ReferenceObject>;
+const isReference = _is<ReferenceObject>({ $ref: "string" }, {});
+export type ReferenceObject = { $ref: string };
+export const ReferenceObject = _type<ReferenceObject>("ReferenceObject", isReference);

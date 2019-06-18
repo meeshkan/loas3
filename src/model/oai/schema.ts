@@ -2,7 +2,6 @@ import * as t from "io-ts";
 import { DiscriminatorObject } from "./discriminator";
 import { ReferenceObject } from "./reference";
 import { XMLObject } from "./xml";
-import { SpecificationExtension } from "./specification-extension";
 import { _is, L, _type } from "./util";
 
 const isBaseSchemaObject = {
@@ -340,80 +339,59 @@ const OpenApiArrayType: t.Type<OpenApiArrayType> = t.recursion(
   () => _type<OpenApiArrayType>("OpenApiArrayType", isOpenApiArrayType)
 );
 
-/*
+
 type DiscriminatorSchema = BaseSchemaObject & Partial<DiscriminatorObject>;
 
-const DiscriminatorPartial = t.partial({
-    propertyName: t.string,
-    mapping: t.record(t.string, t.string)
-});
-
-const NotType: t.Type<NotType> = t.recursion("NotType", () =>
-    t.intersection([
-        BaseSchemaObject,
-        t.type({
-            not: t.union([SchemaObject, t.array(SchemaObject)]),
-        }),
-        DiscriminatorPartial
-    ])
-);
+const isDiscriminator = {
+    propertyName: "string",
+    mapping: (v: any) => v && typeof v === "object" && Object.values(v).map(i => typeof i === "string").reduce((a, b) => a && b, true)
+}
 
 type NotType = DiscriminatorSchema & {
-    not: SchemaObject | SchemaObject[];
+  not: SchemaObject | SchemaObject[];
 }
-
-const AllOfType: t.Type<AllOfType> = t.recursion("AllOfType", () =>
-    t.intersection([
-        BaseSchemaObject,
-        t.type({
-            allOf: t.union([SchemaObject, t.array(SchemaObject)]),
-        }),
-        DiscriminatorPartial
-    ])
-);
-
-type AllOfType = DiscriminatorSchema & {
-    allOf: SchemaObject | SchemaObject[];
-}
-
-const AnyOfType: t.Type<AnyOfType> = t.recursion("AnyOfType", () =>
-    t.intersection([
-        BaseSchemaObject,
-        t.type({
-            anyOf: t.union([SchemaObject, t.array(SchemaObject)]),
-        }),
-        DiscriminatorPartial
-    ])
-);
-
-type AnyOfType = DiscriminatorSchema & {
-    anyOf: SchemaObject | SchemaObject[];
-}
-
-const OneOfType: t.Type<OneOfType> = t.recursion("OneOfType", () =>
-    t.intersection([
-        BaseSchemaObject,
-        t.type({
-            oneOf: t.union([SchemaObject, t.array(SchemaObject)]),
-        }),
-        DiscriminatorPartial
-    ])
-);
 
 type OneOfType = DiscriminatorSchema & {
-    oneOf: SchemaObject | SchemaObject[];
+  not: SchemaObject | SchemaObject[];
 }
 
-*/
+type AllOfType = DiscriminatorSchema & {
+  not: SchemaObject | SchemaObject[];
+}
+
+type AnyOfType = DiscriminatorSchema & {
+  not: SchemaObject | SchemaObject[];
+}
+
+const isAggType = <T>(name: string) => (u: unknown): u is T =>
+  _is(
+    {
+      [name]: (v) => v instanceof Array ? tailIsSchemaObject(v) : isSchemaObject(v)
+    },
+    {
+      required: "boolean",
+      ...isBaseSchemaObject,
+      ...isDiscriminator
+    }
+  )(u);
+const isNotType = isAggType<NotType>("not");
+const isAnyOfType = isAggType<AnyOfType>("anyOf");
+const isAllOfType = isAggType<AllOfType>("oneOf");
+const isOneOfType = isAggType<OneOfType>("allOf");
+export const NotType = _type<NotType>("NotType", isNotType);
+export const AnyOfType = _type<AnyOfType>("AnyOfType", isAnyOfType);
+export const AllOfType = _type<AllOfType>("AllOfType", isAllOfType);
+export const OneOfType = _type<OneOfType>("OneOfType", isOneOfType);
+
 export type SchemaObject =
   | OpenAPIObjectType
   | OpenApiArrayType
-  | OpenAPIPrimitiveDataType;
-// | OneOfType
-// | NotType
-// | AnyOfType
-// | AllOfType
-// | ReferenceObject;
+  | OpenAPIPrimitiveDataType
+  | OneOfType
+  | NotType
+  | AnyOfType
+  | AllOfType
+  | ReferenceObject;
 
 const isSchemaObject = (u: unknown): u is SchemaObject =>
   isOpenAPIObjectType(u) ||
