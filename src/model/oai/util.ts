@@ -11,10 +11,7 @@ export class L implements _L {
   }
 }
 
-const evalUnion = (
-  obj: any,
-  l: Array<"string" | "number" | "object" | "boolean" | det | _L>
-): boolean =>
+const evalUnion = (obj: any, l: Array<string | det | _L>): boolean =>
   l.length === 0
     ? false
     : obj &&
@@ -29,8 +26,8 @@ const evalUnion = (
 // TODO: combine?
 import * as t from "io-ts";
 
-type small = Array<"string" | "number" | "object" | "boolean" | det | _L>;
-type big = "string" | "number" | "object" | "boolean" | det | _L | small;
+type small = Array<string | det | _L>;
+type big = string | det | _L | small;
 const doYes = (obj: any, l: Array<[string, big]>): boolean =>
   l.length === 0
     ? true

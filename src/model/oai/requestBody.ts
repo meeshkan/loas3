@@ -1,16 +1,17 @@
-import t from "io-ts";
-import { SpecificationExtension } from "./specification-extension";
 import { MediaTypeObject } from "./media-type";
 
-export const RequestBodyObject = t.intersection([
-  t.type({
-    content: t.record(t.string, MediaTypeObject)
-  }),
-  t.partial({
-    description: t.string,
-    required: t.boolean
-  }),
-  SpecificationExtension
-]);
+import { _is, _type, _choose_val } from "./util";
 
-export type RequestBodyObject = t.TypeOf<typeof RequestBodyObject>;
+const isRequestBody = _is<RequestBodyObject>(
+  { content: _choose_val([MediaTypeObject]) },
+  { description: "string", required: "boolean" }
+);
+export type RequestBodyObject = {
+  content: { [key: string]: MediaTypeObject };
+  description?: string;
+  required: boolean;
+};
+export const RequestBodyObject = _type<RequestBodyObject>(
+  "RequestBodyObject",
+  isRequestBody
+);

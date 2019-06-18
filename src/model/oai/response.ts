@@ -1,33 +1,46 @@
 import t from "io-ts";
-import { SpecificationExtension } from "./specification-extension";
 import { MediaTypeObject } from "./media-type";
 import { LinksObject } from "./link";
 import { KnownHeaderObject } from "./parameter";
 import { ReferenceObject } from "./reference";
+import { _is, _type, _choose_val, _choose } from "./util";
 
-export const ResponseObject = t.intersection([
-  t.type({
-    description: t.string
-  }),
-  t.partial({
-    content: t.record(t.string, MediaTypeObject),
-    headers: t.record(t.string, t.union([KnownHeaderObject, ReferenceObject])),
-    links: LinksObject
-  }),
-  SpecificationExtension
-]);
-export type ResponseObject = t.TypeOf<typeof ResponseObject>;
+const isResponseObject = _is<ResponseObject>(
+  { description: "string" },
+  {
+    content: _choose_val([MediaTypeObject]),
+    headers: _choose_val([KnownHeaderObject, ReferenceObject]),
+    links: _choose([LinksObject])
+  }
+);
 
-export const ResponsesObject = t.intersection([
-  t.record(
-    // literal 200 due to hack because of [Mixed, Mixed, ...Mixed[]]
-    t.union([
-      t.literal("default"),
-      t.literal("200"),
-      ...new Array(399).fill(null).map(i => t.literal(`${201 + i}`))
-    ]),
-    ResponseObject
-  ),
-  SpecificationExtension
-]);
-export type ResponsesObject = t.TypeOf<typeof ResponsesObject>;
+export type ResponseObject = {
+  description: string;
+  content?: { [key: string]: MediaTypeObject };
+  headers?: { [key: string]: KnownHeaderObject | ReferenceObject };
+  links?: LinksObject;
+};
+
+export const ResponseObject = _type<ResponseObject>(
+  "ResponseObject",
+  isResponseObject
+);
+
+const codes = [
+  "default",
+  ...new Array(600 - 200).fill(null).map((i, j) => j + 200)
+];
+const isResponsesObject = (u: unknown): u is ResponsesObject =>
+  u &&
+  typeof u === "object" &&
+  new Set([...codes, ...Object.keys(u as any)]).size === codes.length &&
+  Object.values(u as any)
+    .map(i => ResponseObject.is(i))
+    .reduce((a, b) => a && b, true);
+
+export type ResponsesObject = { [key: string]: ResponseObject };
+
+export const ResponsesObject = _type<ResponsesObject>(
+  "ResponsesObject",
+  isResponsesObject
+);

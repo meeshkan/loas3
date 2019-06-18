@@ -28,7 +28,7 @@ const isKnownHeaderObject = _is<KnownHeaderObject>(
   }
 );
 
-const KnownHeaderObject = _type<KnownHeaderObject>(
+export const KnownHeaderObject = _type<KnownHeaderObject>(
   "KnownHeaderObject",
   isKnownHeaderObject
 );
@@ -63,7 +63,7 @@ const isHeaderObject = _is<HeaderObject>(
   }
 );
 
-const HeaderObject = _type<HeaderObject>("HeaderObject", isHeaderObject);
+export const HeaderObject = _type<HeaderObject>("HeaderObject", isHeaderObject);
 
 ////////////
 
