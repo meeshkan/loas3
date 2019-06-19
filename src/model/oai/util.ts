@@ -87,6 +87,9 @@ export const _choose = (tp: Array<t.Type<any>>) => (v: any) =>
 export const _choose_val = (tp: Array<t.Type<any>>) => (v: any) =>
   v &&
   typeof v === "object" &&
+  Object.keys(v)
+    .map(i => typeof i === "string")
+    .reduce((a, b) => a && b, true) &&
   Object.values(v)
     .map(i => tp.map(x => x.is(i)).reduce((a, b) => a || b, false))
     .reduce((a, b) => a && b, true);
