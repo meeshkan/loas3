@@ -9,7 +9,7 @@ const isRequestBody = _is<RequestBodyObject>(
 export type RequestBodyObject = {
   content: { [key: string]: MediaTypeObject };
   description?: string;
-  required: boolean;
+  required?: boolean;
 };
 export const RequestBodyObject = _type<RequestBodyObject>(
   "RequestBodyObject",
