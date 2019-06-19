@@ -1,4 +1,7 @@
-import { ParameterObject, KnownHeaderObject } from "../../../src/model/oai/parameter";
+import {
+  ParameterObject,
+  KnownHeaderObject
+} from "../../../src/model/oai/parameter";
 
 test("reference object cannot be empty", () => {
   expect(ParameterObject.is({})).toBe(false);
@@ -197,4 +200,4 @@ test("path is always required", () => {
       schema: { type: "string" }
     })
   ).toBe(false);
-})
+});

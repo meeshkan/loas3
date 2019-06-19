@@ -27,13 +27,13 @@ test("minimal path with foreign field will fail validate", () => {
       get: { responses: { 200: { description: "ok" } } },
       summary: "foo",
       description: "bar",
-      servers: [{url: "my/home"}],
+      servers: [{ url: "my/home" }],
       parameters: [
         {
           name: "foo",
           in: "header",
           description: "a",
-          schema: {type: "string"}
+          schema: { type: "string" }
         }
       ]
     })

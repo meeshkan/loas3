@@ -52,7 +52,6 @@ test("full operation validates", () => {
   ).toBe(true);
 });
 
-
 test("full operation invalid if security is not string", () => {
   expect(
     OperationObject.is({
