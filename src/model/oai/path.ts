@@ -47,7 +47,7 @@ export type PathItemObject = {
 };
 
 export type PathsObject = { [key: string]: PathItemObject | ReferenceObject };
-const PathsObject = _type<PathsObject>(
+export const PathsObject = _type<PathsObject>(
   "PathsObject",
   (u: unknown): u is PathsObject => _choose_val([PathItemObject])(u)
 );
