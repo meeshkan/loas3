@@ -15,7 +15,7 @@ test("tag object validates", () => {
 test("small tag object validates", () => {
   expect(
     TagObject.is({
-      name: "hello",
+      name: "hello"
     })
   ).toBe(true);
 });
