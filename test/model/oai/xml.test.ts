@@ -7,9 +7,7 @@ test("contact object validates", () => {
       prefix: "b"
     })
   ).toBe(true);
-  expect(
-    XMLObject.is({})
-  ).toBe(true);
+  expect(XMLObject.is({})).toBe(true);
   expect(
     XMLObject.is({
       name: "Mike",

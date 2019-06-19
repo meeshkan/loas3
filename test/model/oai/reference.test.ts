@@ -1,9 +1,7 @@
 import { ReferenceObject } from "../../../src/model/oai/reference";
 
 test("reference object cannot be empty", () => {
-  expect(
-    ReferenceObject.is({})
-  ).toBe(false);
+  expect(ReferenceObject.is({})).toBe(false);
 });
 test("reference object cannot contain extra fields", () => {
   expect(

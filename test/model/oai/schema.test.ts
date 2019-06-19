@@ -121,7 +121,7 @@ test("number schema with x- field succeeds", () => {
 test("string schema validates", () => {
   expect(
     SchemaObject.is({
-      type: "string",
+      type: "string"
     })
   ).toBe(true);
   expect(
@@ -273,7 +273,7 @@ test("string enum with good default succeeds", () => {
   expect(
     SchemaObject.is({
       type: "string",
-      enum: ["a","b"],
+      enum: ["a", "b"],
       default: "b",
       example: "a"
     })
@@ -334,7 +334,70 @@ test("object with correct x-field succeeds", () => {
     })
   ).toBe(true);
 });
-
+test("object with ref succeeds", () => {
+  expect(
+    SchemaObject.is({
+      type: "object",
+      properties: {
+        foo: {
+          type: "string"
+        },
+        bar: {
+          $ref: "#/hello/world"
+        }
+      }
+    })
+  ).toBe(true);
+});
+test("object with existing required field passes", () => {
+  expect(
+    SchemaObject.is({
+      type: "object",
+      required: ["foo"],
+      properties: {
+        foo: {
+          type: "string"
+        },
+        bar: {
+          type: "string",
+          enum: ["a", "b", "c"]
+        }
+      }
+    })
+  ).toBe(true);
+});
+test("object required field corner cases", () => {
+  expect(
+    SchemaObject.is({
+      type: "object",
+      required: [],
+      properties: {}
+    })
+  ).toBe(true);
+  expect(
+    SchemaObject.is({
+      type: "object",
+      required: []
+    })
+  ).toBe(true);
+});
+test("object with non-existing required field fails", () => {
+  expect(
+    SchemaObject.is({
+      type: "object",
+      required: ["foo", "goo"],
+      properties: {
+        foo: {
+          type: "string"
+        },
+        bar: {
+          type: "string",
+          enum: ["a", "b", "c"]
+        }
+      }
+    })
+  ).toBe(false);
+});
 test("object with extraneous field fails", () => {
   expect(
     SchemaObject.is({
@@ -353,12 +416,14 @@ test("object with extraneous field fails", () => {
   ).toBe(false);
 });
 
-test("array", () => {
+test("array without items succeeds", () => {
   expect(
     SchemaObject.is({
       type: "array"
     })
   ).toBe(true);
+});
+test("array with nonsense items fails", () => {
   expect(
     SchemaObject.is({
       type: "array",
@@ -367,12 +432,47 @@ test("array", () => {
       }
     })
   ).toBe(false);
+});
+test("array with correctly formed items succeeds", () => {
   expect(
     SchemaObject.is({
       type: "array",
       items: {
         type: "string"
       }
+    })
+  ).toBe(true);
+});
+test("array with reference items succeeds", () => {
+  expect(
+    SchemaObject.is({
+      type: "array",
+      items: {
+        $ref: "#/components/Foo"
+      }
+    })
+  ).toBe(true);
+});
+test("array with extraneous field fails", () => {
+  expect(
+    SchemaObject.is({
+      type: "array",
+      items: {
+        type: "string"
+      },
+      foo: "bar"
+    })
+  ).toBe(false);
+});
+
+test("array with x- field succeeds", () => {
+  expect(
+    SchemaObject.is({
+      type: "array",
+      items: {
+        type: "string"
+      },
+      "x-foo": "bar"
     })
   ).toBe(true);
 });

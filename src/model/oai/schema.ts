@@ -1,7 +1,7 @@
 import * as t from "io-ts";
 import { ReferenceObject } from "./reference";
 import { XMLObject } from "./xml";
-import { _is, L, _type } from "./util";
+import { _is, L, _type, _choose } from "./util";
 
 const isBaseSchemaObject = {
   title: "string",
@@ -144,14 +144,15 @@ type BaseEnumType<
 type EnumStringObject = BaseEnumType<"string", string>;
 type EnumIntegerObject = BaseEnumType<"number", number>;
 
-const enumCheck = <T extends "string" | "number", Q extends string | number> (u: unknown) => (
-  v: unknown
-): boolean => (u as BaseEnumType<T, Q>).enum.indexOf(v as Q) !== -1;
+const enumCheck = <T extends "string" | "number", Q extends string | number>(
+  u: unknown
+) => (v: unknown): boolean =>
+  (u as BaseEnumType<T, Q>).enum.indexOf(v as Q) !== -1;
 
 const isEnumValid = <T extends "string" | "number", Q extends string | number>(
   tp: string
 ) => (u: unknown): u is BaseEnumType<T, Q> =>
-  _is<BaseEnumType<T,Q>>(
+  _is<BaseEnumType<T, Q>>(
     {
       type: new L(tp),
       ...(tp === "integer"
@@ -264,20 +265,24 @@ type PropertyAddons = {
   xml?: XMLObject;
 };
 type OpenAPIObjectType = BaseSchemaObject & {
+  type: "object";
+  required?: string[];
   properties?: { [s: string]: SchemaObject }; // & PropertyAddons
-  additionalProperties?: { [s: string]: SchemaObject }; // & PropertyAddons
+  additionalProperties?: SchemaObject | boolean; // & PropertyAddons
   default?: any; // hack, fix on the validator...
   example?: any; // hack, fix on the validator...
   maxProperties?: number;
   minProperties?: number;
 };
 
-const isPropertyAddons = {
+// TODO add these to schema when property
+/*
+{
   readOnly: t.boolean,
   writeOnly: t.boolean,
   xml: XMLObject
 };
-
+*/
 const tailIsSchemaObject = (l: any[]): boolean =>
   l.length === 0
     ? true
@@ -291,9 +296,17 @@ const isOpenAPIObjectType = (u: unknown): u is OpenAPIObjectType =>
       type: new L("object")
     },
     {
+      required: v =>
+        v instanceof Array &&
+        new Set([
+          ...v,
+          ...Object.keys((u as any).properties ? (u as any).properties : {})
+        ]).size ===
+          Object.keys((u as any).properties ? (u as any).properties : {})
+            .length,
       properties: v => v && tailIsSchemaObject(Object.values(v as any)), // & PropertyAddons
       additionalProperties: v =>
-        v && tailIsSchemaObject(Object.values(v as any)),
+        v && (typeof v === "boolean" || _choose([SchemaObject])(v)),
       default: "object", // hack, fix on the validator...
       example: "object", // hack, fix on the validator...
       maxProperties: "number",
@@ -409,9 +422,14 @@ export type SchemaObject =
   | ReferenceObject;
 
 const isSchemaObject = (u: unknown): u is SchemaObject =>
-  isOpenAPIObjectType(u) ||
-  isOpenApiArrayType(u) ||
-  isOpenAPIPrimitiveDataType(u);
+  OpenAPIObjectType.is(u) ||
+  OpenApiArrayType.is(u) ||
+  OpenAPIPrimitiveDataType.is(u) ||
+  OneOfType.is(u) ||
+  NotType.is(u) ||
+  AnyOfType.is(u) ||
+  AllOfType.is(u) ||
+  ReferenceObject.is(u);
 
 export const SchemaObject: t.Type<SchemaObject> = t.recursion(
   "SchemaObject",

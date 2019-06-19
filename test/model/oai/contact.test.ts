@@ -1,9 +1,7 @@
 import { ContactObject } from "../../../src/model/oai/contact";
 
 test("empty contact object validates", () => {
-  expect(
-    ContactObject.is({})
-  ).toBe(true);
+  expect(ContactObject.is({})).toBe(true);
 });
 test("fully-formed contact object validates", () => {
   expect(

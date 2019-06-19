@@ -48,7 +48,7 @@ test("info object with wrong type field fails", () => {
   expect(
     InfoObject.is({
       title: 1,
-      version: "0.0.0",
+      version: "0.0.0"
     })
   ).toBe(false);
 });
