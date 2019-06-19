@@ -40,7 +40,7 @@ Because sometimes you need to write an OpenAPI spec.
 
 ## TODO
 
-- [io-js](https://github.com/gcanti/io-ts/) for types
+- More idiomatic [io-ts](https://github.com/gcanti/io-ts/) for types
 - Stronger typing convention for `x-???` extension syntax
 
 ## How does it work?
