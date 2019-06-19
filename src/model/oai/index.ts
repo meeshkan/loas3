@@ -6,6 +6,7 @@ import { SecurityRequirementObject } from "./security-requirements";
 import { TagObject } from "./tag";
 import { ExternalDocumentObject } from "./external-document";
 import { _is, _type, _choose } from "./util";
+import { ServerObject } from "./server";
 
 // TODO: callbacks
 export const isOpenAPIObject = _is<OpenAPIObject>(
@@ -22,6 +23,12 @@ export const isOpenAPIObject = _is<OpenAPIObject>(
       v
         .map(i => SecurityRequirementObject.is(i))
         .reduce((a, b) => a && b, true),
+    servers: v =>
+        v &&
+        v instanceof Array &&
+        v
+          .map(i => ServerObject.is(i))
+          .reduce((a, b) => a && b, true),
     tags: v =>
       v &&
       v instanceof Array &&
@@ -34,6 +41,7 @@ export type OpenAPIObject = {
   openapi: string;
   info: InfoObject;
   paths: PathsObject;
+  servers?: ServerObject[],
   components?: ComponentsObject;
   security?: SecurityRequirementObject[];
   tags?: TagObject[];

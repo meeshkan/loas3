@@ -293,9 +293,10 @@ const tailIsSchemaObject = (l: any[]): boolean =>
 const isOpenAPIObjectType = (u: unknown): u is OpenAPIObjectType =>
   _is(
     {
-      type: new L("object")
+      properties: v => v && tailIsSchemaObject(Object.values(v as any)), // & PropertyAddons
     },
     {
+      type: new L("object"),
       required: v =>
         v instanceof Array &&
         new Set([
@@ -304,7 +305,6 @@ const isOpenAPIObjectType = (u: unknown): u is OpenAPIObjectType =>
         ]).size ===
           Object.keys((u as any).properties ? (u as any).properties : {})
             .length,
-      properties: v => v && tailIsSchemaObject(Object.values(v as any)), // & PropertyAddons
       additionalProperties: v =>
         v && (typeof v === "boolean" || _choose([SchemaObject])(v)),
       default: (_: any) => true, // hack, fix on the validator...

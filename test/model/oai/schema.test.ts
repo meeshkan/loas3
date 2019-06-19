@@ -366,18 +366,19 @@ test("object with existing required field passes", () => {
     })
   ).toBe(true);
 });
+test("object MUST have properties", () => {
+  expect(
+    SchemaObject.is({
+      properties: {}
+    })
+  ).toBe(true);
+});
 test("object required field corner cases", () => {
   expect(
     SchemaObject.is({
       type: "object",
       required: [],
       properties: {}
-    })
-  ).toBe(true);
-  expect(
-    SchemaObject.is({
-      type: "object",
-      required: []
     })
   ).toBe(true);
 });

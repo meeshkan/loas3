@@ -13,8 +13,6 @@ test("security scheme object with no optional params passes", () => {
       scheme: "world",
       flows: {},
       openIdConnectUrl: "none"
-      //bearerFormat?: string | undefined;
-      //description?: string | undefined;
     })
   ).toBe(true);
 });
