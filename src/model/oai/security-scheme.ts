@@ -1,20 +1,33 @@
-import t from "io-ts";
 import { OAuthFlowsObject } from "./oauth-flow";
-import { SpecificationExtension } from "./specification-extension";
+import { _is, _type, _choose } from "./util";
 
-export const SecuritySchemeObject = t.intersection([
-  t.type({
-    type: t.string,
-    name: t.string,
-    in: t.string,
-    scheme: t.string,
-    flows: OAuthFlowsObject,
-    openIdConnectUrl: t.string
-  }),
-  t.partial({
-    bearerFormat: t.string,
-    description: t.string
-  }),
-  SpecificationExtension
-]);
-export type SecuritySchemeObject = t.TypeOf<typeof SecuritySchemeObject>;
+const isSecuritySchemeObject = _is<SecuritySchemeObject>(
+  {
+    type: "string",
+    name: "string",
+    in: "string",
+    scheme: "string",
+    flows: _choose([OAuthFlowsObject]),
+    openIdConnectUrl: "string"
+  },
+  {
+    bearerFormat: "string",
+    description: "string"
+  }
+);
+
+type SecuritySchemeObject = {
+  type: string;
+  name: string;
+  in: string;
+  scheme: string;
+  flows: OAuthFlowsObject;
+  openIdConnectUrl: string;
+  bearerFormat?: string;
+  description?: string;
+};
+
+export const SecuritySchemeObject = _type(
+  "SecuritySchemeObject",
+  isSecuritySchemeObject
+);

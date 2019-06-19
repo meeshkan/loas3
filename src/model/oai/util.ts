@@ -1,4 +1,4 @@
-type det = (u: unknown) => boolean;
+type det = (u: unknown, m?: unknown) => boolean;
 
 type _L = {
   readonly l: any;
@@ -35,7 +35,7 @@ const doYes = (obj: any, l: Array<[string, big]>): boolean =>
       (typeof l[0][1] === "string"
         ? typeof obj[l[0][0]] === l[0][1]
         : typeof l[0][1] === "function"
-        ? l[0][1](obj[l[0][0]])
+        ? l[0][1](obj[l[0][0]], obj)
         : l[0][1] instanceof L
         ? l[0][1].l === obj[l[0][0]]
         : evalUnion(obj[l[0][0]], l[0][1] as small))
@@ -49,7 +49,7 @@ const doMaybe = (obj: any, l: Array<[string, big]>): boolean =>
       (typeof l[0][1] === "string"
         ? typeof obj[l[0][0]] === l[0][1]
         : typeof l[0][1] === "function"
-        ? l[0][1](obj[l[0][0]])
+        ? l[0][1](obj[l[0][0]], obj)
         : l[0][1] instanceof L
         ? l[0][1].l === obj[l[0][0]]
         : evalUnion(obj[l[0][0]], l[0][1] as small))

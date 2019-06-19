@@ -1,16 +1,20 @@
-import t from "io-ts";
 import { ExternalDocumentObject } from "./external-document";
-import { SpecificationExtension } from "./specification-extension";
+import { _is, _type, _choose } from "./util";
 
-export const TagObject = t.intersection([
-  t.type({
-    name: t.string
-  }),
-  t.partial({
-    description: t.string,
-    externalDocs: ExternalDocumentObject
-  }),
-  SpecificationExtension
-]);
+const isTagObject = _is<TagObject>(
+  {
+    name: "string"
+  },
+  {
+    description: "string",
+    externalDocs: _choose([ExternalDocumentObject])
+  }
+);
 
-export type TagObject = t.TypeOf<typeof TagObject>;
+export type TagObject = {
+  name: string;
+  description?: string;
+  externalDocs?: ExternalDocumentObject;
+};
+
+export const TagObject = _type("TagObject", isTagObject);

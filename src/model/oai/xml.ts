@@ -1,14 +1,22 @@
-import * as t from "io-ts";
-import { SpecificationExtension } from "./specification-extension";
+import { _is, _type, _choose } from "./util";
 
-export const XMLObject = t.intersection([
-  t.partial({
-    name: t.string,
-    namespace: t.string,
-    prefix: t.string,
-    attribute: t.boolean,
-    wrapped: t.boolean
-  }),
-  SpecificationExtension
-]);
-export type XMLObject = t.TypeOf<typeof XMLObject>;
+const isXMLObject = _is<XMLObject>(
+  {},
+  {
+    name: "string",
+    namespace: "string",
+    prefix: "string",
+    attribute: "boolean",
+    wrapped: "boolean"
+  }
+);
+
+export type XMLObject = {
+  name?: string;
+  namespace?: string;
+  prefix?: string;
+  attribute?: boolean;
+  wrapped?: boolean;
+};
+
+export const XMLObject = _type("XMLObject", isXMLObject);
