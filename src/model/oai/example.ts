@@ -5,7 +5,7 @@ export const isExampleObject = _is<ExampleObject>(
   {
     summary: "string",
     description: "string",
-    value: "object",
+    value: _ => true,
     externalValue: "string"
   }
 );

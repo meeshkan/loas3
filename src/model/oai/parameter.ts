@@ -21,7 +21,7 @@ const isKnownHeaderObject = _is<KnownHeaderObject>(
   {
     deprecated: "boolean",
     examples: (v: any) => v instanceof Array,
-    example: "object",
+    example: (_: any) => true,
     explode: "boolean",
     required: "boolean",
     style: new L("simple")
@@ -56,7 +56,7 @@ const isHeaderObject = _is<HeaderObject>(
   {
     deprecated: "boolean",
     examples: (v: any) => v instanceof Array,
-    example: "object",
+    example: (_: any) => true,
     explode: "boolean",
     required: "boolean",
     style: new L("simple")
@@ -87,7 +87,7 @@ const isKnownPathObject = _is<KnownPathObject>(
   {
     deprecated: "boolean",
     examples: (v: any) => v instanceof Array,
-    example: "object",
+    example: (_: any) => true,
     explode: "boolean",
     style: v => ["simple", "matrix", "label"].indexOf(v as string) !== -1
   }
@@ -122,7 +122,7 @@ const isPathObject = _is<PathObject>(
   {
     deprecated: "boolean",
     examples: (v: any) => v instanceof Array,
-    example: "object",
+    example: (_: any) => true,
     explode: "boolean",
     style: v => ["simple", "matrix", "label"].indexOf(v as string) !== -1
   }
@@ -153,7 +153,7 @@ const isKnownQueryObject = _is<KnownQueryObject>(
     deprecated: "boolean",
     required: "boolean",
     examples: (v: any) => v instanceof Array,
-    example: "object",
+    example: (_: any) => true,
     explode: "boolean",
     allowEmptyValue: "boolean",
     allowReserved: "boolean",
@@ -195,7 +195,7 @@ const isQueryObject = _is<QueryObject>(
     deprecated: "boolean",
     required: "boolean",
     examples: (v: any) => v instanceof Array,
-    example: "object",
+    example: (_: any) => true,
     explode: "boolean",
     allowEmptyValue: "boolean",
     allowReserved: "boolean",
@@ -229,7 +229,7 @@ const isKnownCookieObject = _is<KnownCookieObject>(
   {
     deprecated: "boolean",
     examples: (v: any) => v instanceof Array,
-    example: "object",
+    example: (_: any) => true,
     explode: "boolean",
     required: "boolean",
     style: new L("form")
@@ -264,7 +264,7 @@ const isCookieObject = _is<CookieObject>(
   {
     deprecated: "boolean",
     examples: (v: any) => v instanceof Array,
-    example: "object",
+    example: (_: any) => true,
     explode: "boolean",
     required: "boolean",
     style: new L("form")

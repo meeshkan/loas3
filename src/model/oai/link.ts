@@ -5,9 +5,9 @@ import { ReferenceObject } from "./reference";
 import { _is, _type } from "./util";
 
 export const isBaseLinkObject = {
-  parameters: "object", // is this correct?
-  requestBody: "object",
-  description: "object",
+  parameters: (_: any) => true, // is this correct?
+  requestBody: (_: any) => true,
+  description: (_: any) => true,
   server: (v: any) => v && typeof v === "object" && ServerObject.is(v)
 };
 
