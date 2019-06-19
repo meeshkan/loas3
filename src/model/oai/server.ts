@@ -28,7 +28,7 @@ export const ServerVariableObject = _type(
   isServerVariableObject
 );
 
-const isServerVariablesObject = _is<ServerVariablesObject>(
+const isServerObject = _is<ServerObject>(
   {
     url: "string"
   },
@@ -38,13 +38,13 @@ const isServerVariablesObject = _is<ServerVariablesObject>(
   }
 );
 
-export type ServerVariablesObject = {
+export type ServerObject = {
   url: string;
   description?: string;
   variables?: { [key: string]: ServerVariableObject };
 };
 
-export const ServerVariablesObject = _type(
-  "ServerVariablesObject",
-  isServerVariablesObject
+export const ServerObject = _type(
+  "ServerObject",
+  isServerObject
 );

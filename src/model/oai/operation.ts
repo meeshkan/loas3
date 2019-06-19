@@ -23,9 +23,8 @@ const isOperationObject = _is<OperationObject>(
     operationId: "string",
     parameters: v =>
       v &&
-      ((v instanceof Array &&
-        v.map(i => ParameterObject.is(i)).reduce((a, b) => a && b, true)) ||
-        _choose([ReferenceObject])(v)),
+      v instanceof Array &&
+        v.map(i => ReferenceObject.is(i) || ParameterObject.is(i)).reduce((a, b) => a && b, true),
     requestBody: _choose([RequestBodyObject]),
     deprecated: "boolean",
     servers: v =>
@@ -41,16 +40,16 @@ const isOperationObject = _is<OperationObject>(
 
 export type OperationObject = {
   responses: ResponsesObject;
-  tags: string[];
-  summary: string;
-  description: string;
-  externalDocs: ExternalDocumentObject;
-  operationId: string;
-  parameters: ParameterObject[] | ReferenceObject;
-  requestBody: RequestBodyObject;
-  deprecated: boolean;
-  servers: ServerObject[];
-  security: SecurityRequirementObject[];
+  tags?: string[];
+  summary?: string;
+  description?: string;
+  externalDocs?: ExternalDocumentObject;
+  operationId?: string;
+  parameters?: (ParameterObject | ReferenceObject)[];
+  requestBody?: RequestBodyObject;
+  deprecated?: boolean;
+  servers?: ServerObject[];
+  security?: SecurityRequirementObject[];
 };
 
 export const OperationObject = _type<OperationObject>(

@@ -28,7 +28,8 @@ export const ResponseObject = _type<ResponseObject>(
 
 const codes = [
   "default",
-  ...new Array(600 - 200).fill(null).map((i, j) => j + 200)
+  ...new Array(600 - 200).fill(null).map((i, j) => j + 200),
+  ...new Array(600 - 200).fill(null).map((i, j) => `${j + 200}`) // TODO: slow
 ];
 const isResponsesObject = (u: unknown): u is ResponsesObject =>
   u &&

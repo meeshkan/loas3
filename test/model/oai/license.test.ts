@@ -7,6 +7,8 @@ test("license object validates", () => {
       url: "https://meeshkan.com"
     })
   ).toBe(true);
+});
+test("license object with extra field fails", () => {
   expect(
     LicenseObject.is({
       name: "Apache-2.0",
@@ -14,6 +16,8 @@ test("license object validates", () => {
       extra: "bad"
     })
   ).toBe(false);
+});
+test("license object with x- field succeeds", () => {
   expect(
     LicenseObject.is({
       name: "Apache-2.0",
@@ -21,6 +25,8 @@ test("license object validates", () => {
       "x-extra": "good"
     })
   ).toBe(true);
+});
+test("license without name fails", () => {
   expect(
     LicenseObject.is({
       url: "https://meeshkan.com"

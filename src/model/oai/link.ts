@@ -1,13 +1,12 @@
 import t from "io-ts";
 import { ServerObject } from "./server";
-import { SpecificationExtension } from "./specification-extension";
 import { ReferenceObject } from "./reference";
 import { _is, _type } from "./util";
 
 export const isBaseLinkObject = {
-  parameters: (_: any) => true, // is this correct?
+  parameters: (v: any) => typeof v === "object", // is this correct?
   requestBody: (_: any) => true,
-  description: (_: any) => true,
+  description: "string",
   server: (v: any) => v && typeof v === "object" && ServerObject.is(v)
 };
 
@@ -16,7 +15,7 @@ type OperationRefObject = {
   operationRef: string;
   parameters: any; // is this correct?
   requestBody: any;
-  description: any;
+  description: string;
   server: ServerObject;
 };
 
@@ -25,7 +24,7 @@ type OperationIdObject = {
   operationId: string;
   parameters: any; // is this correct?
   requestBody: any;
-  description: any;
+  description: string;
   server: ServerObject;
 };
 
@@ -33,6 +32,7 @@ export type LinkObject =
   | OperationIdObject
   | OperationRefObject
   | ReferenceObject;
+
 const isLinkObject = (u: unknown): u is LinkObject =>
   u &&
   typeof u === "object" &&
