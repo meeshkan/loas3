@@ -44,7 +44,4 @@ export type ServerObject = {
   variables?: { [key: string]: ServerVariableObject };
 };
 
-export const ServerObject = _type(
-  "ServerObject",
-  isServerObject
-);
+export const ServerObject = _type("ServerObject", isServerObject);

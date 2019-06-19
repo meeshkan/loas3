@@ -203,7 +203,7 @@ const isQueryObject = _is<QueryObject>(
         v as string
       ) !== -1
   }
-)
+);
 
 const QueryObject = _type<QueryObject>("QueryObject", isQueryObject);
 

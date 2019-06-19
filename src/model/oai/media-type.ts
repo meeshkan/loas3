@@ -10,8 +10,7 @@ const isMediaTypeObject = _is<MediaTypeObject>(
   },
   {
     example: _ => true,
-    examples: v =>
-      _choose_val([ExampleObject, ReferenceObject])(v),
+    examples: v => _choose_val([ExampleObject, ReferenceObject])(v),
     encoding: _choose_val([EncodingObject])
   }
 );
@@ -20,7 +19,7 @@ export type MediaTypeObject = {
   schema: SchemaObject;
   example?: any;
   examples?: { [key: string]: ExampleObject | ReferenceObject };
-  encoding?: { [key: string]: EncodingObject};
+  encoding?: { [key: string]: EncodingObject };
 };
 export const MediaTypeObject = _type<MediaTypeObject>(
   "MediaTypeObject",

@@ -24,7 +24,9 @@ const isOperationObject = _is<OperationObject>(
     parameters: v =>
       v &&
       v instanceof Array &&
-        v.map(i => ReferenceObject.is(i) || ParameterObject.is(i)).reduce((a, b) => a && b, true),
+      v
+        .map(i => ReferenceObject.is(i) || ParameterObject.is(i))
+        .reduce((a, b) => a && b, true),
     requestBody: _choose([RequestBodyObject]),
     deprecated: "boolean",
     servers: v =>

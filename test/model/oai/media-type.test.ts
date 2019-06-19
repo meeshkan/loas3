@@ -1,9 +1,7 @@
 import { MediaTypeObject } from "../../../src/model/oai/media-type";
 
 test("empty media type object fails", () => {
-  expect(
-    MediaTypeObject.is({})
-  ).toBe(false);
+  expect(MediaTypeObject.is({})).toBe(false);
 });
 
 test("media type object succeeds with schema", () => {
@@ -37,7 +35,6 @@ test("media type object fails with alien field", () => {
     })
   ).toBe(false);
 });
-
 
 test("media type object fails with broken schema", () => {
   expect(
