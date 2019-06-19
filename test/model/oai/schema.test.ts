@@ -299,13 +299,15 @@ test("string enum with x- field succeeds", () => {
   ).toBe(true);
 });
 
-test("test object", () => {
+test("empty object", () => {
   expect(
     SchemaObject.is({
       type: "object",
       properties: {}
     })
   ).toBe(true);
+});
+test("object with nonsense property fails", () => {
   expect(
     SchemaObject.is({
       type: "object",
@@ -314,19 +316,44 @@ test("test object", () => {
       }
     })
   ).toBe(false);
+});
+test("object with correct x-field succeeds", () => {
   expect(
     SchemaObject.is({
       type: "object",
       properties: {
         foo: {
           type: "string"
+        },
+        bar: {
+          type: "string",
+          enum: ["a", "b", "c"]
         }
-      }
+      },
+      "x-works": true
     })
   ).toBe(true);
 });
 
-test("test array", () => {
+test("object with extraneous field fails", () => {
+  expect(
+    SchemaObject.is({
+      type: "object",
+      properties: {
+        foo: {
+          type: "string"
+        },
+        bar: {
+          type: "string",
+          enum: ["a", "b", "c"]
+        }
+      },
+      works: false
+    })
+  ).toBe(false);
+});
+
+test("array", () => {
   expect(
     SchemaObject.is({
       type: "array"
