@@ -24,7 +24,7 @@
     "compile": "tsc --outDir dist",
     "lint:fix": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "lint": "prettier --check \"src/**/*.ts\" \"test/**/*.ts\"",
-    "test": "yarn compile && jest",
+    "test": "jest",
     "prepublish": "yarn compile && yarn lint && yarn test",
     "test:ci": "yarn run coverage --ci --maxWorkers=2  --reporters=default --reporters=jest-junit",
     "coverage": "yarn test --coverage",
