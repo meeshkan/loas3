@@ -16,7 +16,7 @@ const isSecuritySchemeObject = _is<SecuritySchemeObject>(
   }
 );
 
-type SecuritySchemeObject = {
+export type SecuritySchemeObject = {
   type: string;
   name: string;
   in: string;
