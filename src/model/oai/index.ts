@@ -24,11 +24,9 @@ export const isOpenAPIObject = _is<OpenAPIObject>(
         .map(i => SecurityRequirementObject.is(i))
         .reduce((a, b) => a && b, true),
     servers: v =>
-        v &&
-        v instanceof Array &&
-        v
-          .map(i => ServerObject.is(i))
-          .reduce((a, b) => a && b, true),
+      v &&
+      v instanceof Array &&
+      v.map(i => ServerObject.is(i)).reduce((a, b) => a && b, true),
     tags: v =>
       v &&
       v instanceof Array &&
@@ -41,7 +39,7 @@ export type OpenAPIObject = {
   openapi: string;
   info: InfoObject;
   paths: PathsObject;
-  servers?: ServerObject[],
+  servers?: ServerObject[];
   components?: ComponentsObject;
   security?: SecurityRequirementObject[];
   tags?: TagObject[];

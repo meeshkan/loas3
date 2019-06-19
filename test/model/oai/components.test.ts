@@ -5,124 +5,132 @@ test("empty components object validates", () => {
 });
 
 test("full components object with unwelcome field fails", () => {
-  expect(ComponentsObject.is({
-    schemas: {},
-    responses: {},
-    parameters: {},
-    examples: {},
-    requestBodies: {},
-    headers: {},
-    securitySchemas: {},
-    links: {},
-    sneaky: {}
-  })).toBe(false);
+  expect(
+    ComponentsObject.is({
+      schemas: {},
+      responses: {},
+      parameters: {},
+      examples: {},
+      requestBodies: {},
+      headers: {},
+      securitySchemas: {},
+      links: {},
+      sneaky: {}
+    })
+  ).toBe(false);
 });
 
 test("full components object with x- field fails", () => {
-  expect(ComponentsObject.is({
-    schemas: {},
-    responses: {},
-    parameters: {},
-    examples: {},
-    requestBodies: {},
-    headers: {},
-    securitySchemas: {},
-    links: {},
-    "x-sneaky": {}
-  })).toBe(true);
+  expect(
+    ComponentsObject.is({
+      schemas: {},
+      responses: {},
+      parameters: {},
+      examples: {},
+      requestBodies: {},
+      headers: {},
+      securitySchemas: {},
+      links: {},
+      "x-sneaky": {}
+    })
+  ).toBe(true);
 });
 
 test("full components object validates", () => {
-  expect(ComponentsObject.is({
-    schemas: {},
-    responses: {},
-    parameters: {},
-    examples: {},
-    requestBodies: {},
-    headers: {},
-    securitySchemas: {},
-    links: {},
-  })).toBe(true);
+  expect(
+    ComponentsObject.is({
+      schemas: {},
+      responses: {},
+      parameters: {},
+      examples: {},
+      requestBodies: {},
+      headers: {},
+      securitySchemas: {},
+      links: {}
+    })
+  ).toBe(true);
 });
 
 test("full components object validates", () => {
-  expect(ComponentsObject.is({
-    schemas: {
-      myschema: { type: "string" },
-      myref: {
-        $ref: "foo"
-      }
-    },
-    responses: {
-      myresponse: {
-        description: "ok"
+  expect(
+    ComponentsObject.is({
+      schemas: {
+        myschema: { type: "string" },
+        myref: {
+          $ref: "foo"
+        }
       },
-      myref: {
-        $ref: "foo"
-      }
-    },
-    parameters: {
-      myparameter: {
-        name: "foo",
-        in: "query",
-        description: "useless",
-        schema: { type: "array", items: { type: "string" }}
+      responses: {
+        myresponse: {
+          description: "ok"
+        },
+        myref: {
+          $ref: "foo"
+        }
       },
-      myref: {
-        $ref: "foo"
-      }
-    },
-    examples: {
-      myexample: {
-        summary: "1",
-        description: "1",
-        value: "1",
-        externalValue: "1"
+      parameters: {
+        myparameter: {
+          name: "foo",
+          in: "query",
+          description: "useless",
+          schema: { type: "array", items: { type: "string" } }
+        },
+        myref: {
+          $ref: "foo"
+        }
       },
-      myref: {
-        $ref: "foo"
-      }
-    },
-    requestBodies: {
-      myRequestBody: {
-        content: { "application/json": { schema: { type: "string" } } },
-        description: "not very helpful",
-        required: false
+      examples: {
+        myexample: {
+          summary: "1",
+          description: "1",
+          value: "1",
+          externalValue: "1"
+        },
+        myref: {
+          $ref: "foo"
+        }
       },
-      myref: {
-        $ref: "foo"
-      }
-    },
-    headers: {
-      myheader: {
-        style: "simple",
-        description: "bad",
-        schema: { type: "string" }
+      requestBodies: {
+        myRequestBody: {
+          content: { "application/json": { schema: { type: "string" } } },
+          description: "not very helpful",
+          required: false
+        },
+        myref: {
+          $ref: "foo"
+        }
       },
-      myref: {
-        $ref: "foo"
-      }
-    },
-    securitySchemas: {
-      mysecurity: {
-        type: "foo",
-        name: "bar",
-        in: "hello",
-        scheme: "world",
-        flows: {},
-        openIdConnectUrl: "none"
+      headers: {
+        myheader: {
+          style: "simple",
+          description: "bad",
+          schema: { type: "string" }
+        },
+        myref: {
+          $ref: "foo"
+        }
       },
-      myref: {
-        $ref: "foo"
-      }
-    },
-    links: {
-      mylink: {
-        operationId: "a"
+      securitySchemas: {
+        mysecurity: {
+          type: "foo",
+          name: "bar",
+          in: "hello",
+          scheme: "world",
+          flows: {},
+          openIdConnectUrl: "none"
+        },
+        myref: {
+          $ref: "foo"
+        }
       },
-      myref: {
-        $ref: "foo"
+      links: {
+        mylink: {
+          operationId: "a"
+        },
+        myref: {
+          $ref: "foo"
+        }
       }
-    },
-  })).toBe(true);
+    })
+  ).toBe(true);
 });

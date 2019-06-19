@@ -293,7 +293,7 @@ const tailIsSchemaObject = (l: any[]): boolean =>
 const isOpenAPIObjectType = (u: unknown): u is OpenAPIObjectType =>
   _is(
     {
-      properties: v => v && tailIsSchemaObject(Object.values(v as any)), // & PropertyAddons
+      properties: v => v && tailIsSchemaObject(Object.values(v as any)) // & PropertyAddons
     },
     {
       type: new L("object"),
