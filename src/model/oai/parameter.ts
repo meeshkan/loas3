@@ -1,6 +1,7 @@
 import { SchemaObject } from "./schema";
 import { _is, _type, _choose, L } from "./util";
 
+// TODO: add logic for content and mediatype, currently only uses style param
 export type KnownHeaderObject = {
   description: string;
   deprecated?: boolean;
@@ -65,38 +66,6 @@ const isHeaderObject = _is<HeaderObject>(
 export const HeaderObject = _type<HeaderObject>("HeaderObject", isHeaderObject);
 
 ////////////
-
-export type KnownPathObject = {
-  description: string;
-  required: true;
-  deprecated?: boolean;
-  schema: SchemaObject;
-  examples?: any[];
-  example?: any;
-  explode?: boolean;
-  style?: "simple" | "matrix" | "label";
-};
-
-const isKnownPathObject = _is<KnownPathObject>(
-  {
-    description: "string",
-    schema: _choose([SchemaObject]),
-    required: new L(true)
-  },
-  {
-    deprecated: "boolean",
-    examples: (v: any) => v instanceof Array,
-    example: (_: any) => true,
-    explode: "boolean",
-    style: v => ["simple", "matrix", "label"].indexOf(v as string) !== -1
-  }
-);
-
-const KnownPathObject = _type<KnownPathObject>(
-  "KnownPathObject",
-  isKnownPathObject
-);
-
 export type PathObject = {
   name: string;
   in: "path";
@@ -129,45 +98,6 @@ const isPathObject = _is<PathObject>(
 
 const PathObject = _type<PathObject>("PathObject", isPathObject);
 ///////
-
-export type KnownQueryObject = {
-  description: string;
-  required?: boolean;
-  deprecated?: boolean;
-  schema: SchemaObject;
-  examples?: any[];
-  example?: any;
-  explode?: boolean;
-  allowEmptyValue?: true;
-  allowReserved?: true;
-  style?: "form" | "spaceDelimited" | "pipeDelimited" | "deepObject";
-};
-
-const isKnownQueryObject = _is<KnownQueryObject>(
-  {
-    description: "string",
-    schema: _choose([SchemaObject])
-  },
-  {
-    deprecated: "boolean",
-    required: "boolean",
-    examples: (v: any) => v instanceof Array,
-    example: (_: any) => true,
-    explode: "boolean",
-    allowEmptyValue: "boolean",
-    allowReserved: "boolean",
-    style: v =>
-      ["form", "spaceDelimited", "pipeDelimited", "deepObject"].indexOf(
-        v as string
-      ) !== -1
-  }
-);
-
-const KnownQueryObject = _type<KnownQueryObject>(
-  "KnownQueryObject",
-  isKnownQueryObject
-);
-
 export type QueryObject = {
   name: string;
   in: "query";
@@ -208,38 +138,6 @@ const isQueryObject = _is<QueryObject>(
 const QueryObject = _type<QueryObject>("QueryObject", isQueryObject);
 
 //////
-
-export type KnownCookieObject = {
-  description: string;
-  deprecated?: boolean;
-  schema: SchemaObject;
-  examples?: any[];
-  example?: any;
-  style?: "form";
-  required?: boolean;
-  explode?: boolean;
-};
-
-const isKnownCookieObject = _is<KnownCookieObject>(
-  {
-    description: "string",
-    schema: _choose([SchemaObject])
-  },
-  {
-    deprecated: "boolean",
-    examples: (v: any) => v instanceof Array,
-    example: (_: any) => true,
-    explode: "boolean",
-    required: "boolean",
-    style: new L("form")
-  }
-);
-
-const KnownCookieObject = _type<KnownCookieObject>(
-  "KnownCookieObject",
-  isKnownCookieObject
-);
-
 export type CookieObject = {
   name: string;
   in: "cookie";

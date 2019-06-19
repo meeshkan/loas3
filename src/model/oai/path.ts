@@ -27,7 +27,7 @@ const isPathItemObject = _is<PathItemObject>(
     patch: _choose([OperationObject])
   }
 );
-const PathItemObject = _type<PathItemObject>(
+export const PathItemObject = _type<PathItemObject>(
   "PathItemObject",
   isPathItemObject
 );
