@@ -7,12 +7,16 @@ test("int schema validates", () => {
       format: "int64"
     })
   ).toBe(true);
+});
+test("int schema with wrong format fails", () => {
   expect(
     SchemaObject.is({
       type: "integer",
       format: "int63"
     })
   ).toBe(false);
+});
+test("int schema with optional field succeeds", () => {
   expect(
     SchemaObject.is({
       type: "integer",
@@ -20,6 +24,8 @@ test("int schema validates", () => {
       required: true
     })
   ).toBe(true);
+});
+test("int schema with incorrectly typed optional field fails", () => {
   expect(
     SchemaObject.is({
       type: "integer",
@@ -27,6 +33,24 @@ test("int schema validates", () => {
       required: "foo"
     })
   ).toBe(false);
+});
+test("int schema with unknown field fails", () => {
+  expect(
+    SchemaObject.is({
+      type: "integer",
+      format: "int64",
+      notrequired: "foo"
+    })
+  ).toBe(false);
+});
+test("int schema with x- field succeeds", () => {
+  expect(
+    SchemaObject.is({
+      type: "integer",
+      format: "int64",
+      "x-hello": "foo"
+    })
+  ).toBe(true);
 });
 
 test("number schema validates", () => {
