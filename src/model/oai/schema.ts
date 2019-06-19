@@ -136,19 +136,22 @@ type BaseEnumType<
 > = BaseSchemaObject & {
   type: T;
   enum: Q[];
+  default?: Q;
+  example?: Q;
+  required?: boolean;
 };
 
 type EnumStringObject = BaseEnumType<"string", string>;
 type EnumIntegerObject = BaseEnumType<"number", number>;
 
-const enumCheck = <T extends "string" | "number", Q extends string | number>(
+const enumCheck = <T extends "string" | "number", Q extends string | number> (u: unknown) => (
   v: unknown
-): boolean => (v as BaseEnumType<T, Q>).enum.indexOf(v as Q) !== -1;
+): boolean => (u as BaseEnumType<T, Q>).enum.indexOf(v as Q) !== -1;
 
 const isEnumValid = <T extends "string" | "number", Q extends string | number>(
   tp: string
 ) => (u: unknown): u is BaseEnumType<T, Q> =>
-  _is(
+  _is<BaseEnumType<T,Q>>(
     {
       type: new L(tp),
       ...(tp === "integer"
@@ -162,8 +165,8 @@ const isEnumValid = <T extends "string" | "number", Q extends string | number>(
     },
     {
       required: "boolean",
-      default: enumCheck,
-      example: enumCheck,
+      default: enumCheck(u),
+      example: enumCheck(u),
       ...isBaseSchemaObject
     }
   )(u);

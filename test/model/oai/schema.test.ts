@@ -7,6 +7,12 @@ test("int schema validates", () => {
       format: "int64"
     })
   ).toBe(true);
+  expect(
+    SchemaObject.is({
+      type: "integer",
+      format: "int32"
+    })
+  ).toBe(true);
 });
 test("int schema with wrong format fails", () => {
   expect(
@@ -57,43 +63,119 @@ test("number schema validates", () => {
   expect(
     SchemaObject.is({
       type: "number",
-      format: "int64"
+      format: "float"
     })
-  ).toBe(false);
+  ).toBe(true);
   expect(
     SchemaObject.is({
       type: "number",
-      format: "float"
+      format: "double"
+    })
+  ).toBe(true);
+});
+test("number schema with wrong format fails", () => {
+  expect(
+    SchemaObject.is({
+      type: "number",
+      format: "reallybig"
+    })
+  ).toBe(false);
+});
+test("number schema with optional field succeeds", () => {
+  expect(
+    SchemaObject.is({
+      type: "number",
+      format: "double",
+      required: true
+    })
+  ).toBe(true);
+});
+test("number schema with incorrectly typed optional field fails", () => {
+  expect(
+    SchemaObject.is({
+      type: "number",
+      format: "float",
+      required: "foo"
+    })
+  ).toBe(false);
+});
+test("number schema with unknown field fails", () => {
+  expect(
+    SchemaObject.is({
+      type: "number",
+      format: "double",
+      notrequired: "foo"
+    })
+  ).toBe(false);
+});
+test("number schema with x- field succeeds", () => {
+  expect(
+    SchemaObject.is({
+      type: "number",
+      format: "float",
+      "x-hello": "foo"
     })
   ).toBe(true);
 });
 
 test("string schema validates", () => {
   expect(
-    SchemaObject.decode({
-      type: "string"
-    }).value
-  ).toEqual({
-    type: "string"
-  });
-  expect(
-    SchemaObject.decode({
+    SchemaObject.is({
       type: "string",
-      format: "binary"
-    }).value
-  ).toEqual({
-    type: "string",
-    format: "binary"
-  });
+    })
+  ).toBe(true);
   expect(
     SchemaObject.is({
       type: "string",
-      format: "foo"
+      format: "byte"
+    })
+  ).toBe(true);
+});
+test("string schema with wrong format fails", () => {
+  expect(
+    SchemaObject.is({
+      type: "string",
+      format: "reallybig"
     })
   ).toBe(false);
 });
+test("string schema with optional field succeeds", () => {
+  expect(
+    SchemaObject.is({
+      type: "string",
+      format: "byte",
+      required: true
+    })
+  ).toBe(true);
+});
+test("string schema with incorrectly typed optional field fails", () => {
+  expect(
+    SchemaObject.is({
+      type: "string",
+      required: "foo"
+    })
+  ).toBe(false);
+});
+test("string schema with unknown field fails", () => {
+  expect(
+    SchemaObject.is({
+      type: "string",
+      format: "date",
+      notrequired: "foo"
+    })
+  ).toBe(false);
+});
+test("string schema with x- field succeeds", () => {
+  expect(
+    SchemaObject.is({
+      type: "string",
+      format: "date-time",
+      "x-hello": "foo"
+    })
+  ).toBe(true);
+});
 
-test("test int enum", () => {
+test("well formed int enum", () => {
   expect(
     SchemaObject.is({
       type: "integer",
@@ -101,6 +183,8 @@ test("test int enum", () => {
       enum: [1, 2, 3]
     })
   ).toBe(true);
+});
+test("int enum with string in enum fails", () => {
   expect(
     SchemaObject.is({
       type: "integer",
@@ -108,6 +192,111 @@ test("test int enum", () => {
       enum: [1, 2, "foo"]
     })
   ).toBe(false);
+});
+test("int enum with bad default fails", () => {
+  expect(
+    SchemaObject.is({
+      type: "integer",
+      format: "int64",
+      enum: [1, 2],
+      default: 3
+    })
+  ).toBe(false);
+});
+test("int enum with good default succeeds", () => {
+  expect(
+    SchemaObject.is({
+      type: "integer",
+      format: "int64",
+      enum: [1, 2],
+      default: 2
+    })
+  ).toBe(true);
+});
+test("int enum with extra field fails", () => {
+  expect(
+    SchemaObject.is({
+      type: "integer",
+      format: "int64",
+      enum: [1, 2],
+      bad: "field"
+    })
+  ).toBe(false);
+});
+test("int enum with x- field succeeds", () => {
+  expect(
+    SchemaObject.is({
+      type: "integer",
+      format: "int64",
+      enum: [1, 2],
+      default: 2,
+      "x-good": true
+    })
+  ).toBe(true);
+});
+
+test("well formed string enum", () => {
+  expect(
+    SchemaObject.is({
+      type: "string",
+      enum: ["a", "b"]
+    })
+  ).toBe(true);
+});
+test("string enum with int in enum fails", () => {
+  expect(
+    SchemaObject.is({
+      type: "string",
+      enum: [1, 2, "foo"]
+    })
+  ).toBe(false);
+});
+test("string enum with format fails", () => {
+  expect(
+    SchemaObject.is({
+      type: "string",
+      format: "byte",
+      enum: ["b", "a"]
+    })
+  ).toBe(false);
+});
+test("string enum with bad default fails", () => {
+  expect(
+    SchemaObject.is({
+      type: "string",
+      enum: ["b", "a"],
+      default: "c"
+    })
+  ).toBe(false);
+});
+test("string enum with good default succeeds", () => {
+  expect(
+    SchemaObject.is({
+      type: "string",
+      enum: ["a","b"],
+      default: "b",
+      example: "a"
+    })
+  ).toBe(true);
+});
+test("string enum with extra field fails", () => {
+  expect(
+    SchemaObject.is({
+      type: "string",
+      enum: ["A"],
+      bad: "field"
+    })
+  ).toBe(false);
+});
+test("string enum with x- field succeeds", () => {
+  expect(
+    SchemaObject.is({
+      type: "string",
+      enum: ["A"],
+      example: "A",
+      "x-good": true
+    })
+  ).toBe(true);
 });
 
 test("test object", () => {
