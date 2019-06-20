@@ -1,5 +1,5 @@
 import { $RequestBodyObject, $ContentObject } from "../model/LazyOpenApi";
-import { RequestBodyObject } from "../model/OpenApi";
+import { RequestBodyObject } from "openapi3-ts";
 import content from "./content";
 
 // adds query, header, path, cookie to spec

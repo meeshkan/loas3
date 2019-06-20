@@ -1,5 +1,5 @@
 import { $ParameterObject, $SchemaObject } from "../model/LazyOpenApi";
-import { ParameterObject, ParameterLocation } from "../model/OpenApi";
+import { ParameterObject, ParameterLocation } from "openapi3-ts";
 import { OAPI30_BASE_PARAMETER_ITEM_KEYS } from "./baseParameter";
 import schema from "./schema";
 

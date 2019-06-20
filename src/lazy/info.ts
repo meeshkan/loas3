@@ -1,5 +1,5 @@
 import { $InfoObject } from "../model/LazyOpenApi";
-import { InfoObject } from "../model/OpenApi";
+import { InfoObject } from "openapi3-ts";
 
 const defaults = {
   title: "lazy",

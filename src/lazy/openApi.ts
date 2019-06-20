@@ -1,5 +1,5 @@
 import { $OpenAPIObject } from "../model/LazyOpenApi";
-import { OpenAPIObject } from "../model/OpenApi";
+import { OpenAPIObject } from "openapi3-ts";
 import _info from "./info";
 import _paths from "./paths";
 

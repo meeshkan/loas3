@@ -1,5 +1,5 @@
 import { $ResponsesObject } from "../model/LazyOpenApi";
-import { ResponsesObject } from "../model/OpenApi";
+import { ResponsesObject } from "openapi3-ts";
 import response from "./response";
 
 const OAPI30_STATUS_CODES = new Set([

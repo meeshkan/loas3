@@ -1,5 +1,5 @@
 import { $ResponseObject, $ContentObject } from "../model/LazyOpenApi";
-import { ResponseObject } from "../model/OpenApi";
+import { ResponseObject } from "openapi3-ts";
 import baseParameter from "./baseParameter";
 import content from "./content";
 

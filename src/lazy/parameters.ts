@@ -4,7 +4,7 @@ import {
   LazyParameter,
   LazyParameters
 } from "../model/LazyOpenApi";
-import { ReferenceObject, ParameterObject } from "../model/OpenApi";
+import { ReferenceObject, ParameterObject } from "openapi3-ts";
 import parameter from "./parameter";
 
 const OPEN_API_PARAMETER_IN_NAMES = new Set([

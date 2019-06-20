@@ -1,6 +1,6 @@
-import { ISpecificationExtension } from "./SpecificationExtension";
 import {
   ParameterObject,
+  ISpecificationExtension,
   PathItemObject,
   OperationObject,
   ResponseObject,
@@ -13,7 +13,7 @@ import {
   OpenAPIObject,
   InfoObject,
   ResponsesObject
-} from "./OpenApi";
+} from "openapi3-ts";
 
 export type LazyParameter =
   | ReferenceObject

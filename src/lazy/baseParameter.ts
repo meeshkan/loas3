@@ -1,5 +1,5 @@
 import { $BaseParameterObject, $SchemaObject } from "../model/LazyOpenApi";
-import { BaseParameterObject } from "../model/OpenApi";
+import { BaseParameterObject } from "openapi3-ts";
 import schema from "./schema";
 
 // adds query, header, path, cookie to spec

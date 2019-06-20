@@ -1,5 +1,5 @@
 import { $OperationObject, $ResponsesObject } from "../model/LazyOpenApi";
-import { OperationObject } from "../model/OpenApi";
+import { OperationObject } from "openapi3-ts";
 import _parameters from "./parameters";
 import _requestBody from "./requestBody";
 import _responses from "./responses";

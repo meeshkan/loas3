@@ -1,5 +1,5 @@
 import { JSONValue } from "../model/LazyOpenApi";
-import { SchemaObject } from "../model/OpenApi";
+import { SchemaObject } from "openapi3-ts";
 
 const _ = (o: JSONValue): SchemaObject =>
   o instanceof Array

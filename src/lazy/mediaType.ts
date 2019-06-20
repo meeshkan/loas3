@@ -1,5 +1,5 @@
 import { $MediaTypeObject, $SchemaObject } from "../model/LazyOpenApi";
-import { MediaTypeObject } from "../model/OpenApi";
+import { MediaTypeObject } from "openapi3-ts";
 import schema from "./schema";
 
 // adds query, header, path, cookie to spec

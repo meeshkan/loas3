@@ -1,5 +1,5 @@
 import { $PathItemObject, $ParametersObject } from "../model/LazyOpenApi";
-import { PathItemObject } from "../model/OpenApi";
+import { PathItemObject } from "openapi3-ts";
 import operation from "./operation";
 import parameters from "./parameters";
 

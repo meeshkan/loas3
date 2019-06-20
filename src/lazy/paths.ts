@@ -1,5 +1,5 @@
 import { $PathsObject } from "../model/LazyOpenApi";
-import { PathsObject } from "../model/OpenApi";
+import { PathsObject } from "openapi3-ts";
 import path from "./path";
 
 export default (o: $PathsObject | undefined): PathsObject =>
