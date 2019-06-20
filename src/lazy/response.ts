@@ -12,22 +12,22 @@ const OAPI30_RESPONSE_KEYS = new Set([
 
 export default (o: $ResponseObject): ResponseObject =>
   typeof o !== "object" ||
-  Object.keys(o as object).filter(k => OAPI30_RESPONSE_KEYS.has(k)).length === 0
+  Object.keys(<object>o).filter(k => OAPI30_RESPONSE_KEYS.has(k)).length === 0
     ? {
         description: "too lazy",
         content: content(o)
       }
     : // todo: links
       {
-        ...(o as ResponseObject),
-        ...((o as ResponseObject).content
+        ...(<ResponseObject>o),
+        ...((<ResponseObject>o).content
           ? {
-              content: content((o as ResponseObject).content as $ContentObject)
+              content: content(<$ContentObject>(<ResponseObject>o).content)
             }
           : {}),
-        ...((o as ResponseObject).headers
+        ...((<ResponseObject>o).headers
           ? {
-              headers: Object.entries((o as ResponseObject).headers as object)
+              headers: Object.entries(<object>(<ResponseObject>o).headers)
                 .map(([k, v]) => ({ [k]: baseParameter(v) }))
                 .reduce((a, b) => ({ ...a, ...b }), {})
             }

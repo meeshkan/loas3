@@ -24,23 +24,20 @@ const OAPI30_PATH_ITEM_KEYS = new Set([
 
 export default (o: $PathItemObject, path: string): PathItemObject =>
   typeof o !== "object" ||
-  Object.keys(o as object).filter(a =>
-    OAPI30_PATH_ITEM_KEYS.has(a.toLowerCase())
-  ).length === 0
+  Object.keys(<object>o).filter(a => OAPI30_PATH_ITEM_KEYS.has(a.toLowerCase()))
+    .length === 0
     ? { get: operation(o, path) }
     : {
         ...o,
-        ...((o as PathItemObject).parameters
+        ...((<PathItemObject>o).parameters
           ? {
               parameters: parameters(
-                (o as PathItemObject).parameters as $ParametersObject,
+                <$ParametersObject>(<PathItemObject>o).parameters,
                 path
               )
             }
           : {}),
         ...[...OAPI30_METHODS]
-          .map(a =>
-            (o as any)[a] ? { [a]: operation((o as any)[a], path) } : {}
-          )
+          .map(a => ((<any>o)[a] ? { [a]: operation((<any>o)[a], path) } : {}))
           .reduce((a, b) => ({ ...a, ...b }), {})
       };

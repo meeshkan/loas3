@@ -31,7 +31,7 @@ export default (
   path: string
 ): (ReferenceObject | ParameterObject)[] =>
   o instanceof Array
-    ? (o as Array<ParameterObject>).map((i: ParameterObject) =>
+    ? (<Array<ParameterObject>>o).map((i: ParameterObject) =>
         parameter(i, path)
       )
     : Object.keys(o).filter(a => OPEN_API_PARAMETER_IN_NAMES.has(a)).length !==
@@ -39,7 +39,7 @@ export default (
     ? Object.entries(o)
         .map(([k0, v0]) =>
           Object.entries(v0).map(([k1, v1]) =>
-            parameter(v1 as $ParameterObject, path, { name: k1, $in: k0 })
+            parameter(<$ParameterObject>v1, path, { name: k1, $in: k0 })
           )
         )
         .reduce((a, b) => [...a, ...b], []) // { header: { ... }, query: { ... }}

@@ -9,8 +9,8 @@ const OAPI30_STATUS_CODES = new Set([
 
 export default (o: $ResponsesObject): ResponsesObject =>
   typeof o !== "object" ||
-  Object.keys(o as object).filter(k => OAPI30_STATUS_CODES.has(k)).length === 0
+  Object.keys(<object>o).filter(k => OAPI30_STATUS_CODES.has(k)).length === 0
     ? { default: response(o) }
-    : Object.entries(o as object)
+    : Object.entries(<object>o)
         .map(([a, b]) => ({ [a]: response(b) }))
         .reduce((a, b) => ({ ...a, ...b }));

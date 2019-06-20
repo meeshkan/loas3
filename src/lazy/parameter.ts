@@ -15,19 +15,21 @@ export default (
   specs?: { name: string; $in?: string }
 ): ParameterObject =>
   (typeof o !== "object" ||
-    Object.keys(o as object).filter(a => OAPI30_PARAMETER_ITEM_KEYS.has(a))
+    Object.keys(<object>o).filter(a => OAPI30_PARAMETER_ITEM_KEYS.has(a))
       .length === 0) &&
   specs
     ? {
         name: specs.name,
-        in: (specs.$in
-          ? specs.$in
-          : path.indexOf(`{${specs.name}}`) !== -1
-          ? "path"
-          : "query") as ParameterLocation,
+        in: <ParameterLocation>(
+          (specs.$in
+            ? specs.$in
+            : path.indexOf(`{${specs.name}}`) !== -1
+            ? "path"
+            : "query")
+        ),
         schema: schema(o)
       }
-    : ({
-        ...(o as ParameterObject),
-        schema: schema((o as ParameterObject).schema as $SchemaObject)
-      } as ParameterObject);
+    : <ParameterObject>{
+        ...(<ParameterObject>o),
+        schema: schema(<$SchemaObject>(<ParameterObject>o).schema)
+      };

@@ -10,12 +10,12 @@ const OAPI30_REQUEST_BODY_KEYS = new Set([
 ]);
 export default (o: $RequestBodyObject): RequestBodyObject =>
   typeof o !== "object" ||
-  Object.keys(o as object).filter(a => OAPI30_REQUEST_BODY_KEYS.has(a))
-    .length === 0
+  Object.keys(<object>o).filter(a => OAPI30_REQUEST_BODY_KEYS.has(a)).length ===
+    0
     ? {
         content: content(o)
       }
-    : ({
+    : <RequestBodyObject>{
         ...o,
-        content: content((o as RequestBodyObject).content as $ContentObject)
-      } as RequestBodyObject);
+        content: content(<$ContentObject>(<RequestBodyObject>o).content)
+      };

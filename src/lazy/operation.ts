@@ -22,19 +22,20 @@ const OAPI30_OPERATION_ITEM_KEYS = new Set([
 
 export default (o: $OperationObject, path: string): OperationObject =>
   typeof o !== "object" ||
-  Object.keys(o as object).filter(a => OAPI30_OPERATION_ITEM_KEYS.has(a))
+  Object.keys(<object>o).filter(a => OAPI30_OPERATION_ITEM_KEYS.has(a))
     .length === 0
     ? { responses: _responses(o) }
     : {
         ...o,
         ...{
-          responses: _responses((o as OperationObject)
-            .responses as $ResponsesObject)
+          responses: _responses(<$ResponsesObject>(
+            (<OperationObject>o).responses
+          ))
         },
-        ...(o && (o as OperationObject).parameters
-          ? { parameters: _parameters((o as any).parameters, path) }
+        ...(o && (<OperationObject>o).parameters
+          ? { parameters: _parameters((<any>o).parameters, path) }
           : {}),
-        ...(o && (o as OperationObject).requestBody
-          ? { requestBody: _requestBody((o as any).requestBody) }
+        ...(o && (<OperationObject>o).requestBody
+          ? { requestBody: _requestBody((<any>o).requestBody) }
           : {})
       };

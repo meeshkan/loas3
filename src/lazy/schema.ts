@@ -10,9 +10,9 @@ const _ = (o: JSONValue): SchemaObject =>
     : typeof o === "object"
     ? {
         type: "object",
-        ...(Object.keys(o as object).length !== 0
+        ...(Object.keys(<object>o).length !== 0
           ? {
-              properties: Object.entries(o as object)
+              properties: Object.entries(<object>o)
                 .map(([k, v]) => ({ [k]: _(v) }))
                 .reduce((a, b) => ({ ...a, ...b }), {})
             }
