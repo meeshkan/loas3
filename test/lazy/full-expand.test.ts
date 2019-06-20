@@ -1,3 +1,4 @@
+import fs from "fs";
 import yaml from "js-yaml";
 import loai3 from "../../src/";
 
