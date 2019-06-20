@@ -10,13 +10,13 @@ const OAPI30_MEDIA_TYPE_KEYS = new Set([
   "encoding"
 ]);
 export default (o: $MediaTypeObject): MediaTypeObject =>
-  typeof o !== "object" ||
-  Object.keys(o as object).filter(a => OAPI30_MEDIA_TYPE_KEYS.has(a)).length ===
+  typeof o !== "object" || // if $SchemaObject
+  Object.keys(<object>o).filter(a => OAPI30_MEDIA_TYPE_KEYS.has(a)).length ===
     0
     ? {
         schema: schema(o)
       }
-    : ({
+    : <MediaTypeObject>{ // then it is $MediaTypeObject and maybe the next thing down
         ...o,
-        schema: schema((o as MediaTypeObject).schema as $SchemaObject)
-      } as MediaTypeObject);
+        schema: schema(<$SchemaObject>(<MediaTypeObject>o).schema)
+      };

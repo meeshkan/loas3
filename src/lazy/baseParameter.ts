@@ -18,12 +18,12 @@ export const OAPI30_BASE_PARAMETER_ITEM_KEYS = new Set([
 ]);
 export default (o: $BaseParameterObject): BaseParameterObject =>
   typeof o !== "object" ||
-  Object.keys(o as object).filter(a => OAPI30_BASE_PARAMETER_ITEM_KEYS.has(a))
+  Object.keys(<object>o).filter(a => OAPI30_BASE_PARAMETER_ITEM_KEYS.has(a))
     .length === 0
     ? {
         schema: schema(o)
       }
-    : ({
+    : <BaseParameterObject>{
         ...o,
-        schema: schema((o as BaseParameterObject).schema as $SchemaObject)
-      } as BaseParameterObject);
+        schema: schema(<$SchemaObject>(<BaseParameterObject>o).schema)
+      };
