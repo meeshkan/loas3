@@ -40,12 +40,11 @@ Because sometimes you need to write an OpenAPI spec.
 
 ## TODO
 
-- More idiomatic [io-ts](https://github.com/gcanti/io-ts/) for types
-- Stronger typing convention for `x-???` extension syntax
+- Create JSON spec for loai3 validation
 
 ## How does it work?
 
-[Lazy OpenAPI](src/model/LazyOpenApi.ts) in. [Unlazy OpenAPI](src/model/OpenApi.ts) out.  Feel free to mix and match.
+[Lazy OpenAPI](src/model/LazyOpenApi.ts) in. [Unlazy OpenAPI](https://github.com/metadevpro/openapi3-ts) out.  Feel free to mix and match.
 
 ## Examples
 
@@ -53,4 +52,4 @@ See the [tests](test/lazy/).
 
 ## Thanks
 
-Thanks to [metadevpro](https://github.com/metadevpro) for providing the unlazy types.
+Thanks to [metadevpro](https://github.com/metadevpro/openapi3-ts) for providing the unlazy types.
