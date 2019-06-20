@@ -563,7 +563,7 @@ definitions:
     errorMessage:
       additionalProperties: "should only have path names that start with `/`"
   PathItem:
-    oneOf:
+    anyOf:
       - $ref: "#/definitions/Operation"
       - type: object
         properties:
