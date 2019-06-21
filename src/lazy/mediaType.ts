@@ -1,23 +1,18 @@
 import { $MediaTypeObject, $SchemaObject } from "../model/LazyOpenApi";
 import { MediaTypeObject, ReferenceObject } from "openapi3-ts";
-import schema from "./schema";
+import { isReference } from "./reference";
+import schema, { isTopLevelSchema } from "./schema";
 
-const OAPI30_MEDIA_TYPE_KEYS = new Set([
-  "schema",
-  "examples",
-  "example",
-  "encoding"
-]);
+// for now, if we can't find a schema, expand
 export default (o: $MediaTypeObject): MediaTypeObject =>
-  typeof o !== "object" || // if $SchemaObject
-  Object.keys(<object>o).filter(a => OAPI30_MEDIA_TYPE_KEYS.has(a)).length === 0
-    ? {
+  typeof o === "object" && isTopLevelSchema((<any>o).schema)
+    ? { ...(<MediaTypeObject>o), schema: (<any>o).schema }
+    : typeof o === "object" && isReference((<any>o).schema)
+    ? { ...(<MediaTypeObject>o), schema: (<any>o).schema }
+    : typeof o === "object" && isTopLevelSchema(<any>o)
+    ? { ...(<MediaTypeObject>o), schema: <any>o }
+    : typeof o === "object" && isReference(<any>o)
+    ? { ...(<MediaTypeObject>o), schema: <any>o }
+    : {
         schema: schema(o)
-      }
-    : Object.keys(<object>o).indexOf("$ref") !== -1
-    ? { schema: <ReferenceObject>o }
-    : <MediaTypeObject>{
-        // then it is $MediaTypeObject and maybe the next thing down
-        ...o,
-        schema: schema(<$SchemaObject>(<MediaTypeObject>o).schema)
       };

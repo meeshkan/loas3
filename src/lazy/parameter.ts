@@ -1,7 +1,8 @@
 import { $ParameterObject, $SchemaObject } from "../model/LazyOpenApi";
 import { ParameterObject, ParameterLocation } from "openapi3-ts";
 import { OAPI30_BASE_PARAMETER_ITEM_KEYS } from "./baseParameter";
-import schema from "./schema";
+import schema, { isTopLevelSchema } from "./schema";
+import { isReference } from "./reference";
 
 // adds query, header, path, cookie to spec
 const OAPI30_PARAMETER_ITEM_KEYS = new Set([
@@ -31,5 +32,9 @@ export default (
       }
     : <ParameterObject>{
         ...(<ParameterObject>o),
-        schema: schema(<$SchemaObject>(<ParameterObject>o).schema)
+        schema: isTopLevelSchema((<ParameterObject>o).schema)
+          ? (<ParameterObject>o).schema
+          : isReference((<any>o).schema)
+          ? { schema: (<any>o).schema }
+          : schema(<$SchemaObject>(<ParameterObject>o).schema)
       };

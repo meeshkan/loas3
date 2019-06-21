@@ -1,6 +1,19 @@
 import { JSONValue } from "../model/LazyOpenApi";
 import { SchemaObject } from "openapi3-ts";
 
+// only the necessary to establish - this can even theoretically be shorter
+const SCHEMA_PROPERTIES = new Set([
+  "properties",
+  "type",
+  "additionalProperties",
+  "xml"
+]);
+
+export const isTopLevelSchema = (o: unknown): o is SchemaObject =>
+  o &&
+  typeof o === "object" &&
+  Object.keys(<object>o).filter(i => SCHEMA_PROPERTIES.has(i)).length > 0;
+
 const _ = (o: JSONValue): SchemaObject =>
   o instanceof Array
     ? {

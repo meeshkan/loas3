@@ -1,9 +1,4 @@
-import {
-  $ParametersObject,
-  $ParameterObject,
-  LazyParameter,
-  LazyParameters
-} from "../model/LazyOpenApi";
+import { $ParametersObject, $ParameterObject } from "../model/LazyOpenApi";
 import { ReferenceObject, ParameterObject } from "openapi3-ts";
 import parameter from "./parameter";
 
