@@ -1,6 +1,4 @@
 ---
-id: https://spec.unmock.io/loas/3.0/schema/2019-04-02
-"$schema": http://json-schema.org/draft-04/schema#
 description: Validation schema for the Lazy OpenAPI Specification 3.0.X.
 type: object
 properties:
@@ -269,7 +267,7 @@ definitions:
       multipleOf:
         type: number
         minimum: 0
-        exclusiveMinimum: true
+        exclusiveMinimum: 0
       maximum:
         type: number
       exclusiveMaximum:
@@ -362,7 +360,7 @@ definitions:
       multipleOf:
         type: number
         minimum: 0
-        exclusiveMinimum: true
+        exclusiveMinimum: 0
       maximum:
         type: number
       exclusiveMaximum:
