@@ -32,9 +32,7 @@ export default (
       }
     : <ParameterObject>{
         ...(<ParameterObject>o),
-        schema: isTopLevelSchema((<ParameterObject>o).schema)
-          ? (<ParameterObject>o).schema
-          : isReference((<any>o).schema)
-          ? { schema: (<any>o).schema }
+        schema: isReference((<any>o).schema)
+          ? (<any>o).schema
           : schema(<$SchemaObject>(<ParameterObject>o).schema)
       };

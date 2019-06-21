@@ -1,6 +1,5 @@
 import fs from "fs";
 import yaml from "js-yaml";
-import { ErrorObject } from "ajv";
 import { lazy } from "./util";
 import loas from "../../src";
 
