@@ -3,7 +3,7 @@ import yaml from "js-yaml";
 import { lazy } from "./util";
 import loas from "../../src";
 
-test("condensed schema validates", () => {
+test("highly condensed schema validates", () => {
   const instance = yaml.load(
     fs.readFileSync("./test/good/pet-store-lite.loas3.yml").toString()
   );
