@@ -39,7 +39,8 @@ Because sometimes you need to write an OpenAPI spec.
 
 ## TODO
 
-- Create JSON spec for loas3 validation
+- Better (lazy) types.
+- More examples
 
 ## How does it work?
 
