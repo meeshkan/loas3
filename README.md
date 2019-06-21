@@ -40,7 +40,7 @@ Because sometimes you need to write an OpenAPI spec.
 ## TODO
 
 - Better (lazy) types.
-- More examples
+- More examples.
 
 ## How does it work?
 
