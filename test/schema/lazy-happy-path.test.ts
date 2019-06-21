@@ -39,5 +39,5 @@ test("schema validates without operations, resposnes or response specified", () 
     fs.readFileSync("./test/schema/pet-store-uses-ref-default.yml").toString()
   );
   var schema = yaml.load(fs.readFileSync("./schema/lazy.yml").toString());
-  expect(v.validate(instance, schema).errors).toBe(0);
+  expect(v.validate(instance, schema).errors.length).toBe(0);
 });

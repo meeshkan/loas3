@@ -7,11 +7,11 @@ test("lazy openapi correctly expands parameters", () => {
       yaml.load(`paths:
     '/foo/{id}':
         get:
-            parameters:
-                id: 3
-                bar: baz
-            responses:
-                200: 1
+          parameters:
+              id: 3
+              bar: baz
+          responses:
+              200: 1
 `)
     ).paths
   ).toEqual({
