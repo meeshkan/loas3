@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "description": "OpenAPI 3.0.0 for lazy people",
   "main": "dist/index.js",
-  "repository": "https://github.com/unmock/loai3",
+  "repository": "https://github.com/unmock/loas3",
   "author": "Mike Solomon",
   "license": "MIT",
   "devDependencies": {

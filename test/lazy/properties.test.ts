@@ -1,9 +1,9 @@
 import yaml from "js-yaml";
-import loai3 from "../../src/";
+import loas3 from "../../src/";
 
 test("lazy openapi correctly represents objects", () => {
   expect(
-    loai3(
+    loas3(
       yaml.load(`paths:
     '/foo':
         post:
@@ -45,7 +45,7 @@ test("lazy openapi correctly represents objects", () => {
 
 test("lazy openapi correctly represents arrays", () => {
   expect(
-    loai3(
+    loas3(
       yaml.load(`paths:
     '/foo':
         post:

@@ -8,31 +8,31 @@ properties:
     type: string
     pattern: "^3\\.0\\.\\d(-.+)?$"
   info:
-    $ref: "#/definitions/Info"
+    $ref: "#/definitions/$Info"
   externalDocs:
-    $ref: "#/definitions/ExternalDocumentation"
+    $ref: "#/definitions/$ExternalDocumentation"
   servers:
     type: array
     items:
-      $ref: "#/definitions/Server"
+      $ref: "#/definitions/$Server"
   security:
     type: array
     items:
-      $ref: "#/definitions/SecurityRequirement"
+      $ref: "#/definitions/$SecurityRequirement"
   tags:
     type: array
     items:
-      $ref: "#/definitions/Tag"
+      $ref: "#/definitions/$Tag"
     uniqueItems: true
   paths:
-    $ref: "#/definitions/Paths"
+    $ref: "#/definitions/$Paths"
   components:
-    $ref: "#/definitions/Components"
+    $ref: "#/definitions/$Components"
 patternProperties:
   "^x-": {}
 additionalProperties: false
 definitions:
-  Reference:
+  $Reference:
     type: object
     required:
     - $ref
@@ -40,7 +40,7 @@ definitions:
       $ref:
         type: string
         format: uri-reference
-  Info:
+  $Info:
     type: object
     properties:
       title:
@@ -51,15 +51,15 @@ definitions:
         type: string
         format: uri-reference
       contact:
-        $ref: "#/definitions/Contact"
+        $ref: "#/definitions/$Contact"
       license:
-        $ref: "#/definitions/License"
+        $ref: "#/definitions/$License"
       version:
         type: string
     patternProperties:
       "^x-": {}
     additionalProperties: false
-  Contact:
+  $Contact:
     type: object
     properties:
       name:
@@ -73,7 +73,7 @@ definitions:
     patternProperties:
       "^x-": {}
     additionalProperties: false
-  License:
+  $License:
     type: object
     required:
     - name
@@ -86,7 +86,7 @@ definitions:
     patternProperties:
       "^x-": {}
     additionalProperties: false
-  Server:
+  $Server:
     type: object
     required:
     - url
@@ -98,11 +98,11 @@ definitions:
       variables:
         type: object
         additionalProperties:
-          $ref: "#/definitions/ServerVariable"
+          $ref: "#/definitions/$ServerVariable"
     patternProperties:
       "^x-": {}
     additionalProperties: false
-  ServerVariable:
+  $ServerVariable:
     type: object
     required:
     - default
@@ -118,7 +118,7 @@ definitions:
     patternProperties:
       "^x-": {}
     additionalProperties: false
-  Components:
+  $Components:
     type: object
     properties:
       schemas:
@@ -129,9 +129,9 @@ definitions:
             - if:
                 required: [$ref]
               then:
-                $ref: "#/definitions/Reference"
+                $ref: "#/definitions/$Reference"
             - then:
-                $ref: "#/definitions/Schema"
+                $ref: "#/definitions/$Schema"
       responses:
         type: object
         patternProperties:
@@ -140,9 +140,9 @@ definitions:
             - if:
                 required: [$ref]
               then:
-                $ref: "#/definitions/Reference"
+                $ref: "#/definitions/$Reference"
             - then:
-                $ref: "#/definitions/Response"
+                $ref: "#/definitions/$Response"
       parameters:
         type: object
         patternProperties:
@@ -151,9 +151,9 @@ definitions:
             - if:
                 required: [$ref]
               then:
-                $ref: "#/definitions/Reference"
+                $ref: "#/definitions/$Reference"
             - then:
-                $ref: "#/definitions/Parameter"
+                $ref: "#/definitions/$Parameter"
       examples:
         type: object
         patternProperties:
@@ -162,9 +162,9 @@ definitions:
             - if:
                 required: [$ref]
               then:
-                $ref: "#/definitions/Reference"
+                $ref: "#/definitions/$Reference"
             - then:
-                $ref: "#/definitions/Example"
+                $ref: "#/definitions/$Example"
       requestBodies:
         type: object
         patternProperties:
@@ -173,9 +173,9 @@ definitions:
             - if:
                 required: [$ref]
               then:
-                $ref: "#/definitions/Reference"
+                $ref: "#/definitions/$Reference"
             - then:
-                $ref: "#/definitions/RequestBody"
+                $ref: "#/definitions/$RequestBody"
       headers:
         type: object
         patternProperties:
@@ -184,9 +184,9 @@ definitions:
             - if:
                 required: [$ref]
               then:
-                $ref: "#/definitions/Reference"
+                $ref: "#/definitions/$Reference"
             - then:
-                $ref: "#/definitions/Header"
+                $ref: "#/definitions/$Header"
       securitySchemes:
         type: object
         patternProperties:
@@ -195,9 +195,9 @@ definitions:
             - if:
                 required: [$ref]
               then:
-                $ref: "#/definitions/Reference"
+                $ref: "#/definitions/$Reference"
             - then:
-                $ref: "#/definitions/SecurityScheme"
+                $ref: "#/definitions/$SecurityScheme"
       links:
         type: object
         patternProperties:
@@ -206,9 +206,9 @@ definitions:
             - if:
                 required: [$ref]
               then:
-                $ref: "#/definitions/Reference"
+                $ref: "#/definitions/$Reference"
             - then:
-                $ref: "#/definitions/Link"
+                $ref: "#/definitions/$Link"
       callbacks:
         type: object
         patternProperties:
@@ -217,14 +217,52 @@ definitions:
             - if:
                 required: [$ref]
               then:
-                $ref: "#/definitions/Reference"
+                $ref: "#/definitions/$Reference"
             - then:
-                $ref: "#/definitions/Callback"
+                $ref: "#/definitions/$Callback"
     patternProperties:
       "^x-": {}
     additionalProperties: false
-  Schema:
+  $BooleanSchema:
     type: object
+    required:
+      - type
+    properties:
+      title:
+        type: string
+      type:
+        type: string
+        enum:
+        - boolean
+      description:
+        type: string
+      format:
+        type: string
+      default:
+        type: boolean
+      nullable:
+        type: boolean
+        default: false
+      readOnly:
+        type: boolean
+        default: false
+      writeOnly:
+        type: boolean
+        default: false
+      example:
+        type: boolean
+      externalDocs:
+        $ref: "#/definitions/$ExternalDocumentation"
+      deprecated:
+        type: boolean
+        default: false
+    patternProperties:
+      "^x-": {}
+    additionalProperties: false
+  $IntegerSchema:
+    type: object
+    required:
+      - type
     properties:
       title:
         type: string
@@ -242,6 +280,478 @@ definitions:
       exclusiveMinimum:
         type: boolean
         default: false
+      type:
+        type: string
+        enum:
+        - integer
+      description:
+        type: string
+      format:
+        type: string
+      default:
+        type: integer
+      nullable:
+        type: boolean
+        default: false
+      readOnly:
+        type: boolean
+        default: false
+      writeOnly:
+        type: boolean
+        default: false
+      example:
+        type: integer
+      externalDocs:
+        $ref: "#/definitions/$ExternalDocumentation"
+      deprecated:
+        type: boolean
+        default: false
+    patternProperties:
+      "^x-": {}
+    additionalProperties: false
+  $IntegerEnumSchema:
+    type: object
+    required:
+      - type
+      - enum
+    properties:
+      title:
+        type: string
+      type:
+        type: string
+        enum:
+        - integer
+      description:
+        type: string
+      format:
+        type: string
+      default:
+        type: integer
+      nullable:
+        type: boolean
+        default: false
+      enum:
+        type: array
+        items:
+          type: integer
+        minItems: 1
+        uniqueItems: false
+      readOnly:
+        type: boolean
+        default: false
+      writeOnly:
+        type: boolean
+        default: false
+      example:
+        type: integer
+      externalDocs:
+        $ref: "#/definitions/$ExternalDocumentation"
+      deprecated:
+        type: boolean
+        default: false
+    patternProperties:
+      "^x-": {}
+    additionalProperties: false
+  $NumberSchema:
+    type: object
+    required:
+      - type
+    properties:
+      title:
+        type: string
+      multipleOf:
+        type: number
+        minimum: 0
+        exclusiveMinimum: true
+      maximum:
+        type: number
+      exclusiveMaximum:
+        type: boolean
+        default: false
+      minimum:
+        type: number
+      exclusiveMinimum:
+        type: boolean
+        default: false
+      type:
+        type: string
+        enum:
+        - number
+      description:
+        type: string
+      format:
+        type: string
+      default:
+        type: number
+      nullable:
+        type: boolean
+        default: false
+      readOnly:
+        type: boolean
+        default: false
+      writeOnly:
+        type: boolean
+        default: false
+      example:
+        type: number
+      externalDocs:
+        $ref: "#/definitions/$ExternalDocumentation"
+      deprecated:
+        type: boolean
+        default: false
+    patternProperties:
+      "^x-": {}
+    additionalProperties: false
+  $NumberEnumSchema:
+    type: object
+    required:
+      - type
+      - enum
+    properties:
+      title:
+        type: string
+      type:
+        type: string
+        enum:
+        - number
+      description:
+        type: string
+      format:
+        type: string
+      default:
+        type: number
+      nullable:
+        type: boolean
+        default: false
+      enum:
+        type: array
+        items:
+          type: number
+        minItems: 1
+        uniqueItems: false
+      readOnly:
+        type: boolean
+        default: false
+      writeOnly:
+        type: boolean
+        default: false
+      example:
+        type: number
+      externalDocs:
+        $ref: "#/definitions/$ExternalDocumentation"
+      deprecated:
+        type: boolean
+        default: false
+    patternProperties:
+      "^x-": {}
+    additionalProperties: false
+  $StringSchema:
+    type: object
+    required:
+      - type
+    properties:
+      title:
+        type: string
+      type:
+        type: string
+        enum:
+        - string
+      description:
+        type: string
+      format:
+        type: string
+      pattern:
+        type: string
+        format: regex
+      default:
+        type: number
+      nullable:
+        type: boolean
+        default: false
+      readOnly:
+        type: boolean
+        default: false
+      writeOnly:
+        type: boolean
+        default: false
+      example:
+        type: string
+      externalDocs:
+        $ref: "#/definitions/$ExternalDocumentation"
+      deprecated:
+        type: boolean
+        default: false
+    patternProperties:
+      "^x-": {}
+    additionalProperties: false
+  $StringEnumSchema:
+    type: object
+    required:
+      - type
+      - enum
+    properties:
+      title:
+        type: string
+      type:
+        type: string
+        enum:
+        - string
+      description:
+        type: string
+      format:
+        type: string
+      default:
+        type: string
+      nullable:
+        type: boolean
+        default: false
+      enum:
+        type: array
+        items:
+          type: string
+        minItems: 1
+        uniqueItems: false
+      readOnly:
+        type: boolean
+        default: false
+      writeOnly:
+        type: boolean
+        default: false
+      example:
+        type: string
+      externalDocs:
+        $ref: "#/definitions/$ExternalDocumentation"
+      deprecated:
+        type: boolean
+        default: false
+    patternProperties:
+      "^x-": {}
+    additionalProperties: false
+  $ObjectSchema:
+    type: object
+    required:
+      - properties
+    properties:
+      title:
+        type: string
+      maxProperties:
+        type: integer
+        minimum: 0
+      minProperties:
+        type: integer
+        minimum: 0
+        default: 0
+      required:
+        type: array
+        items:
+          type: string
+        minItems: 1
+        uniqueItems: true
+        errorMessage: 
+          type: "should be an array of property names required within an object schema"
+      type:
+        type: string
+        enum:
+        - object
+      properties:
+        type: object
+        additionalProperties:
+          switch:
+          - if:
+              required: [$ref]
+            then:
+              $ref: "#/definitions/$Reference"
+          - then:
+              $ref: "#/definitions/$Schema"
+      additionalProperties:
+        default: true
+        switch:
+        - if:
+            type: object
+            required: [$ref]
+          then:
+            $ref: "#/definitions/$Reference"
+        - if: 
+            type: object
+          then:
+            $ref: "#/definitions/$Schema"
+        - then: 
+            type: boolean
+            errorMessage: "should be a Reference Object, Schema Object, or boolean value"
+      description:
+        type: string
+      format:
+        type: string
+      default: {}
+      nullable:
+        type: boolean
+        default: false
+      readOnly:
+        type: boolean
+        default: false
+      writeOnly:
+        type: boolean
+        default: false
+      example: {}
+      externalDocs:
+        $ref: "#/definitions/$ExternalDocumentation"
+      deprecated:
+        type: boolean
+        default: false
+      xml:
+        $ref: "#/definitions/$XML"
+    patternProperties:
+      "^x-": {}
+    additionalProperties: false
+  $AnyOfSchema:
+    type: object
+    properties:
+      anyOf:
+        type: array
+        items:
+          switch:
+          - if:
+              required: [$ref]
+            then:
+              $ref: "#/definitions/$Reference"
+          - then:
+              $ref: "#/definitions/$Schema"
+      description:
+        type: string
+      default: {}
+      nullable:
+        type: boolean
+        default: false
+      discriminator:
+        $ref: "#/definitions/$Discriminator"
+      readOnly:
+        type: boolean
+        default: false
+      writeOnly:
+        type: boolean
+        default: false
+      example: {}
+      externalDocs:
+        $ref: "#/definitions/$ExternalDocumentation"
+      deprecated:
+        type: boolean
+        default: false
+    patternProperties:
+      "^x-": {}
+    additionalProperties: false
+  $NotSchema:
+    type: object
+    properties:
+      not:
+        switch:
+          - if:
+              required: [$ref]
+            then:
+              $ref: "#/definitions/$Reference"
+          - then:
+              $ref: "#/definitions/$Schema"
+      description:
+        type: string
+      default: {}
+      nullable:
+        type: boolean
+        default: false
+      discriminator:
+        $ref: "#/definitions/$Discriminator"
+      readOnly:
+        type: boolean
+        default: false
+      writeOnly:
+        type: boolean
+        default: false
+      example: {}
+      externalDocs:
+        $ref: "#/definitions/$ExternalDocumentation"
+      deprecated:
+        type: boolean
+        default: false
+    patternProperties:
+      "^x-": {}
+    additionalProperties: false
+  $AllOfSchema:
+    type: object
+    properties:
+      anyOf:
+        type: array
+        items:
+          switch:
+          - if:
+              required: [$ref]
+            then:
+              $ref: "#/definitions/$Reference"
+          - then:
+              $ref: "#/definitions/$Schema"
+      description:
+        type: string
+      default: {}
+      nullable:
+        type: boolean
+        default: false
+      discriminator:
+        $ref: "#/definitions/$Discriminator"
+      readOnly:
+        type: boolean
+        default: false
+      writeOnly:
+        type: boolean
+        default: false
+      example: {}
+      externalDocs:
+        $ref: "#/definitions/$ExternalDocumentation"
+      deprecated:
+        type: boolean
+        default: false
+    patternProperties:
+      "^x-": {}
+    additionalProperties: false
+  $OneOfSchema:
+    type: object
+    properties:
+      oneOf:
+        type: array
+        items:
+          switch:
+          - if:
+              required: [$ref]
+            then:
+              $ref: "#/definitions/$Reference"
+          - then:
+              $ref: "#/definitions/$Schema"
+      description:
+        type: string
+      default: {}
+      nullable:
+        type: boolean
+        default: false
+      discriminator:
+        $ref: "#/definitions/$Discriminator"
+      readOnly:
+        type: boolean
+        default: false
+      writeOnly:
+        type: boolean
+        default: false
+      example: {}
+      externalDocs:
+        $ref: "#/definitions/$ExternalDocumentation"
+      deprecated:
+        type: boolean
+        default: false
+    patternProperties:
+      "^x-": {}
+    additionalProperties: false
+  $ArraySchema:
+    type: object
+    required:
+      - type
+    properties:
+      title:
+        type: string
       maxLength:
         type: integer
         minimum: 0
@@ -262,116 +772,26 @@ definitions:
       uniqueItems:
         type: boolean
         default: false
-      maxProperties:
-        type: integer
-        minimum: 0
-      minProperties:
-        type: integer
-        minimum: 0
-        default: 0
-      required:
-        type: array
-        items:
-          type: string
-        minItems: 1
-        uniqueItems: true
-        errorMessage: 
-          type: "should be an array of property names required within an object schema"
-      enum:
-        type: array
-        items: {}
-        minItems: 1
-        uniqueItems: false
       type:
         type: string
         enum:
         - array
-        - boolean
-        - integer
-        - number
-        - object
-        - string
-      not:
-        switch:
-          - if:
-              required: [$ref]
-            then:
-              $ref: "#/definitions/Reference"
-          - then:
-              $ref: "#/definitions/Schema"
-      allOf:
-        type: array
-        items:
-          switch:
-          - if:
-              required: [$ref]
-            then:
-              $ref: "#/definitions/Reference"
-          - then:
-              $ref: "#/definitions/Schema"
-      oneOf:
-        type: array
-        items:
-          switch:
-          - if:
-              required: [$ref]
-            then:
-              $ref: "#/definitions/Reference"
-          - then:
-              $ref: "#/definitions/Schema"
-      anyOf:
-        type: array
-        items:
-          switch:
-          - if:
-              required: [$ref]
-            then:
-              $ref: "#/definitions/Reference"
-          - then:
-              $ref: "#/definitions/Schema"
-      items:
-        switch:
-        - if:
-            required: [$ref]
-          then:
-            $ref: "#/definitions/Reference"
-        - then:
-            $ref: "#/definitions/Schema"
-      properties:
-        type: object
-        additionalProperties:
-          switch:
-          - if:
-              required: [$ref]
-            then:
-              $ref: "#/definitions/Reference"
-          - then:
-              $ref: "#/definitions/Schema"
-      additionalProperties:
-        default: true
-        switch:
-        - if:
-            type: object
-            required: [$ref]
-          then:
-            $ref: "#/definitions/Reference"
-        - if: 
-            type: object
-          then:
-            $ref: "#/definitions/Schema"
-        - then: 
-            type: boolean
-            errorMessage: "should be a Reference Object, Schema Object, or boolean value"
       description:
         type: string
       format:
         type: string
       default: {}
+      items:
+        switch:
+        - if:
+            required: [$ref]
+          then:
+            $ref: "#/definitions/$Reference"
+        - then:
+            $ref: "#/definitions/$Schema"
       nullable:
         type: boolean
         default: false
-      discriminator:
-        $ref: "#/definitions/Discriminator"
       readOnly:
         type: boolean
         default: false
@@ -380,16 +800,16 @@ definitions:
         default: false
       example: {}
       externalDocs:
-        $ref: "#/definitions/ExternalDocumentation"
+        $ref: "#/definitions/$ExternalDocumentation"
       deprecated:
         type: boolean
         default: false
       xml:
-        $ref: "#/definitions/XML"
+        $ref: "#/definitions/$XML"
     patternProperties:
       "^x-": {}
     additionalProperties: false
-  Discriminator:
+  $Discriminator:
     type: object
     required:
     - propertyName
@@ -400,7 +820,7 @@ definitions:
         type: object
         additionalProperties:
           type: string
-  XML:
+  $XML:
     type: object
     properties:
       name:
@@ -419,7 +839,11 @@ definitions:
     patternProperties:
       "^x-": {}
     additionalProperties: false
-  Response:
+  $Response:
+    anyOf:
+      - $ref: "#/definitions/$MediaType"
+      - $ref: "#/definitions/$$Response"
+  $$Response:
     type: object
     required:
     - description
@@ -433,13 +857,13 @@ definitions:
           - if:
               required: [$ref]
             then:
-              $ref: "#/definitions/Reference"
+              $ref: "#/definitions/$Reference"
           - then:
-              $ref: "#/definitions/Header"
+              $ref: "#/definitions/$Header"
       content:
         type: object
         additionalProperties:
-          $ref: "#/definitions/MediaType"
+          $ref: "#/definitions/$MediaType"
       links:
         type: object
         additionalProperties:
@@ -447,13 +871,49 @@ definitions:
           - if:
               required: [$ref]
             then:
-              $ref: "#/definitions/Reference"
+              $ref: "#/definitions/$Reference"
           - then:
-              $ref: "#/definitions/Link"
+              $ref: "#/definitions/$Link"
     patternProperties:
       "^x-": {}
     additionalProperties: false
-  MediaType:
+  $Schema:
+    anyOf:
+    - $ref: "#/definitions/$IntegerSchema"
+    - $ref: "#/definitions/$NumberSchema"
+    - $ref: "#/definitions/$StringSchema"
+    - $ref: "#/definitions/$IntegerEnumSchema"
+    - $ref: "#/definitions/$NumberEnumSchema"
+    - $ref: "#/definitions/$StringEnumSchema"
+    - $ref: "#/definitions/$ArraySchema"
+    - $ref: "#/definitions/$ObjectSchema"
+    - $ref: "#/definitions/$AllOfSchema"
+    - $ref: "#/definitions/$AnyOfSchema"
+    - $ref: "#/definitions/$OneOfSchema"
+    - $ref: "#/definitions/$NotSchema"
+    - $ref: "#/definitions/$SimpleBooleanSchema"
+    - $ref: "#/definitions/$SimpleIntegerSchema"
+    - $ref: "#/definitions/$SimpleNumberSchema"
+    - $ref: "#/definitions/$SimpleStringSchema"
+    - $ref: "#/definitions/$SimpleArraySchema"
+    - $ref: "#/definitions/$SimpleObjectSchema"
+  $SimpleObjectSchema:
+    type: object
+  $SimpleIntegerSchema:
+    type: number
+  $SimpleNumberSchema:
+    type: number
+  $SimpleStringSchema:
+    type: string
+  $SimpleBooleanSchema:
+    type: boolean
+  $SimpleArraySchema:
+    type: array
+  $MediaType:
+    anyOf:
+      - $ref: "#/definitions/$Schema"
+      - $ref: "#/definitions/$$MediaType"
+  $$MediaType:
     type: object
     properties:
       schema:
@@ -461,9 +921,9 @@ definitions:
         - if:
             required: [$ref]
           then:
-            $ref: "#/definitions/Reference"
+            $ref: "#/definitions/$Reference"
         - then:
-            $ref: "#/definitions/Schema"
+            $ref: "#/definitions/$Schema"
       example: {}
       examples:
         type: object
@@ -472,19 +932,19 @@ definitions:
           - if:
               required: [$ref]
             then:
-              $ref: "#/definitions/Reference"
+              $ref: "#/definitions/$Reference"
           - then:
-              $ref: "#/definitions/Example"
+              $ref: "#/definitions/$Example"
       encoding:
         type: object
         additionalProperties:
-          $ref: "#/definitions/Encoding"
+          $ref: "#/definitions/$Encoding"
     patternProperties:
       "^x-": {}
     additionalProperties: false
     allOf:
-    - $ref: "#/definitions/ExampleXORExamples"
-  Example:
+    - $ref: "#/definitions/$ExampleXORExamples"
+  $Example:
     type: object
     properties:
       summary:
@@ -498,7 +958,7 @@ definitions:
     patternProperties:
       "^x-": {}
     additionalProperties: false
-  Header:
+  $Header:
     type: object
     properties:
       description:
@@ -527,13 +987,13 @@ definitions:
         - if:
             required: [$ref]
           then:
-            $ref: "#/definitions/Reference"
+            $ref: "#/definitions/$Reference"
         - then:
-            $ref: "#/definitions/Schema"
+            $ref: "#/definitions/$Schema"
       content:
         type: object
         additionalProperties:
-          $ref: "#/definitions/MediaType"
+          $ref: "#/definitions/$MediaType"
         minProperties: 1
         maxProperties: 1
       example: {}
@@ -544,56 +1004,62 @@ definitions:
           - if:
               required: [$ref]
             then:
-              $ref: "#/definitions/Reference"
+              $ref: "#/definitions/$Reference"
           - then:
-              $ref: "#/definitions/Example"
+              $ref: "#/definitions/$Example"
     patternProperties:
       "^x-": {}
     additionalProperties: false
     allOf:
-    - $ref: "#/definitions/ExampleXORExamples"
-    - $ref: "#/definitions/SchemaXORContent"
-  Paths:
+    - $ref: "#/definitions/$ExampleXORExamples"
+    - $ref: "#/definitions/$SchemaXORContent"
+  $Paths:
     type: object
     patternProperties:
       "^\\/":
-        $ref: "#/definitions/PathItem"
+        $ref: "#/definitions/$PathItem"
       "^x-": {}
     additionalProperties: false
     errorMessage:
       additionalProperties: "should only have path names that start with `/`"
-  PathItem:
+  $PathItem:
     anyOf:
-      - $ref: "#/definitions/Operation"
-      - type: object
-        properties:
-          $ref:
-            type: string
-          summary:
-            type: string
-          description:
-            type: string
-          servers:
-            type: array
-            items:
-              $ref: "#/definitions/Server"
-          parameters:
-            type: array
-            items:
-              switch:
-              - if:
-                  required: [$ref]
-                then:
-                  $ref: "#/definitions/Reference"
-              - then:
-                  $ref: "#/definitions/Parameter"
-            uniqueItems: true
-        patternProperties:
-          "^(get|put|post|delete|options|head|patch|trace)$":
-            $ref: "#/definitions/Operation"
-          "^x-": {}
-        additionalProperties: false
-  Operation:
+      - $ref: "#/definitions/$Operation"
+      - $ref: "#/definitions/$$PathItem"
+  $$PathItem:
+    type: object
+    properties:
+      $ref:
+        type: string
+      summary:
+        type: string
+      description:
+        type: string
+      servers:
+        type: array
+        items:
+          $ref: "#/definitions/$Server"
+      parameters:
+        type: array
+        items:
+          switch:
+          - if:
+              required: [$ref]
+            then:
+              $ref: "#/definitions/$Reference"
+          - then:
+              $ref: "#/definitions/$Parameter"
+        uniqueItems: true
+    patternProperties:
+      "^(get|put|post|delete|options|head|patch|trace)$":
+        $ref: "#/definitions/$Operation"
+      "^x-": {}
+    additionalProperties: false
+  $Operation:
+    anyOf:
+      - $ref: "#/definitions/$Responses"
+      - $ref: "#/definitions/$$Operation"
+  $$Operation:
     type: object
     required:
     - responses
@@ -607,7 +1073,7 @@ definitions:
       description:
         type: string
       externalDocs:
-        $ref: "#/definitions/ExternalDocumentation"
+        $ref: "#/definitions/$ExternalDocumentation"
       operationId:
         type: string
       parameters:
@@ -617,20 +1083,20 @@ definitions:
           - if:
               required: [$ref]
             then:
-              $ref: "#/definitions/Reference"
+              $ref: "#/definitions/$Reference"
           - then:
-              $ref: "#/definitions/Parameter"
+              $ref: "#/definitions/$Parameter"
         uniqueItems: true
       requestBody:
         switch:
         - if:
             required: [$ref]
           then:
-            $ref: "#/definitions/Reference"
+            $ref: "#/definitions/$Reference"
         - then:
-            $ref: "#/definitions/RequestBody"
+            $ref: "#/definitions/$RequestBody"
       responses:
-        $ref: "#/definitions/Responses"
+        $ref: "#/definitions/$Responses"
       callbacks:
         type: object
         additionalProperties:
@@ -638,24 +1104,28 @@ definitions:
           - if:
               required: [$ref]
             then:
-              $ref: "#/definitions/Reference"
+              $ref: "#/definitions/$Reference"
           - then:
-              $ref: "#/definitions/Callback"
+              $ref: "#/definitions/$Callback"
       deprecated:
         type: boolean
         default: false
       security:
         type: array
         items:
-          $ref: "#/definitions/SecurityRequirement"
+          $ref: "#/definitions/$SecurityRequirement"
       servers:
         type: array
         items:
-          $ref: "#/definitions/Server"
+          $ref: "#/definitions/$Server"
     patternProperties:
       "^x-": {}
     additionalProperties: false
-  Responses:
+  $Responses:
+    anyOf:
+      - $ref: "#/definitions/$Response"
+      - $ref: "#/definitions/$$Responses"
+  $$Responses:
     type: object
     properties:
       default:
@@ -663,18 +1133,18 @@ definitions:
         - if:
             required: [$ref]
           then:
-            $ref: "#/definitions/Reference"
+            $ref: "#/definitions/$Reference"
         - then:
-            $ref: "#/definitions/Response"
+            $ref: "#/definitions/$Response"
     patternProperties:
       "^[1-5](?:\\d{2}|XX)$":
         switch: 
         - if:
             required: [$ref]
           then:
-            $ref: "#/definitions/Reference"
+            $ref: "#/definitions/$Reference"
         - then:
-            $ref: "#/definitions/Response"
+            $ref: "#/definitions/$Response"
       "^x-": {}
     minProperties: 1
     additionalProperties: false
@@ -688,13 +1158,13 @@ definitions:
       minProperties: "should define at least one response"
       not: "should define at least one response, in addition to any vendor extension (`x-*`) fields"
       additionalProperties: "should only have three-digit status codes, `default`, and vendor extensions (`x-*`) as properties"
-  SecurityRequirement:
+  $SecurityRequirement:
     type: object
     additionalProperties:
       type: array
       items:
         type: string
-  Tag:
+  $Tag:
     type: object
     required:
     - name
@@ -704,11 +1174,11 @@ definitions:
       description:
         type: string
       externalDocs:
-        $ref: "#/definitions/ExternalDocumentation"
+        $ref: "#/definitions/$ExternalDocumentation"
     patternProperties:
       "^x-": {}
     additionalProperties: false
-  ExternalDocumentation:
+  $ExternalDocumentation:
     type: object
     required:
     - url
@@ -721,14 +1191,14 @@ definitions:
     patternProperties:
       "^x-": {}
     additionalProperties: false
-  ExampleXORExamples:
+  $ExampleXORExamples:
     description: Example and examples are mutually exclusive
     errorMessage: "should not have both `example` and `examples`, as they are mutually exclusive"
     not:
       required:
       - example
       - examples
-  SchemaXORContent:
+  $SchemaXORContent:
     description: Schema and content are mutually exclusive, at least one is required
     switch:
     - if:
@@ -764,7 +1234,7 @@ definitions:
     - then:
         required: [schema, content]
     errorMessage: "should have either a `schema` or `content` property"
-  Parameter:
+  $Parameter:
     type: object
     properties:
       name:
@@ -794,13 +1264,13 @@ definitions:
         - if:
             required: [$ref]
           then:
-            $ref: "#/definitions/Reference"
+            $ref: "#/definitions/$Reference"
         - then:
-            $ref: "#/definitions/Schema"
+            $ref: "#/definitions/$Schema"
       content:
         type: object
         additionalProperties:
-          $ref: "#/definitions/MediaType"
+          $ref: "#/definitions/$MediaType"
         minProperties: 1
         maxProperties: 1
       example: {}
@@ -811,9 +1281,9 @@ definitions:
           - if:
               required: [$ref]
             then:
-              $ref: "#/definitions/Reference"
+              $ref: "#/definitions/$Reference"
           - then:
-              $ref: "#/definitions/Example"
+              $ref: "#/definitions/$Example"
     patternProperties:
       "^x-": {}
     additionalProperties: false
@@ -821,10 +1291,10 @@ definitions:
     - name
     - in
     allOf:
-    - $ref: "#/definitions/ExampleXORExamples"
-    - $ref: "#/definitions/SchemaXORContent"
-    - $ref: "#/definitions/ParameterLocation"
-  ParameterLocation:
+    - $ref: "#/definitions/$ExampleXORExamples"
+    - $ref: "#/definitions/$SchemaXORContent"
+    - $ref: "#/definitions/$ParameterLocation"
+  $ParameterLocation:
     description: Parameter location
     switch:
     - if:
@@ -882,7 +1352,7 @@ definitions:
         properties:
           in:
             enum: [path, query, header, cookie]
-  RequestBody:
+  $RequestBody:
     type: object
     required:
     - content
@@ -892,14 +1362,14 @@ definitions:
       content:
         type: object
         additionalProperties:
-          $ref: "#/definitions/MediaType"
+          $ref: "#/definitions/$MediaType"
       required:
         type: boolean
         default: false
     patternProperties:
       "^x-": {}
     additionalProperties: false
-  SecurityScheme:
+  $SecurityScheme:
     type: object
     switch:
     - if:
@@ -908,35 +1378,35 @@ definitions:
           type:
             enum: [apiKey]
       then:
-        $ref: "#/definitions/APIKeySecurityScheme"
+        $ref: "#/definitions/$APIKeySecurityScheme"
     - if:
         required: [type]
         properties:
           type:
             enum: [http]
       then:
-        $ref: "#/definitions/HTTPSecurityScheme"
+        $ref: "#/definitions/$HTTPSecurityScheme"
     - if:
         required: [type]
         properties:
           type:
             enum: [oauth2]
       then:
-        $ref: "#/definitions/OAuth2SecurityScheme"
+        $ref: "#/definitions/$OAuth2SecurityScheme"
     - if:
         required: [type]
         properties:
           type:
             enum: [openIdConnect]
       then:
-        $ref: "#/definitions/OpenIdConnectSecurityScheme"
+        $ref: "#/definitions/$OpenIdConnectSecurityScheme"
     - then:
         required: [type]
         properties:
           type:
             type: string
             enum: [apiKey, http, oauth2, openIdConnect]
-  APIKeySecurityScheme:
+  $APIKeySecurityScheme:
     type: object
     required:
     - type
@@ -960,7 +1430,7 @@ definitions:
     patternProperties:
       "^x-": {}
     additionalProperties: false
-  HTTPSecurityScheme:
+  $HTTPSecurityScheme:
     type: object
     required:
     - scheme
@@ -992,7 +1462,7 @@ definitions:
             enum: [null]
         errorMessage: "should NOT have a `bearerFormat` property without `scheme: bearer` being set"
     additionalProperties: false
-  OAuth2SecurityScheme:
+  $OAuth2SecurityScheme:
     type: object
     required:
     - type
@@ -1003,13 +1473,13 @@ definitions:
         enum:
         - oauth2
       flows:
-        $ref: "#/definitions/OAuthFlows"
+        $ref: "#/definitions/$OAuthFlows"
       description:
         type: string
     patternProperties:
       "^x-": {}
     additionalProperties: false
-  OpenIdConnectSecurityScheme:
+  $OpenIdConnectSecurityScheme:
     type: object
     required:
     - type
@@ -1027,21 +1497,21 @@ definitions:
     patternProperties:
       "^x-": {}
     additionalProperties: false
-  OAuthFlows:
+  $OAuthFlows:
     type: object
     properties:
       implicit:
-        $ref: "#/definitions/ImplicitOAuthFlow"
+        $ref: "#/definitions/$ImplicitOAuthFlow"
       password:
-        $ref: "#/definitions/PasswordOAuthFlow"
+        $ref: "#/definitions/$PasswordOAuthFlow"
       clientCredentials:
-        $ref: "#/definitions/ClientCredentialsFlow"
+        $ref: "#/definitions/$ClientCredentialsFlow"
       authorizationCode:
-        $ref: "#/definitions/AuthorizationCodeOAuthFlow"
+        $ref: "#/definitions/$AuthorizationCodeOAuthFlow"
     patternProperties:
       "^x-": {}
     additionalProperties: false
-  ImplicitOAuthFlow:
+  $ImplicitOAuthFlow:
     type: object
     required:
     - authorizationUrl
@@ -1060,7 +1530,7 @@ definitions:
     patternProperties:
       "^x-": {}
     additionalProperties: false
-  PasswordOAuthFlow:
+  $PasswordOAuthFlow:
     type: object
     required:
     - tokenUrl
@@ -1078,7 +1548,7 @@ definitions:
     patternProperties:
       "^x-": {}
     additionalProperties: false
-  ClientCredentialsFlow:
+  $ClientCredentialsFlow:
     type: object
     required:
     - tokenUrl
@@ -1096,7 +1566,7 @@ definitions:
     patternProperties:
       "^x-": {}
     additionalProperties: false
-  AuthorizationCodeOAuthFlow:
+  $AuthorizationCodeOAuthFlow:
     type: object
     required:
     - authorizationUrl
@@ -1118,7 +1588,7 @@ definitions:
     patternProperties:
       "^x-": {}
     additionalProperties: false
-  Link:
+  $Link:
     type: object
     properties:
       operationId:
@@ -1133,7 +1603,7 @@ definitions:
       description:
         type: string
       server:
-        $ref: "#/definitions/Server"
+        $ref: "#/definitions/$Server"
     patternProperties:
       "^x-": {}
     additionalProperties: false
@@ -1142,13 +1612,13 @@ definitions:
       required:
       - operationId
       - operationRef
-  Callback:
+  $Callback:
     type: object
     additionalProperties:
-      $ref: "#/definitions/PathItem"
+      $ref: "#/definitions/$PathItem"
     patternProperties:
       "^x-": {}
-  Encoding:
+  $Encoding:
     type: object
     properties:
       contentType:
@@ -1156,7 +1626,7 @@ definitions:
       headers:
         type: object
         additionalProperties:
-          $ref: "#/definitions/Header"
+          $ref: "#/definitions/$Header"
       style:
         type: string
         enum:

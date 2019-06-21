@@ -1,7 +1,7 @@
-[![CircleCI](https://circleci.com/gh/unmock/loai3.svg?style=svg)](https://circleci.com/gh/unmock/loai3)
-[![codecov](https://codecov.io/gh/unmock/loai3/branch/master/graph/badge.svg)](https://codecov.io/gh/unmock/loai3)
+[![CircleCI](https://circleci.com/gh/unmock/loas3.svg?style=svg)](https://circleci.com/gh/unmock/loas3)
+[![codecov](https://codecov.io/gh/unmock/loas3/branch/master/graph/badge.svg)](https://codecov.io/gh/unmock/loas3)
 
-# loai3
+# loas3
 
 OpenAPI 3 for lazy people.
 
@@ -40,7 +40,7 @@ Because sometimes you need to write an OpenAPI spec.
 
 ## TODO
 
-- Create JSON spec for loai3 validation
+- Create JSON spec for loas3 validation
 
 ## How does it work?
 

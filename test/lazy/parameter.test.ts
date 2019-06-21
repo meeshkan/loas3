@@ -1,9 +1,9 @@
 import yaml from "js-yaml";
-import loai3 from "../../src/";
+import loas3 from "../../src/";
 
 test("lazy openapi correctly expands parameters", () => {
   expect(
-    loai3(
+    loas3(
       yaml.load(`paths:
     '/foo/{id}':
         get:
@@ -57,7 +57,7 @@ test("lazy openapi correctly expands parameters", () => {
 
 test("lazy openapi correctly expands segmented parameters", () => {
   expect(
-    loai3(
+    loas3(
       yaml.load(`paths:
     '/foo':
         get:

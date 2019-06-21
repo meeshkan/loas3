@@ -1,9 +1,8 @@
-import fs from "fs";
 import yaml from "js-yaml";
-import loai3 from "../../src/";
+import loas3 from "../../src/";
 
 test("lazy openapi fully expands", () => {
-  expect(loai3(yaml.load(`paths: { '/foo': 1}`)).paths).toEqual({
+  expect(loas3(yaml.load(`paths: { '/foo': 1}`)).paths).toEqual({
     "/foo": {
       get: {
         responses: {
