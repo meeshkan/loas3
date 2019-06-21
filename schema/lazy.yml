@@ -1021,6 +1021,13 @@ definitions:
     errorMessage:
       additionalProperties: "should only have path names that start with `/`"
   $PathItem:
+    switch:
+      - if:
+          required: [$ref]
+        then:
+          $ref: "#/definitions/$Reference"
+      - then:
+          $ref: "#/definitions/$Schema"
     anyOf:
       - $ref: "#/definitions/$Operation"
       - $ref: "#/definitions/$$PathItem"
@@ -1038,16 +1045,28 @@ definitions:
         items:
           $ref: "#/definitions/$Server"
       parameters:
-        type: array
-        items:
-          switch:
-          - if:
-              required: [$ref]
-            then:
-              $ref: "#/definitions/$Reference"
-          - then:
-              $ref: "#/definitions/$Parameter"
-        uniqueItems: true
+        anyOf:
+          - type: object
+            properties:
+              query:
+                type: object
+              header:
+                type: object
+              path:
+                type: object
+              cookie:
+                type: object
+          - type: object
+          - type: array
+            items:
+              switch:
+              - if:
+                  required: [$ref]
+                then:
+                  $ref: "#/definitions/$Reference"
+              - then:
+                  $ref: "#/definitions/$Parameter"
+            uniqueItems: true
     patternProperties:
       "^(get|put|post|delete|options|head|patch|trace)$":
         $ref: "#/definitions/$Operation"

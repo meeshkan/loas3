@@ -11,19 +11,20 @@ export default class Validator {
   constructor() {
     this.ajv = new Ajv({
       allErrors: true,
-      jsonPointers: true,
-    })
-    AjvKeywords(this.ajv, "switch")
-    AjvErrors(this.ajv)
+      jsonPointers: true
+    });
+    AjvKeywords(this.ajv, "switch");
+    AjvErrors(this.ajv);
     this.addSchema(full, "oas3");
     this.addSchema(lazy, "loas3");
   }
 
   public addSchema(schema: any, key: string) {
-    this.ajv.addSchema(schema, key)
+    this.ajv.addSchema(schema, key);
   }
 
-  validate(key: string, data: any) {
-    return this.ajv.validate(key, data)
+  public validate(key: string, data: any) {
+    this.ajv.validate(key, data);
+    return this.ajv.errors;
   }
 }

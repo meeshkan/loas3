@@ -1,8 +1,7 @@
 import { $MediaTypeObject, $SchemaObject } from "../model/LazyOpenApi";
-import { MediaTypeObject } from "openapi3-ts";
+import { MediaTypeObject, ReferenceObject } from "openapi3-ts";
 import schema from "./schema";
 
-// adds query, header, path, cookie to spec
 const OAPI30_MEDIA_TYPE_KEYS = new Set([
   "schema",
   "examples",
@@ -15,6 +14,8 @@ export default (o: $MediaTypeObject): MediaTypeObject =>
     ? {
         schema: schema(o)
       }
+    : Object.keys(<object>o).indexOf("$ref") !== -1
+    ? { schema: <ReferenceObject>o }
     : <MediaTypeObject>{
         // then it is $MediaTypeObject and maybe the next thing down
         ...o,
