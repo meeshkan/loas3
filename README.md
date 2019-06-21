@@ -1,5 +1,4 @@
 [![CircleCI](https://circleci.com/gh/unmock/loas3.svg?style=svg)](https://circleci.com/gh/unmock/loas3)
-[![codecov](https://codecov.io/gh/unmock/loas3/branch/master/graph/badge.svg)](https://codecov.io/gh/unmock/loas3)
 
 # loas3
 
