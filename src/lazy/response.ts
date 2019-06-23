@@ -9,14 +9,14 @@ const __ = ({
   headers,
   ...rest
 }: $$Response): Response => ({
-    ...rest,
+  ...rest,
   description,
   ...(headers
     ? Object.entries(headers) // same problem as encoding, need to unroll header :-(
         .map(([a, b]) => ({ [a]: b }))
         .reduce((a, b) => ({ ...a, ...b }), {})
     : {}),
-    ...(content
+  ...(content
     ? Object.entries(content)
         .map(([a, b]) => ({ [a]: _mediaType(b) }))
         .reduce((a, b) => ({ ...a, ...b }), {})
