@@ -1023,12 +1023,7 @@ definitions:
   $LazyLazyParams:
     type: object
     additionalProperties:
-      type: object
-      additionalProperties:
-        anyOf:
-          - type: string
-          - type: number
-          - type: boolean
+      $ref: "#/definitions/$Schema"
   $LazyParams:
     type: object
     properties:
