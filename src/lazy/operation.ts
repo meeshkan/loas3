@@ -11,13 +11,10 @@ import _parameters from "./parameters";
 import _requestBody from "./requestBody";
 import _path from "./path";
 
-const __ = ({
-  responses,
-  parameters,
-  requestBody,
-  callbacks,
-  ...rest
-}: $$Operation): Operation => ({
+const __ = (
+  { responses, parameters, requestBody, callbacks, ...rest }: $$Operation,
+  path: string
+): Operation => ({
   ...rest,
   ...(callbacks
     ? {
@@ -40,8 +37,8 @@ const __ = ({
           : requestBody
       }
     : {}),
-  ...(parameters ? { parameters: _parameters(parameters) } : {})
+  ...(parameters ? { parameters: _parameters(parameters, path) } : {})
 });
 
 export default (o: $Operation, path: string): Operation =>
-  is$$Operation(o) ? __(o) : { responses: _responses(o) };
+  is$$Operation(o) ? __(o, path) : { responses: _responses(o) };
