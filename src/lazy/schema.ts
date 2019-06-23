@@ -1,5 +1,5 @@
-import { JSONValue } from "../model/LazyOpenApi";
-import { SchemaObject, ReferenceObject } from "openapi3-ts";
+import { $Schema } from "../generated/lazy";
+import { Schema } from "../generated/full";
 import { isReference } from "./reference";
 
 // only the necessary to establish - this can even theoretically be shorter
@@ -50,7 +50,7 @@ const __ = (o: JSONValue): SchemaObject | ReferenceObject =>
             ? "null"
             : "string"
       };
-const _ = (o: JSONValue): SchemaObject | ReferenceObject =>
+const _ = (o: $Schema): Schema =>
   isReference(o)
     ? o
     : typeof o === "object" && Object.keys(<object>o).indexOf("oneOf") !== -1

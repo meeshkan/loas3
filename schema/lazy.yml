@@ -1020,6 +1020,26 @@ definitions:
     additionalProperties: false
     errorMessage:
       additionalProperties: "should only have path names that start with `/`"
+  $LazyLazyParams:
+    type: object
+    additionalProperties:
+      type: object
+      additionalProperties:
+        anyOf:
+          - type: string
+          - type: number
+          - type: boolean
+  $LazyParams:
+    type: object
+    properties:
+      query:
+        $ref: "#/definitions/$LazyLazyParams"
+      header:
+        $ref: "#/definitions/$LazyLazyParams"
+      path:
+        $ref: "#/definitions/$LazyLazyParams"
+      cookie:
+        $ref: "#/definitions/$LazyLazyParams"
   $PathItem:
     switch:
       - if:
@@ -1046,17 +1066,8 @@ definitions:
           $ref: "#/definitions/$Server"
       parameters:
         anyOf:
-          - type: object
-            properties:
-              query:
-                type: object
-              header:
-                type: object
-              path:
-                type: object
-              cookie:
-                type: object
-          - type: object
+          - $ref: "#/definitions/$LazyParams"
+          - $ref: "#/definitions/$LazyLazyParams"
           - type: array
             items:
               switch:
@@ -1370,6 +1381,10 @@ definitions:
           in:
             enum: [path, query, header, cookie]
   $RequestBody:
+    anyOf:
+      - $ref: "#/definitions/$MediaType"
+      - $ref: "#/definitions/$$RequestBody"
+  $$RequestBody:
     type: object
     required:
     - content

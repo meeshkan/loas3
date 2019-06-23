@@ -1,8 +1,8 @@
-import { $ContentObject } from "../model/LazyOpenApi";
-import { ContentObject } from "openapi3-ts";
+import { $Content, $$Content } from "../generated/lazy";
+import { Content } from "../generated/full";
 import mediaType from "./mediaType";
 
-export default (o: $ContentObject): ContentObject =>
+export default (o: $Content): Content =>
   typeof o !== "object" ||
   Object.keys(<object>o).filter(a => a.indexOf("/") !== -1).length === 0
     ? {

@@ -1,10 +1,10 @@
-import { $PathsObject } from "../model/LazyOpenApi";
-import { PathsObject } from "openapi3-ts";
-import path from "./path";
+import { $Paths } from "../generated/lazy";
+import { Paths } from "../generated/full";
+import _path from "./path";
 
-export default (o: $PathsObject | undefined): PathsObject =>
+export default (o: $Paths): Paths =>
   o
     ? Object.entries(o)
-        .map(([k, v]) => ({ [k]: path(v, k) }))
+        .map(([k, v]) => ({ [k]: _path(v, k) }))
         .reduce((a, b) => ({ ...a, ...b }), {})
     : {};

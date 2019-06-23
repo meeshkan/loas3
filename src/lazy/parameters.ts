@@ -1,41 +1,39 @@
-import { $ParametersObject, $ParameterObject } from "../model/LazyOpenApi";
-import { ReferenceObject, ParameterObject } from "openapi3-ts";
-import parameter from "./parameter";
-
-const OPEN_API_PARAMETER_IN_NAMES = new Set([
-  "query",
-  "header",
-  "path",
-  "cookie"
-]);
-// Lazy paramater is kv pairs
-/*
-export default (o: $ParametersObject, path: string): (ReferenceObject | ParameterObject)[]  =>
-  o instanceof Array ?
-  o.map((i: ParameterObject) => parameter(i, path)) :
-  Object.keys(o).filter(a => OPEN_API_PARAMETER_IN_NAMES.has(a)).length !== 0 ?
-  Object.keys(o)
-    .map(i => Object.keys(i)
-      .map(j => parameter(o[i], path, {name: j, $in: i})))
-    .reduce((a, b) => ([...a, ...b]), []) : // { header: { ... }, query: { ... }}
-  Object.keys(o).map(i => parameter(o[i], path, { name: i}));
-*/
+import {
+  $LazyParams,
+  $Reference,
+  $Parameter,
+  is$LazyLazyParams,
+  is$LazyParams,
+  is$Parameter,
+  is$Schema
+} from "../generated/lazy";
+import { Parameter, Reference } from "../generated/full";
+import { _lazylazy, _lazy } from "./parameter";
+import _mediaType from "./mediaType";
+import _schema from "./schema";
 
 export default (
-  o: $ParametersObject,
-  path: string
-): (ReferenceObject | ParameterObject)[] =>
-  o instanceof Array
-    ? (<Array<ParameterObject>>o).map((i: ParameterObject) =>
-        parameter(i, path)
-      )
-    : Object.keys(o).filter(a => OPEN_API_PARAMETER_IN_NAMES.has(a)).length !==
-      0
-    ? Object.entries(o)
-        .map(([k0, v0]) =>
-          Object.entries(v0).map(([k1, v1]) =>
-            parameter(<$ParameterObject>v1, path, { name: k1, $in: k0 })
-          )
-        )
-        .reduce((a, b) => [...a, ...b], []) // { header: { ... }, query: { ... }}
-    : Object.entries(o).map(([k, v]) => parameter(v, path, { name: k }));
+  o:
+    | $LazyParams
+    | Record<string, Record<string, string | number | boolean>>
+    | ($Reference | $Parameter)[]
+): (Reference | Parameter)[] =>
+  is$LazyLazyParams(o)
+    ? _lazylazy(o)
+    : is$LazyParams(o)
+    ? _lazy(o)
+    : o.filter(is$Parameter).map(({ schema, content, ...rest }) => ({
+        ...rest,
+        ...(content
+          ? {
+              content: Object.entries(content)
+                .map(([a, b]) => ({ [a]: _mediaType(b) }))
+                .reduce((a, b) => ({ ...a, ...b }), {})
+            }
+          : {}),
+        ...(schema
+          ? {
+              schema: is$Schema(schema) ? _schema(schema) : schema
+            }
+          : {})
+      }));

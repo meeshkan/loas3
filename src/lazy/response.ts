@@ -1,35 +1,32 @@
-import { $ResponseObject, $ContentObject } from "../model/LazyOpenApi";
-import { ResponseObject } from "openapi3-ts";
-import baseParameter from "./baseParameter";
-import content from "./content";
+import _content from "./content";
+import { $Response, is$$Response, $$Response } from "../generated/lazy";
+import { Response } from "../generated/full";
+import _mediaType from "./mediaType";
 
-const OAPI30_RESPONSE_KEYS = new Set([
-  "description",
-  "headers",
-  "content",
-  "links"
-]);
+const __ = ({
+  description,
+  content,
+  headers,
+  ...rest
+}: $$Response): Response => ({
+    ...rest,
+  description,
+  ...(headers
+    ? Object.entries(headers) // same problem as encoding, need to unroll header :-(
+        .map(([a, b]) => ({ [a]: b }))
+        .reduce((a, b) => ({ ...a, ...b }), {})
+    : {}),
+    ...(content
+    ? Object.entries(content)
+        .map(([a, b]) => ({ [a]: _mediaType(b) }))
+        .reduce((a, b) => ({ ...a, ...b }), {})
+    : {})
+});
 
-export default (o: $ResponseObject): ResponseObject =>
-  typeof o !== "object" ||
-  Object.keys(<object>o).filter(k => OAPI30_RESPONSE_KEYS.has(k)).length === 0
-    ? {
+export default (o: $Response): Response =>
+  is$$Response(o)
+    ? __(o)
+    : {
         description: "too lazy",
-        content: content(o)
-      }
-    : // todo: links
-      {
-        ...(<ResponseObject>o),
-        ...((<ResponseObject>o).content
-          ? {
-              content: content(<$ContentObject>(<ResponseObject>o).content)
-            }
-          : {}),
-        ...((<ResponseObject>o).headers
-          ? {
-              headers: Object.entries(<object>(<ResponseObject>o).headers)
-                .map(([k, v]) => ({ [k]: baseParameter(v) }))
-                .reduce((a, b) => ({ ...a, ...b }), {})
-            }
-          : {})
+        content: _content(o)
       };

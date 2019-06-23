@@ -1,12 +1,8 @@
-import { $OpenAPIObject } from "../model/LazyOpenApi";
-import { OpenAPIObject, SchemaObject } from "openapi3-ts";
+import { $OpenAPIObject, is$Schema } from "../generated/lazy";
+import { OpenAPIObject, Schema } from "../generated/full";
 import _info from "./info";
 import _paths from "./paths";
-import schema from "./schema";
-import { isReference } from "./reference";
-
-const schemize = (o: unknown) =>
-  typeof o === "object" && isReference(<any>o) ? o : schema(<any>o);
+import _schema from "./schema";
 
 export default ({
   openapi,
@@ -18,15 +14,15 @@ export default ({
   ...rest,
   ...(openapi ? { openapi } : { openapi: "3.0.0" }),
   info: _info(info),
-  paths: _paths(paths),
+  ...(paths ? { paths: _paths(paths) } : { paths: {} }),
   ...(components
     ? {
         components: {
-          ...components,
+          ...components, // this is what screws up, figure out why
           ...(components.schemas
             ? {
                 schemas: Object.entries(components.schemas)
-                  .map(([a, b]) => ({ [a]: schemize(b) as SchemaObject })) // ugh, can be ref too :-(
+                  .map(([a, b]) => ({ [a]: is$Schema(b) ? _schema(b) : b }))
                   .reduce((a, b) => ({ ...a, ...b }), {})
               }
             : {})

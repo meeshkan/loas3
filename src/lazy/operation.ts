@@ -1,41 +1,47 @@
-import { $OperationObject, $ResponsesObject } from "../model/LazyOpenApi";
-import { OperationObject } from "openapi3-ts";
+import {
+  $Operation,
+  is$$Operation,
+  $$Operation,
+  is$RequestBody,
+  is$Reference
+} from "../generated/lazy";
+import { Operation } from "../generated/full";
+import _responses from "./responses";
 import _parameters from "./parameters";
 import _requestBody from "./requestBody";
-import _responses from "./responses";
+import _path from "./path";
 
-const OAPI30_OPERATION_ITEM_KEYS = new Set([
-  "$ref",
-  "tags",
-  "summary",
-  "description",
-  "externalDocs",
-  "operationId",
-  "parameters",
-  "requestBody",
-  "responses",
-  "callbacks",
-  "deprecated",
-  "security",
-  "servers"
-]);
+const __ = ({
+  responses,
+  parameters,
+  requestBody,
+  callbacks,
+  ...rest
+}: $$Operation): Operation => ({
+  ...rest,
+  ...(callbacks
+    ? {
+        callbacks: Object.entries(callbacks)
+          .map(([a, b]) => ({
+            [a]: is$Reference(b)
+              ? b
+              : Object.entries(b)
+                  .map(([c, d]) => ({ [c]: _path(d, c) }))
+                  .reduce((c, d) => ({ ...c, ...d }), {})
+          }))
+          .reduce((a, b) => ({ ...a, ...b }), {})
+      }
+    : {}),
+  responses: _responses(responses),
+  ...(requestBody
+    ? {
+        requestBody: is$RequestBody(requestBody)
+          ? _requestBody(requestBody)
+          : requestBody
+      }
+    : {}),
+  ...(parameters ? { parameters: _parameters(parameters) } : {})
+});
 
-export default (o: $OperationObject, path: string): OperationObject =>
-  typeof o !== "object" ||
-  Object.keys(<object>o).filter(a => OAPI30_OPERATION_ITEM_KEYS.has(a))
-    .length === 0
-    ? { responses: _responses(o) }
-    : {
-        ...o,
-        ...{
-          responses: _responses(<$ResponsesObject>(
-            (<OperationObject>o).responses
-          ))
-        },
-        ...(o && (<OperationObject>o).parameters
-          ? { parameters: _parameters((<any>o).parameters, path) }
-          : {}),
-        ...(o && (<OperationObject>o).requestBody
-          ? { requestBody: _requestBody((<any>o).requestBody) }
-          : {})
-      };
+export default (o: $Operation, path: string): Operation =>
+  is$$Operation(o) ? __(o) : { responses: _responses(o) };

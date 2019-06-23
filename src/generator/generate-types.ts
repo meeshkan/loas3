@@ -52,12 +52,11 @@ const ResponsesHack = (objName: string) => (o: any): any => ({
       ...o.definitions[objName],
       properties: {
         ...o.definitions[objName].properties,
-        ...new Array(400)
+        ...new Array(501)
           .fill(null)
           .map((_, j) => ({
-            [`${100 + j}`]: o.definitions[objName].patternProperties[
-              "^[1-5](?:\\d{2}|XX)$"
-            ]
+            [`${j < 500 ? 100 + j : "default"}`]: o.definitions[objName]
+              .patternProperties["^[1-5](?:\\d{2}|XX)$"]
           }))
           .reduce((a, b) => ({ ...a, ...b }), {})
       }
@@ -200,9 +199,7 @@ const makeTypeGuard = (a: string, b: JSONSchema) => {
     b.patternProperties["^x-"] !== undefined
       ? ` && new Set([...${JSON.stringify(
           Object.keys(b.properties)
-        )}, ...Object.keys(u)]).size === new Set(${JSON.stringify(
-          Object.keys(b.properties)
-        )}).size`
+        )}, ...Object.keys(u)]).size === ${Object.keys(b.properties).length}`
       : "";
   return `export const is${a} = (u: unknown): u is ${a} => ${a}.is(u)${typeGuard};`;
 };
@@ -232,6 +229,17 @@ const to = (schema: JSONSchema): t.TypeReference =>
     ? t.booleanType
     : t.stringType; // no need for string schema
 
+const numberHack = (s: string) =>
+  new Array(500)
+    .fill(null)
+    .map((_, j) => j)
+    .reduce(
+      (a, b) =>
+        a
+          .replace(`${b + 100}:`, `"${b + 100}":`)
+          .replace(`${b + 100}?:`, `"${b + 100}"?:`),
+      s
+    );
 const doStuff = ({
   input,
   output,
@@ -265,18 +273,20 @@ const doStuff = ({
   );
   fs.writeFileSync(
     output,
-    prettier.format(
-      [
-        `import * as t from "io-ts";
+    numberHack(
+      prettier.format(
+        [
+          `import * as t from "io-ts";
 `
-      ]
-        .concat(sorted.map(d => t.printRuntime(d)))
-        .concat(sorted.map(d => `export ${t.printStatic(d)}`))
-        .concat(typeGuards)
-        .join("\n"),
-      {
-        parser: "typescript"
-      }
+        ]
+          .concat(sorted.map(d => t.printRuntime(d)))
+          .concat(sorted.map(d => `export ${t.printStatic(d)}`))
+          .concat(typeGuards)
+          .join("\n"),
+        {
+          parser: "typescript"
+        }
+      )
     )
   );
 };
@@ -292,22 +302,6 @@ doStuff({
 doStuff({
   input: "./schema/lazy.yml",
   output: "./src/generated/lazy.ts",
-  toplevel: "$OpenAPIObject",
-  responsesName: "$$Responses",
-  pathItemName: "$$PathItem",
-  httpSecuritySchemaName: "$HTTPSecurityScheme"
-});
-doStuff({
-  input: "./schema/full.yml",
-  output: "pleasework.ts",
-  toplevel: "OpenAPIObject",
-  responsesName: "Responses",
-  pathItemName: "PathItem",
-  httpSecuritySchemaName: "HTTPSecurityScheme"
-});
-doStuff({
-  input: "./schema/lazy.yml",
-  output: "pleasework-lazy.ts",
   toplevel: "$OpenAPIObject",
   responsesName: "$$Responses",
   pathItemName: "$$PathItem",
