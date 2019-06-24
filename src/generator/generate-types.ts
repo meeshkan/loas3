@@ -205,7 +205,7 @@ const makeTypeGuard = (a: string, b: JSONSchema) => {
     b.patternProperties["^x-"] !== undefined
       ? ` && new Set([...${JSON.stringify(
           Object.keys(b.properties)
-        )}, ...Object.keys(u)]).size === ${Object.keys(b.properties).length}`
+        )}, ...Object.keys(u).filter(i => i.slice(0, 2) !== "x-")]).size === ${Object.keys(b.properties).length}`
       : "";
   return `export const is${a} = (u: unknown): u is ${a} => ${a}.is(u)${typeGuard};`;
 };

@@ -1,9 +1,9 @@
-import _content from "./content";
 import {
   $Response,
   is$$Response,
   $$Response,
-  is$Header
+  is$Header,
+  is$MediaType
 } from "../generated/lazy";
 import { Response } from "../generated/full";
 import _mediaType from "./mediaType";
@@ -38,5 +38,5 @@ export default (o: $Response): Response =>
     ? __(o)
     : {
         description: "too lazy",
-        content: _content(o)
+        content: { "application/json": _mediaType(o) }
       };

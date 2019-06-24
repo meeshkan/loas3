@@ -1,7 +1,7 @@
 import openApi from "./lazy/openApi";
-import { $OpenAPIObject } from "./model/LazyOpenApi";
+import { $OpenAPIObject } from "./generated/lazy";
 import Validator from "./validator";
-import { OpenAPIObject } from "openapi3-ts";
+import { OpenAPIObject } from "./generated/full";
 import { ErrorObject } from "ajv";
 export type LazyResult = {
   errors?: ErrorObject[];
