@@ -44,7 +44,7 @@ Because sometimes you need to write an OpenAPI spec.
 
 ## How does it work?
 
-[Lazy OpenAPI](src/model/LazyOpenApi.ts) in. [Unlazy OpenAPI](https://github.com/metadevpro/openapi3-ts) out.  Feel free to mix and match.
+Lazy types are identified in [schema/lazy.yml](schema/lazy.yml). These, along with the "un"-lazy types from the [official OpenAPI 3.0 Specification](schema/full.yml) are translated into TypeScript types and validators. The lazy OAS3 is expanded into full OAS 3 based on various sensible conventions.
 
 ## Examples
 
