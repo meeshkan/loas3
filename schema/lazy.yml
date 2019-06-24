@@ -895,8 +895,7 @@ definitions:
     - $ref: "#/definitions/$SimpleStringSchema"
     - $ref: "#/definitions/$SimpleArraySchema"
     - $ref: "#/definitions/$SimpleObjectSchema"
-  $SimpleObjectSchema:
-    type: object
+  $SimpleObjectSchema: {}
   $SimpleIntegerSchema:
     type: number
   $SimpleNumberSchema:
@@ -1100,16 +1099,19 @@ definitions:
       operationId:
         type: string
       parameters:
-        type: array
-        items:
-          switch:
-          - if:
-              required: [$ref]
-            then:
-              $ref: "#/definitions/$Reference"
-          - then:
-              $ref: "#/definitions/$Parameter"
-        uniqueItems: true
+        anyOf:
+          - $ref: "#/definitions/$LazyParams"
+          - $ref: "#/definitions/$LazyLazyParams"
+          - type: array
+            items:
+              switch:
+              - if:
+                  required: [$ref]
+                then:
+                  $ref: "#/definitions/$Reference"
+              - then:
+                  $ref: "#/definitions/$Parameter"
+            uniqueItems: true
       requestBody:
         switch:
         - if:

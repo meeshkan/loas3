@@ -14,7 +14,6 @@ import {
   is$StringEnumSchema,
   is$ArraySchema,
   $ArraySchema,
-  is$Schema,
   is$ObjectSchema,
   $ObjectSchema,
   is$AnyOfSchema,
@@ -24,13 +23,14 @@ import {
   $NotSchema,
   is$AllOfSchema,
   is$OneOfSchema,
-  is$NotSchema
+  is$NotSchema,
+  is$Reference
 } from "../generated/lazy";
 import { Schema } from "../generated/full";
 
 const _array = ({ items, ...rest }: $ArraySchema): Schema => ({
   ...rest,
-  ...(items ? { items: is$Schema(items) ? _(items) : items } : {})
+  ...(items ? { items: is$Reference(items) ? items : _(items) } : {})
 });
 
 const _object = ({
@@ -40,35 +40,35 @@ const _object = ({
 }: $ObjectSchema): Schema => ({
   ...rest,
   properties: Object.entries(properties)
-    .map(([a, b]) => ({ [a]: is$Schema(b) ? _(b) : b }))
+    .map(([a, b]) => ({ [a]: is$Reference(b) ? b : _(b) }))
     .reduce((a, b) => ({ ...a, ...b }), {}),
   ...(additionalProperties
     ? {
-        additionalProperties: is$Schema(additionalProperties)
-          ? _(additionalProperties)
-          : additionalProperties
+        additionalProperties: is$Reference(additionalProperties)
+          ? additionalProperties
+          : _(additionalProperties)
       }
     : {})
 });
 
 const _anyOf = ({ anyOf, ...rest }: $AnyOfSchema): Schema => ({
   ...rest,
-  ...(anyOf ? { anyOf: anyOf.map(i => (is$Schema(i) ? _(i) : i)) } : {})
+  ...(anyOf ? { anyOf: anyOf.map(i => (is$Reference(i) ? i : _(i))) } : {})
 });
 
 const _allOf = ({ allOf, ...rest }: $AllOfSchema): Schema => ({
   ...rest,
-  ...(allOf ? { allOf: allOf.map(i => (is$Schema(i) ? _(i) : i)) } : {})
+  ...(allOf ? { allOf: allOf.map(i => (is$Reference(i) ? i : _(i))) } : {})
 });
 
 const _oneOf = ({ oneOf, ...rest }: $OneOfSchema): Schema => ({
   ...rest,
-  ...(oneOf ? { oneOf: oneOf.map(i => (is$Schema(i) ? _(i) : i)) } : {})
+  ...(oneOf ? { oneOf: oneOf.map(i => (is$Reference(i) ? i : _(i))) } : {})
 });
 
 const _not = ({ not, ...rest }: $NotSchema): Schema => ({
   ...rest,
-  ...(not ? { not: is$Schema(not) ? _(not) : not } : {})
+  ...(not ? { not: is$Reference(not) ? not : _(not) } : {})
 });
 
 const _ = (o: $Schema): Schema =>
@@ -104,15 +104,6 @@ const _ = (o: $Schema): Schema =>
         default: o,
         example: o
       }
-    : is$SimpleObjectSchema(o)
-    ? {
-        type: "object",
-        properties: Object.entries(o)
-          .map(([a, b]) => ({ [a]: _(b) }))
-          .reduce((a, b) => ({ ...a, ...b }), {}),
-        example: o,
-        default: o
-      }
     : is$IntegerSchema(o)
     ? o
     : is$NumberSchema(o)
@@ -137,6 +128,15 @@ const _ = (o: $Schema): Schema =>
     ? _oneOf(o)
     : is$NotSchema(o)
     ? _not(o)
-    : {};
+    : is$SimpleObjectSchema(o)
+    ? {
+        type: "object",
+        properties: Object.entries(o)
+          .map(([a, b]) => ({ [a]: _(b) }))
+          .reduce((a, b) => ({ ...a, ...b }), {}),
+        example: o,
+        default: o
+      }
+    : {}
 
 export default _;

@@ -47,8 +47,4 @@ const __ = (
 });
 
 export default (o: $PathItem, path: string): PathItem =>
-  is$$PathItem(o)
-    ? __(o, path)
-    : is$Operation(o)
-    ? { get: _operation(o, path) }
-    : {};
+  is$$PathItem(o) ? __(o, path) : { get: _operation(o, path) };

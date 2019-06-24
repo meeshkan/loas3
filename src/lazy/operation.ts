@@ -2,7 +2,6 @@ import {
   $Operation,
   is$$Operation,
   $$Operation,
-  is$RequestBody,
   is$Reference
 } from "../generated/lazy";
 import { Operation } from "../generated/full";
@@ -32,9 +31,9 @@ const __ = (
   responses: _responses(responses),
   ...(requestBody
     ? {
-        requestBody: is$RequestBody(requestBody)
-          ? _requestBody(requestBody)
-          : requestBody
+        requestBody: is$Reference(requestBody)
+          ? requestBody
+          : _requestBody(requestBody)
       }
     : {}),
   ...(parameters ? { parameters: _parameters(parameters, path) } : {})

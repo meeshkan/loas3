@@ -1,12 +1,4 @@
-import {
-  $OpenAPIObject,
-  $Components,
-  is$Schema,
-  is$Header,
-  is$RequestBody,
-  is$Response,
-  is$Parameter
-} from "../generated/lazy";
+import { $OpenAPIObject, $Components, is$Reference } from "../generated/lazy";
 import { OpenAPIObject, Schema, Components } from "../generated/full";
 import _info from "./info";
 import _paths from "./paths";
@@ -32,35 +24,35 @@ const _components = ({
   ...(responses
     ? {
         responses: Object.entries(responses)
-          .map(([a, b]) => ({ [a]: is$Response(b) ? _response(b) : b }))
+          .map(([a, b]) => ({ [a]: is$Reference(b) ? b : _response(b) }))
           .reduce((a, b) => ({ ...a, ...b }), {})
       }
     : {}),
   ...(parameters
     ? {
         parameters: Object.entries(parameters)
-          .map(([a, b]) => ({ [a]: is$Parameter(b) ? _parameter(b) : b }))
+          .map(([a, b]) => ({ [a]: is$Reference(b) ? b : _parameter(b) }))
           .reduce((a, b) => ({ ...a, ...b }), {})
       }
     : {}),
   ...(requestBodies
     ? {
         requestBodies: Object.entries(requestBodies)
-          .map(([a, b]) => ({ [a]: is$RequestBody(b) ? _requestBody(b) : b }))
+          .map(([a, b]) => ({ [a]: is$Reference(b) ? b : _requestBody(b) }))
           .reduce((a, b) => ({ ...a, ...b }), {})
       }
     : {}),
   ...(headers
     ? {
         headers: Object.entries(headers)
-          .map(([a, b]) => ({ [a]: is$Header(b) ? _header(b) : b }))
+          .map(([a, b]) => ({ [a]: is$Reference(b) ? b : _header(b) }))
           .reduce((a, b) => ({ ...a, ...b }), {})
       }
     : {}),
   ...(schemas
     ? {
         schemas: Object.entries(schemas)
-          .map(([a, b]) => ({ [a]: is$Schema(b) ? _schema(b) : b }))
+          .map(([a, b]) => ({ [a]: is$Reference(b) ? b : _schema(b) }))
           .reduce((a, b) => ({ ...a, ...b }), {})
       }
     : {})

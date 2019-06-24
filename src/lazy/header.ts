@@ -1,4 +1,4 @@
-import { $Header, is$Schema } from "../generated/lazy";
+import { $Header, is$Schema, is$Reference } from "../generated/lazy";
 import { Header } from "../generated/full";
 import _schema from "./schema";
 import _mediaType from "./mediaType";
@@ -12,5 +12,5 @@ export default ({ content, schema, ...rest }: $Header): Header => ({
           .reduce((a, b) => ({ ...a, ...b }), {})
       }
     : {}),
-  ...(schema ? { schema: is$Schema(schema) ? _schema(schema) : schema } : {})
+  ...(schema ? { schema: is$Reference(schema) ? schema : _schema(schema) } : {})
 });

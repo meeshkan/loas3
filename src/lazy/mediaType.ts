@@ -1,7 +1,6 @@
 import {
   $MediaType,
   is$$MediaType,
-  is$Schema,
   is$Reference,
   $$MediaType
 } from "../generated/lazy";
@@ -18,11 +17,7 @@ const __ = ({ encoding, schema, ...rest }: $$MediaType) => ({
     : {}),
   ...(schema
     ? {
-        schema: is$Schema(schema)
-          ? _schema(schema)
-          : is$Reference(schema)
-          ? schema
-          : {}
+        schema: is$Reference(schema) ? schema : _schema(schema)
       }
     : {})
 });
@@ -30,8 +25,6 @@ const __ = ({ encoding, schema, ...rest }: $$MediaType) => ({
 export default (o: $MediaType): MediaType =>
   is$$MediaType(o)
     ? __(o)
-    : is$Schema(o)
-    ? { schema: _schema(o) }
     : is$Reference(o)
     ? { schema: o }
-    : {};
+    : { schema: _schema(o) };

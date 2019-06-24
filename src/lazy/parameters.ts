@@ -4,10 +4,8 @@ import {
   $Parameter,
   is$LazyLazyParams,
   is$LazyParams,
-  is$Parameter,
-  is$Schema,
-  $Schema,
-  $LazyLazyParams
+  $LazyLazyParams,
+  is$Reference
 } from "../generated/lazy";
 import { Parameter, Reference } from "../generated/full";
 import { _lazylazy, _lazy } from "./parameter";
@@ -25,7 +23,7 @@ export const _parameter = ({ schema, content, ...rest }: $Parameter) => ({
     : {}),
   ...(schema
     ? {
-        schema: is$Schema(schema) ? _schema(schema) : schema
+        schema: is$Reference(schema) ? schema : _schema(schema)
       }
     : {})
 });
@@ -34,8 +32,10 @@ export default (
   o: $LazyParams | $LazyLazyParams | ($Reference | $Parameter)[],
   path: string
 ): (Reference | Parameter)[] =>
-  is$LazyLazyParams(o)
+  o instanceof Array
+    ? o.map(i => (is$Reference(i) ? i : _parameter(i))) // this has to come first because _lazy is a catch-all
+    : is$LazyLazyParams(o)
     ? _lazylazy(o, path)
     : is$LazyParams(o)
     ? _lazy(o)
-    : o.map(i => (is$Parameter(i) ? _parameter(i) : i));
+    : []; // should never reach this

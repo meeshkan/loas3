@@ -3,7 +3,8 @@ import {
   is$$Response,
   $$Response,
   is$Header,
-  is$MediaType
+  is$MediaType,
+  is$Reference
 } from "../generated/lazy";
 import { Response } from "../generated/full";
 import _mediaType from "./mediaType";
@@ -20,7 +21,7 @@ const __ = ({
   ...(headers
     ? {
         headers: Object.entries(headers)
-          .map(([a, b]) => ({ [a]: is$Header(b) ? _header(b) : b }))
+          .map(([a, b]) => ({ [a]: is$Reference(b) ? b : _header(b) }))
           .reduce((a, b) => ({ ...a, ...b }), {})
       }
     : {}),
