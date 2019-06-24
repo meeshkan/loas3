@@ -577,6 +577,38 @@ definitions:
     patternProperties:
       "^x-": {}
     additionalProperties: false
+  $NullSchema:
+    type: object
+    required:
+      - nullable
+    properties:
+      title:
+        type: string
+      type:
+        type: string
+      description:
+        type: string
+      format:
+        type: string
+      default: {}
+      nullable:
+        type: boolean
+        default: true
+      readOnly:
+        type: boolean
+        default: false
+      writeOnly:
+        type: boolean
+        default: false
+      example: {}
+      externalDocs:
+        $ref: "#/definitions/$ExternalDocumentation"
+      deprecated:
+        type: boolean
+        default: false
+    patternProperties:
+      "^x-": {}
+    additionalProperties: false
   $ObjectSchema:
     type: object
     properties:
@@ -804,7 +836,7 @@ definitions:
   $ArraySchema:
     type: object
     required:
-      - type
+      - items
     properties:
       title:
         type: string
@@ -939,6 +971,7 @@ definitions:
     - $ref: "#/definitions/$NumberSchema"
     - $ref: "#/definitions/$StringSchema"
     - $ref: "#/definitions/$BooleanSchema"
+    - $ref: "#/definitions/$NullSchema"
     - $ref: "#/definitions/$IntegerEnumSchema"
     - $ref: "#/definitions/$NumberEnumSchema"
     - $ref: "#/definitions/$StringEnumSchema"
@@ -955,6 +988,172 @@ definitions:
     - $ref: "#/definitions/$SimpleStringSchema"
     - $ref: "#/definitions/$SimpleArraySchema"
     - $ref: "#/definitions/$SimpleObjectSchema"
+  $CatchAllSchema: # copied from full in case we screwed up
+    type: object
+    properties:
+      title:
+        type: string
+      multipleOf:
+        type: number
+        minimum: 0
+        exclusiveMinimum: 0
+      maximum:
+        type: number
+      exclusiveMaximum:
+        type: boolean
+        default: false
+      minimum:
+        type: number
+      exclusiveMinimum:
+        type: boolean
+        default: false
+      maxLength:
+        type: integer
+        minimum: 0
+      minLength:
+        type: integer
+        minimum: 0
+        default: 0
+      pattern:
+        type: string
+        format: regex
+      maxItems:
+        type: integer
+        minimum: 0
+      minItems:
+        type: integer
+        minimum: 0
+        default: 0
+      uniqueItems:
+        type: boolean
+        default: false
+      maxProperties:
+        type: integer
+        minimum: 0
+      minProperties:
+        type: integer
+        minimum: 0
+        default: 0
+      required:
+        type: array
+        items:
+          type: string
+        minItems: 1
+        uniqueItems: true
+        errorMessage: 
+          type: "should be an array of property names required within an object schema"
+      enum:
+        type: array
+        items: {}
+        minItems: 1
+        uniqueItems: false
+      type:
+        type: string
+        enum:
+        - array
+        - boolean
+        - integer
+        - number
+        - object
+        - string
+      not:
+        switch:
+          - if:
+              required: [$ref]
+            then:
+              $ref: "#/definitions/$Reference"
+          - then:
+              $ref: "#/definitions/$Schema"
+      allOf:
+        type: array
+        items:
+          switch:
+          - if:
+              required: [$ref]
+            then:
+              $ref: "#/definitions/$Reference"
+          - then:
+              $ref: "#/definitions/$Schema"
+      oneOf:
+        type: array
+        items:
+          switch:
+          - if:
+              required: [$ref]
+            then:
+              $ref: "#/definitions/$Reference"
+          - then:
+              $ref: "#/definitions/$Schema"
+      anyOf:
+        type: array
+        items:
+          switch:
+          - if:
+              required: [$ref]
+            then:
+              $ref: "#/definitions/$Reference"
+          - then:
+              $ref: "#/definitions/$Schema"
+      items:
+        switch:
+        - if:
+            required: [$ref]
+          then:
+            $ref: "#/definitions/$Reference"
+        - then:
+            $ref: "#/definitions/$Schema"
+      properties:
+        type: object
+        additionalProperties:
+          switch:
+          - if:
+              required: [$ref]
+            then:
+              $ref: "#/definitions/$Reference"
+          - then:
+              $ref: "#/definitions/$Schema"
+      additionalProperties:
+        default: true
+        switch:
+        - if:
+            type: object
+            required: [$ref]
+          then:
+            $ref: "#/definitions/$Reference"
+        - if: 
+            type: object
+          then:
+            $ref: "#/definitions/$Schema"
+        - then: 
+            type: boolean
+            errorMessage: "should be a Reference Object, Schema Object, or boolean value"
+      description:
+        type: string
+      format:
+        type: string
+      default: {}
+      nullable:
+        type: boolean
+        default: false
+      discriminator:
+        $ref: "#/definitions/$Discriminator"
+      readOnly:
+        type: boolean
+        default: false
+      writeOnly:
+        type: boolean
+        default: false
+      example: {}
+      externalDocs:
+        $ref: "#/definitions/$ExternalDocumentation"
+      deprecated:
+        type: boolean
+        default: false
+      xml:
+        $ref: "#/definitions/$XML"
+    patternProperties:
+      "^x-": {}
+    additionalProperties: false
   $SimpleObjectSchema: {}
   $SimpleIntegerSchema:
     type: number

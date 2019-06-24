@@ -1,3 +1,9 @@
+import winston from "winston";
+
+const logger = winston.createLogger({
+  transports: [new winston.transports.Console()]
+});
+
 import {
   $Schema,
   is$IntegerSchema,
@@ -26,13 +32,15 @@ import {
   is$OneOfSchema,
   is$NotSchema,
   is$Reference,
-  is$BooleanEnumSchema
+  is$BooleanEnumSchema,
+  is$NullSchema,
+  is$CatchAllSchema
 } from "../generated/lazy";
 import { Schema } from "../generated/full";
 
 const _array = ({ items, ...rest }: $ArraySchema): Schema => ({
   ...rest,
-  ...(items ? { items: is$Reference(items) ? items : _(items) } : {})
+  items: is$Reference(items) ? items : _(items),
 });
 
 const _object = ({
@@ -83,7 +91,8 @@ const _ = (o: $Schema): Schema =>
   is$SimpleBooleanSchema(o)
     ? {
         type: "boolean",
-        default: o
+        default: o,
+        example: o
       }
     : is$SimpleIntegerSchema(o)
     ? {
@@ -118,6 +127,8 @@ const _ = (o: $Schema): Schema =>
     ? o
     : is$StringSchema(o)
     ? o
+    : is$NullSchema(o)
+    ? o
     : is$BooleanSchema(o)
     ? o
     : is$BooleanEnumSchema(o)
@@ -140,6 +151,13 @@ const _ = (o: $Schema): Schema =>
     ? _oneOf(o)
     : is$NotSchema(o)
     ? _not(o)
+    : is$CatchAllSchema(o)
+    ? (() => {
+        logger.warn(
+          `Could not figure out what to do with ${JSON.stringify(o)}, returning it raw.`
+        );
+        return o;
+      })() // hack - this should never happen. if it does, we haven't defined enough stuff above...
     : is$SimpleObjectSchema(o)
     ? {
         type: "object",

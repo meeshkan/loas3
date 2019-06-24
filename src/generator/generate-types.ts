@@ -78,6 +78,10 @@ const HTTPSecuritySchemeHack = (objName: string) => (o: any): any => ({
   }
 });
 
+interface NullSchema {
+  type: "null";
+}
+
 interface StringSchema {
   type: "string";
 }
@@ -127,6 +131,7 @@ interface RefSchema {
 interface EmptySchema {}
 
 type JSONSchema =
+  | NullSchema
   | StringSchema
   | RecordSchema
   | IntegerSchema
@@ -168,6 +173,9 @@ const isNumber = (u: unknown): u is NumberSchema =>
 
 const isInteger = (u: unknown): u is IntegerSchema =>
   u && typeof u === "object" && (<IntegerSchema>u).type === "integer";
+
+const isNull = (u: unknown): u is IntegerSchema =>
+  u && typeof u === "object" && (<NullSchema>u).type === "null";
 
 const isArray = (u: unknown): u is ArraySchema =>
   u && typeof u === "object" && (<ArraySchema>u).type === "array";
@@ -234,10 +242,12 @@ const to = (schema: JSONSchema): t.TypeReference =>
     ? t.numberType
     : isInteger(schema)
     ? t.numberType // t.intType - because this causes weirdness in the types, we let go
+    : isNull(schema)
+    ? t.nullType
     : isBoolean(schema)
     ? t.booleanType
     : isEmpty(schema)
-    ? t.nullType
+    ? t.arrayCombinator(t.identifier("L04$3"))
     : t.stringType; // no need for string schema
 
 const numberHack = (s: string) =>
@@ -249,9 +259,8 @@ const numberHack = (s: string) =>
         a
           .replace(`${b + 100}:`, `"${b + 100}":`)
           .replace(`${b + 100}?:`, `"${b + 100}"?:`)
-          .replace(/t.null/g, "t.any")
-          .replace(/null/g, "any")
-          .replace(/anyable/g, "nullable"), // uggggh
+          .replace(/t.array\(L04\$3\)/g, "t.any")
+          .replace(/Array\<L04\$3\>/g, "any"),
       s
     );
 const generateTypes = ({

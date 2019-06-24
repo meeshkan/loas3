@@ -31,7 +31,8 @@
     "ajv-errors": "^1.0.1",
     "ajv-keywords": "^3.4.0",
     "io-ts": "^1.10.2",
-    "openapi3-ts": "^1.3.0"
+    "openapi3-ts": "^1.3.0",
+    "winston": "^3.2.1"
   },
   "scripts": {
     "compile": "ts-node ./src/generator/generate-types.ts && tsc --outDir dist",
