@@ -2,6 +2,7 @@ import * as t from "io-ts-codegen";
 import yaml from "js-yaml";
 import fs from "fs";
 import prettier from "prettier";
+import mkdirp from "mkdirp";
 
 const unswitch = (o: any): any =>
   o === null
@@ -252,7 +253,7 @@ const numberHack = (s: string) =>
           .replace(/null/g, "any"),
       s
     );
-const doStuff = ({
+const generateTypes = ({
   input,
   output,
   toplevel,
@@ -267,6 +268,7 @@ const doStuff = ({
   httpSecuritySchemaName: string;
   pathItemName: string;
 }) => {
+  mkdirp.sync(output.split("/").slice(0, -1).join("/"));
   const full = unswitch(
     HTTPSecuritySchemeHack(httpSecuritySchemaName)(
       ResponsesHack(responsesName)(
@@ -303,7 +305,7 @@ const doStuff = ({
   );
 };
 
-doStuff({
+generateTypes({
   input: "./schema/full.yml",
   output: "./src/generated/full.ts",
   toplevel: "OpenAPIObject",
@@ -311,7 +313,7 @@ doStuff({
   pathItemName: "PathItem",
   httpSecuritySchemaName: "HTTPSecurityScheme"
 });
-doStuff({
+generateTypes({
   input: "./schema/lazy.yml",
   output: "./src/generated/lazy.ts",
   toplevel: "$OpenAPIObject",
