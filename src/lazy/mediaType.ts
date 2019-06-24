@@ -11,9 +11,11 @@ import _schema from "./schema";
 const __ = ({ encoding, schema, ...rest }: $$MediaType) => ({
   ...rest,
   ...(encoding
-    ? Object.entries(encoding)
-        .map(([a, b]) => ({ [a]: _encoding(b) }))
-        .reduce((a, b) => ({ ...a, ...b }), {})
+    ? {
+        encoding: Object.entries(encoding)
+          .map(([a, b]) => ({ [a]: _encoding(b) }))
+          .reduce((a, b) => ({ ...a, ...b }), {})
+      }
     : {}),
   ...(schema
     ? {

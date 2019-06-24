@@ -1,6 +1,7 @@
 import {
   $Schema,
   is$IntegerSchema,
+  is$BooleanSchema,
   is$SimpleBooleanSchema,
   is$SimpleIntegerSchema,
   is$SimpleNumberSchema,
@@ -24,7 +25,8 @@ import {
   is$AllOfSchema,
   is$OneOfSchema,
   is$NotSchema,
-  is$Reference
+  is$Reference,
+  is$BooleanEnumSchema
 } from "../generated/lazy";
 import { Schema } from "../generated/full";
 
@@ -39,12 +41,18 @@ const _object = ({
   ...rest
 }: $ObjectSchema): Schema => ({
   ...rest,
-  properties: Object.entries(properties)
-    .map(([a, b]) => ({ [a]: is$Reference(b) ? b : _(b) }))
-    .reduce((a, b) => ({ ...a, ...b }), {}),
-  ...(additionalProperties
+  ...(properties
+    ? {
+        properties: Object.entries(properties)
+          .map(([a, b]) => ({ [a]: is$Reference(b) ? b : _(b) }))
+          .reduce((a, b) => ({ ...a, ...b }), {})
+      }
+    : {}),
+  ...(additionalProperties !== undefined
     ? {
         additionalProperties: is$Reference(additionalProperties)
+          ? additionalProperties
+          : typeof additionalProperties === "boolean"
           ? additionalProperties
           : _(additionalProperties)
       }
@@ -109,6 +117,10 @@ const _ = (o: $Schema): Schema =>
     : is$NumberSchema(o)
     ? o
     : is$StringSchema(o)
+    ? o
+    : is$BooleanSchema(o)
+    ? o
+    : is$BooleanEnumSchema(o)
     ? o
     : is$IntegerEnumSchema(o)
     ? o

@@ -257,6 +257,49 @@ definitions:
     patternProperties:
       "^x-": {}
     additionalProperties: false
+  $BooleanEnumSchema:
+    type: object
+    required:
+      - type
+      - enum
+    properties:
+      title:
+        type: string
+      type:
+        type: string
+        enum:
+        - boolean
+      description:
+        type: string
+      format:
+        type: string
+      default:
+        type: boolean
+      nullable:
+        type: boolean
+        default: false
+      enum:
+        type: array
+        items:
+          type: boolean
+        minItems: 1
+        uniqueItems: false
+      readOnly:
+        type: boolean
+        default: false
+      writeOnly:
+        type: boolean
+        default: false
+      example:
+        type: boolean
+      externalDocs:
+        $ref: "#/definitions/$ExternalDocumentation"
+      deprecated:
+        type: boolean
+        default: false
+    patternProperties:
+      "^x-": {}
+    additionalProperties: false
   $IntegerSchema:
     type: object
     required:
@@ -427,6 +470,9 @@ definitions:
           type: number
         minItems: 1
         uniqueItems: false
+      maxLength:
+        type: integer
+        minimum: 0
       readOnly:
         type: boolean
         default: false
@@ -474,6 +520,9 @@ definitions:
         default: false
       example:
         type: string
+      maxLength:
+        type: integer
+        minimum: 0
       externalDocs:
         $ref: "#/definitions/$ExternalDocumentation"
       deprecated:
@@ -509,6 +558,9 @@ definitions:
           type: string
         minItems: 1
         uniqueItems: false
+      maxLength:
+        type: integer
+        minimum: 0
       readOnly:
         type: boolean
         default: false
@@ -527,8 +579,6 @@ definitions:
     additionalProperties: false
   $ObjectSchema:
     type: object
-    required:
-      - properties
     properties:
       title:
         type: string
@@ -614,6 +664,8 @@ definitions:
               $ref: "#/definitions/$Reference"
           - then:
               $ref: "#/definitions/$Schema"
+      title:
+        type: string
       description:
         type: string
       default: {}
@@ -663,6 +715,8 @@ definitions:
         type: boolean
         default: false
       example: {}
+      title:
+        type: string
       externalDocs:
         $ref: "#/definitions/$ExternalDocumentation"
       deprecated:
@@ -695,6 +749,8 @@ definitions:
       readOnly:
         type: boolean
         default: false
+      title:
+        type: string
       writeOnly:
         type: boolean
         default: false
@@ -735,6 +791,8 @@ definitions:
         type: boolean
         default: false
       example: {}
+      title:
+        type: string
       externalDocs:
         $ref: "#/definitions/$ExternalDocumentation"
       deprecated:
@@ -880,9 +938,11 @@ definitions:
     - $ref: "#/definitions/$IntegerSchema"
     - $ref: "#/definitions/$NumberSchema"
     - $ref: "#/definitions/$StringSchema"
+    - $ref: "#/definitions/$BooleanSchema"
     - $ref: "#/definitions/$IntegerEnumSchema"
     - $ref: "#/definitions/$NumberEnumSchema"
     - $ref: "#/definitions/$StringEnumSchema"
+    - $ref: "#/definitions/$BooleanEnumSchema"
     - $ref: "#/definitions/$ArraySchema"
     - $ref: "#/definitions/$ObjectSchema"
     - $ref: "#/definitions/$AllOfSchema"

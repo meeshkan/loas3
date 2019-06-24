@@ -250,7 +250,8 @@ const numberHack = (s: string) =>
           .replace(`${b + 100}:`, `"${b + 100}":`)
           .replace(`${b + 100}?:`, `"${b + 100}"?:`)
           .replace(/t.null/g, "t.any")
-          .replace(/null/g, "any"),
+          .replace(/null/g, "any")
+          .replace(/anyable/g, "nullable"), // uggggh
       s
     );
 const generateTypes = ({
