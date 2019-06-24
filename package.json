@@ -34,7 +34,7 @@
     "openapi3-ts": "^1.3.0"
   },
   "scripts": {
-    "compile": "tsc --outDir dist",
+    "compile": "ts-node ./src/generator/generate-types.ts && tsc --outDir dist",
     "lint:fix": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "lint": "prettier --check \"src/**/*.ts\" \"test/**/*.ts\"",
     "test": "jest",

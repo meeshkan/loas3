@@ -123,6 +123,8 @@ interface RefSchema {
   $ref: string;
 }
 
+interface EmptySchema {}
+
 type JSONSchema =
   | StringSchema
   | RecordSchema
@@ -131,6 +133,7 @@ type JSONSchema =
   | BooleanSchema
   | ArraySchema
   | ObjectSchema
+  | EmptySchema
   | RefSchema;
 
 function getRequiredProperties(schema: ObjectSchema): { [key: string]: true } {
@@ -173,6 +176,9 @@ const isRecord = (u: unknown): u is RecordSchema =>
   typeof u === "object" &&
   (<ObjectSchema>u).properties === undefined &&
   typeof (<RecordSchema>u).additionalProperties === "object";
+
+const isEmpty = (u: unknown): u is EmptySchema =>
+  u && typeof u === "object" && Object.keys(<object>u).length === 0;
 
 const isPatternedRecord = (u: unknown): u is PatternedRecordSchema =>
   u &&
@@ -227,6 +233,8 @@ const to = (schema: JSONSchema): t.TypeReference =>
     ? t.numberType // t.intType - because this causes weirdness in the types, we let go
     : isBoolean(schema)
     ? t.booleanType
+    : isEmpty(schema)
+    ? t.nullType
     : t.stringType; // no need for string schema
 
 const numberHack = (s: string) =>
@@ -237,7 +245,9 @@ const numberHack = (s: string) =>
       (a, b) =>
         a
           .replace(`${b + 100}:`, `"${b + 100}":`)
-          .replace(`${b + 100}?:`, `"${b + 100}"?:`),
+          .replace(`${b + 100}?:`, `"${b + 100}"?:`)
+          .replace(/t.null/g, "t.any")
+          .replace(/null/g, "any"),
       s
     );
 const doStuff = ({

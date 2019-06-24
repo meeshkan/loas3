@@ -33,7 +33,7 @@ const __ = (
   ...rest,
   ...(parameters
     ? {
-        parameters: _parameters(parameters)
+        parameters: _parameters(parameters, path)
       }
     : {}),
   ...(get ? { get: _operation(get, path) } : {}),

@@ -1,77 +1,142 @@
-import { $Schema } from "../generated/lazy";
+import {
+  $Schema,
+  is$IntegerSchema,
+  is$SimpleBooleanSchema,
+  is$SimpleIntegerSchema,
+  is$SimpleNumberSchema,
+  is$SimpleStringSchema,
+  is$SimpleArraySchema,
+  is$SimpleObjectSchema,
+  is$NumberEnumSchema,
+  is$NumberSchema,
+  is$StringSchema,
+  is$IntegerEnumSchema,
+  is$StringEnumSchema,
+  is$ArraySchema,
+  $ArraySchema,
+  is$Schema,
+  is$ObjectSchema,
+  $ObjectSchema,
+  is$AnyOfSchema,
+  $AnyOfSchema,
+  $AllOfSchema,
+  $OneOfSchema,
+  $NotSchema,
+  is$AllOfSchema,
+  is$OneOfSchema,
+  is$NotSchema
+} from "../generated/lazy";
 import { Schema } from "../generated/full";
-import { isReference } from "./reference";
 
-// only the necessary to establish - this can even theoretically be shorter
-const SCHEMA_PROPERTIES = new Set([
-  "properties",
-  "type",
-  "additionalProperties",
-  "xml"
-]);
+const _array = ({ items, ...rest }: $ArraySchema): Schema => ({
+  ...rest,
+  ...(items ? { items: is$Schema(items) ? _(items) : items } : {})
+});
 
-export const isTopLevelSchema = (o: unknown): o is SchemaObject =>
-  o &&
-  typeof o === "object" &&
-  Object.keys(<object>o).filter(i => SCHEMA_PROPERTIES.has(i)).length > 0;
+const _object = ({
+  properties,
+  additionalProperties,
+  ...rest
+}: $ObjectSchema): Schema => ({
+  ...rest,
+  properties: Object.entries(properties)
+    .map(([a, b]) => ({ [a]: is$Schema(b) ? _(b) : b }))
+    .reduce((a, b) => ({ ...a, ...b }), {}),
+  ...(additionalProperties
+    ? {
+        additionalProperties: is$Schema(additionalProperties)
+          ? _(additionalProperties)
+          : additionalProperties
+      }
+    : {})
+});
 
-const __ = (o: JSONValue): SchemaObject | ReferenceObject =>
-  o instanceof Array
+const _anyOf = ({ anyOf, ...rest }: $AnyOfSchema): Schema => ({
+  ...rest,
+  ...(anyOf ? { anyOf: anyOf.map(i => (is$Schema(i) ? _(i) : i)) } : {})
+});
+
+const _allOf = ({ allOf, ...rest }: $AllOfSchema): Schema => ({
+  ...rest,
+  ...(allOf ? { allOf: allOf.map(i => (is$Schema(i) ? _(i) : i)) } : {})
+});
+
+const _oneOf = ({ oneOf, ...rest }: $OneOfSchema): Schema => ({
+  ...rest,
+  ...(oneOf ? { oneOf: oneOf.map(i => (is$Schema(i) ? _(i) : i)) } : {})
+});
+
+const _not = ({ not, ...rest }: $NotSchema): Schema => ({
+  ...rest,
+  ...(not ? { not: is$Schema(not) ? _(not) : not } : {})
+});
+
+const _ = (o: $Schema): Schema =>
+  is$SimpleBooleanSchema(o)
+    ? {
+        type: "boolean",
+        default: o
+      }
+    : is$SimpleIntegerSchema(o)
+    ? {
+        type: "integer",
+        format: "int64",
+        default: o,
+        example: o
+      }
+    : is$SimpleNumberSchema(o)
+    ? {
+        type: "number",
+        format: "double",
+        default: o,
+        example: o
+      }
+    : is$SimpleStringSchema(o)
+    ? {
+        type: "string",
+        default: o,
+        example: o
+      }
+    : is$SimpleArraySchema(o)
     ? {
         type: "array",
-        items: o.length !== 0 ? __(o[0]) : { type: "string" } //defaults to string
+        ...(o.length > 0 ? { items: _(o[0]) } : {}),
+        default: o,
+        example: o
       }
-    : typeof o === "object"
+    : is$SimpleObjectSchema(o)
     ? {
         type: "object",
-        ...(Object.keys(<object>o).length !== 0
-          ? {
-              properties: Object.entries(<object>o)
-                .map(([k, v]) => ({ [k]: __(v) }))
-                .reduce((a, b) => ({ ...a, ...b }), {})
-            }
-          : {})
+        properties: Object.entries(o)
+          .map(([a, b]) => ({ [a]: _(b) }))
+          .reduce((a, b) => ({ ...a, ...b }), {}),
+        example: o,
+        default: o
       }
-    : {
-        default: o,
-        ...(typeof o === "number" && Math.floor(o) === o
-          ? { format: "int64" }
-          : typeof o === "number"
-          ? { format: "double" }
-          : {}),
-        type:
-          typeof o === "number" && Math.floor(o) === o
-            ? "integer"
-            : typeof o === "number"
-            ? "number"
-            : typeof o === "boolean"
-            ? "boolean"
-            : o === null
-            ? "null"
-            : "string"
-      };
-const _ = (o: $Schema): Schema =>
-  isReference(o)
+    : is$IntegerSchema(o)
     ? o
-    : typeof o === "object" && Object.keys(<object>o).indexOf("oneOf") !== -1
-    ? { ...o, oneOf: (<any>o).oneOf.map((i: any) => _(i)) }
-    : typeof o === "object" && Object.keys(<object>o).indexOf("allOf") !== -1
-    ? { ...o, allOf: (<any>o).allOf.map((i: any) => _(i)) }
-    : typeof o === "object" && Object.keys(<object>o).indexOf("anyOf") !== -1
-    ? { ...o, anyOf: (<any>o).anyOf.map((i: any) => _(i)) }
-    : typeof o === "object" && Object.keys(<object>o).indexOf("not") !== -1
-    ? { ...o, not: _((<any>o).not) }
-    : isTopLevelSchema(o) && o.properties
-    ? {
-        ...o,
-        properties: Object.entries(o.properties)
-          .map(([a, b]) => ({ [a]: _(b as JSONValue) }))
-          .reduce((a, b) => ({ ...a, ...b }), {})
-      }
-    : isTopLevelSchema(o) && o.type === "array"
-    ? { ...o, items: _(o.items as JSONValue) }
-    : isTopLevelSchema(o)
+    : is$NumberSchema(o)
     ? o
-    : __(o);
+    : is$StringSchema(o)
+    ? o
+    : is$IntegerEnumSchema(o)
+    ? o
+    : is$NumberEnumSchema(o)
+    ? o
+    : is$StringEnumSchema(o)
+    ? o
+    : is$ArraySchema(o)
+    ? _array(o)
+    : is$ObjectSchema(o)
+    ? _object(o)
+    : is$AnyOfSchema(o)
+    ? _anyOf(o)
+    : is$AllOfSchema(o)
+    ? _allOf(o)
+    : is$OneOfSchema(o)
+    ? _oneOf(o)
+    : is$NotSchema(o)
+    ? _not(o)
+    : {};
 
 export default _;

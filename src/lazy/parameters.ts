@@ -14,7 +14,7 @@ import { _lazylazy, _lazy } from "./parameter";
 import _mediaType from "./mediaType";
 import _schema from "./schema";
 
-const __ = ({ schema, content, ...rest }: $Parameter) => ({
+export const _parameter = ({ schema, content, ...rest }: $Parameter) => ({
   ...rest,
   ...(content
     ? {
@@ -38,4 +38,4 @@ export default (
     ? _lazylazy(o, path)
     : is$LazyParams(o)
     ? _lazy(o)
-    : o.map(i => (is$Parameter(i) ? __(i) : i));
+    : o.map(i => (is$Parameter(i) ? _parameter(i) : i));

@@ -1,7 +1,13 @@
 import _content from "./content";
-import { $Response, is$$Response, $$Response } from "../generated/lazy";
+import {
+  $Response,
+  is$$Response,
+  $$Response,
+  is$Header
+} from "../generated/lazy";
 import { Response } from "../generated/full";
 import _mediaType from "./mediaType";
+import _header from "./header";
 
 const __ = ({
   description,
@@ -12,14 +18,18 @@ const __ = ({
   ...rest,
   description,
   ...(headers
-    ? Object.entries(headers) // same problem as encoding, need to unroll header :-(
-        .map(([a, b]) => ({ [a]: b }))
-        .reduce((a, b) => ({ ...a, ...b }), {})
+    ? {
+        headers: Object.entries(headers)
+          .map(([a, b]) => ({ [a]: is$Header(b) ? _header(b) : b }))
+          .reduce((a, b) => ({ ...a, ...b }), {})
+      }
     : {}),
   ...(content
-    ? Object.entries(content)
-        .map(([a, b]) => ({ [a]: _mediaType(b) }))
-        .reduce((a, b) => ({ ...a, ...b }), {})
+    ? {
+        content: Object.entries(content)
+          .map(([a, b]) => ({ [a]: _mediaType(b) }))
+          .reduce((a, b) => ({ ...a, ...b }), {})
+      }
     : {})
 });
 

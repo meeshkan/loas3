@@ -674,7 +674,7 @@ definitions:
   $AllOfSchema:
     type: object
     properties:
-      anyOf:
+      allOf:
         type: array
         items:
           switch:
