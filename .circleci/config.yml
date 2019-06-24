@@ -15,7 +15,8 @@ jobs:
 
     steps:
       - checkout
-      - run: git-lfs pull
+      - run: sudo apt-get install git-lfs
+      - run: git lfs pull
       - run: yarn install
       - run: yarn test:ci
       - codecov/upload:
