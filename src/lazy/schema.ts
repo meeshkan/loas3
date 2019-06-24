@@ -137,6 +137,6 @@ const _ = (o: $Schema): Schema =>
         example: o,
         default: o
       }
-    : {}
+    : {};
 
 export default _;

@@ -268,7 +268,12 @@ const generateTypes = ({
   httpSecuritySchemaName: string;
   pathItemName: string;
 }) => {
-  mkdirp.sync(output.split("/").slice(0, -1).join("/"));
+  mkdirp.sync(
+    output
+      .split("/")
+      .slice(0, -1)
+      .join("/")
+  );
   const full = unswitch(
     HTTPSecuritySchemeHack(httpSecuritySchemaName)(
       ResponsesHack(responsesName)(
