@@ -15,6 +15,7 @@ jobs:
 
     steps:
       - checkout
+      - run: curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash
       - run: sudo apt-get install git-lfs
       - run: git lfs pull
       - run: yarn install
