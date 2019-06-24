@@ -49,7 +49,3 @@ Because sometimes you need to write an OpenAPI spec.
 ## Examples
 
 See the [tests](test/lazy/).
-
-## Thanks
-
-Thanks to [metadevpro](https://github.com/metadevpro/openapi3-ts) for providing the unlazy types.
