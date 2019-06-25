@@ -11,6 +11,7 @@
     "@types/js-yaml": "^3.12.1",
     "@types/mkdirp": "^0.5.2",
     "@types/node": "^12.0.8",
+    "@types/prettier": "^1.16.4",
     "@types/tv4": "^1.2.29",
     "codecov": "^3.5.0",
     "io-ts-codegen": "^0.3.3",
@@ -18,7 +19,6 @@
     "jest-junit": "^6.4.0",
     "js-yaml": "^3.13.1",
     "mkdirp": "^0.5.1",
-    "prettier": "^1.18.2",
     "ts-jest": "^24.0.2",
     "ts-node": "^8.3.0",
     "typescript": "^3.5.2"
@@ -28,6 +28,7 @@
     "ajv-errors": "^1.0.1",
     "ajv-keywords": "^3.4.0",
     "io-ts": "^1.10.2",
+    "prettier": "^1.18.2",
     "winston": "^3.2.1"
   },
   "scripts": {
