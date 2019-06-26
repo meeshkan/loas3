@@ -287,9 +287,7 @@ const generateTypes = ({
   );
   const full = unswitch(
     HTTPSecuritySchemeHack(httpSecuritySchemaName)(
-      ResponsesHack(responsesName)(
-        PathItemHack(pathItemName)(input)
-      )
+      ResponsesHack(responsesName)(PathItemHack(pathItemName)(input))
     )
   );
   const { definitions, ...fullObj } = full;
