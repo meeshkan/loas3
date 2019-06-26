@@ -62,6 +62,7 @@
   },
   "exclude": [
     "node_modules",
-    "**/*.test.ts"
+    "**/*.test.ts",
+    "dist"
   ]
 }
