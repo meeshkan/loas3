@@ -1,9 +1,3 @@
-import winston from "winston";
-
-const logger = winston.createLogger({
-  transports: [new winston.transports.Console()]
-});
-
 import {
   $Schema,
   is$SimpleBooleanSchema,
@@ -72,6 +66,9 @@ const __ = ({
     : {})
 });
 
+const un_x = (o: $Schema): $Schema => Object.entries(o).filter(([a]) => a.slice(0,2) !== "x-").map(([a,b]) => ({[a]: b})).reduce((a,b) => ({...a,...b}),{});
+const x = (o: $Schema): $Schema => Object.entries(o).filter(([a]) => a.slice(0,2) === "x-").map(([a,b]) => ({[a]: b})).reduce((a,b) => ({...a,...b}),{});
+
 const _ = (o: $Schema): Schema =>
   is$SimpleBooleanSchema(o)
     ? {
@@ -111,11 +108,12 @@ const _ = (o: $Schema): Schema =>
     : is$SimpleObjectSchema(o)
     ? {
         type: "object",
-        properties: Object.entries(o)
+        properties: Object.entries(un_x(o))
           .map(([a, b]) => ({ [a]: _(b) }))
           .reduce((a, b) => ({ ...a, ...b }), {}),
-        example: o,
-        default: o
+        example: un_x(o),
+        default: un_x(o),
+        ...x(o)
       }
     : {};
 
