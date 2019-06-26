@@ -1,5 +1,6 @@
 import * as t from "io-ts-codegen";
-import yaml from "js-yaml";
+import fullSpec from "../../schema/full";
+import lazySpec from "../../schema/lazy";
 import fs from "fs";
 import prettier from "prettier";
 import mkdirp from "mkdirp";
@@ -271,7 +272,7 @@ const generateTypes = ({
   pathItemName,
   httpSecuritySchemaName
 }: {
-  input: string;
+  input: any;
   output: string;
   toplevel: string;
   responsesName: string;
@@ -287,7 +288,7 @@ const generateTypes = ({
   const full = unswitch(
     HTTPSecuritySchemeHack(httpSecuritySchemaName)(
       ResponsesHack(responsesName)(
-        PathItemHack(pathItemName)(yaml.load(fs.readFileSync(input).toString()))
+        PathItemHack(pathItemName)(input)
       )
     )
   );
@@ -321,7 +322,7 @@ const generateTypes = ({
 };
 
 generateTypes({
-  input: "./schema/full.yml",
+  input: fullSpec,
   output: "./src/generated/full.ts",
   toplevel: "OpenAPIObject",
   responsesName: "Responses",
@@ -329,7 +330,7 @@ generateTypes({
   httpSecuritySchemaName: "HTTPSecurityScheme"
 });
 generateTypes({
-  input: "./schema/lazy.yml",
+  input: lazySpec,
   output: "./src/generated/lazy.ts",
   toplevel: "$OpenAPIObject",
   responsesName: "$$Responses",

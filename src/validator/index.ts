@@ -2,10 +2,9 @@ import Ajv from "ajv";
 import AjvErrors from "ajv-errors";
 import AjvKeywords from "ajv-keywords";
 import fs from "fs";
-import yaml from "js-yaml";
+import full from "../../schema/full";
+import lazy from "../../schema/lazy";
 
-const lazy = yaml.load(fs.readFileSync("./schema/lazy.yml").toString());
-const full = yaml.load(fs.readFileSync("./schema/full.yml").toString());
 export default class Validator {
   public ajv: Ajv.Ajv;
   constructor() {
