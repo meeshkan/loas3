@@ -66,8 +66,16 @@ const __ = ({
     : {})
 });
 
-const un_x = (o: $Schema): $Schema => Object.entries(o).filter(([a]) => a.slice(0,2) !== "x-").map(([a,b]) => ({[a]: b})).reduce((a,b) => ({...a,...b}),{});
-const x = (o: $Schema): $Schema => Object.entries(o).filter(([a]) => a.slice(0,2) === "x-").map(([a,b]) => ({[a]: b})).reduce((a,b) => ({...a,...b}),{});
+const un_x = (o: $Schema): $Schema =>
+  Object.entries(o)
+    .filter(([a]) => a.slice(0, 2) !== "x-")
+    .map(([a, b]) => ({ [a]: b }))
+    .reduce((a, b) => ({ ...a, ...b }), {});
+const x = (o: $Schema): $Schema =>
+  Object.entries(o)
+    .filter(([a]) => a.slice(0, 2) === "x-")
+    .map(([a, b]) => ({ [a]: b }))
+    .reduce((a, b) => ({ ...a, ...b }), {});
 
 const _ = (o: $Schema): Schema =>
   is$SimpleBooleanSchema(o)

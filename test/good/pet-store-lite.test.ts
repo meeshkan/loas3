@@ -11,7 +11,6 @@ test("highly condensed schema validates", () => {
     fs.readFileSync("./test/good/pet-store-lite.full.yml").toString()
   );
   lazy(loas(instance), val => {
-    console.log(JSON.stringify(expanded, null, 2));
     expect(val).toEqual(expanded);
   });
 });
