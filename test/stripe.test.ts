@@ -1,11 +1,11 @@
 import fs from "fs";
 import yaml from "js-yaml";
-import loas from "../../src";
+import loas from "../src";
 import { lazy } from "./util";
 
 test("stripe in, stripe out", () => {
   const instance = yaml.load(
-    fs.readFileSync("./test/good/stripe.yml").toString()
+    fs.readFileSync("./test/stripe.yml").toString()
   );
   lazy(loas(instance), val => {
     expect(val).toEqual(instance);
