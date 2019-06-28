@@ -1,5 +1,5 @@
-import { LazyResult } from "../../src/index";
-import { OpenAPIObject } from "../../src/generated/full";
+import { LazyResult } from "../src/index";
+import { OpenAPIObject } from "../src/generated/full";
 export const lazy = (res: LazyResult, f: (val: OpenAPIObject) => void) => {
   const { errors, val } = res;
   if (val) {
