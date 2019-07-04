@@ -4,9 +4,7 @@ import loas from "../src";
 import { lazy } from "./util";
 
 test("stripe in, stripe out", () => {
-  const instance = yaml.load(
-    fs.readFileSync("./test/stripe.yml").toString()
-  );
+  const instance = yaml.load(fs.readFileSync("./test/stripe.yml").toString());
   lazy(loas(instance), val => {
     expect(val).toEqual(instance);
   });

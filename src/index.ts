@@ -1,4 +1,4 @@
-import { Either, left, right } from 'fp-ts/lib/Either';
+import { Either, left, right } from "fp-ts/lib/Either";
 import openApi from "./lazy/openApi";
 import { $OpenAPIObject } from "./generated/lazy";
 import Validator from "./validator";
@@ -9,7 +9,7 @@ export default (o: $OpenAPIObject): Either<ErrorObject[], OpenAPIObject> => {
   const validator = new Validator();
   const errors = validator.validate("loas3", o);
   if (errors && errors.length) {
-      left(errors)
+    left(errors);
   }
   return right(openApi(o));
 };
