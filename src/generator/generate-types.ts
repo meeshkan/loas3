@@ -4,6 +4,7 @@ import lazySpec from "../../schema/lazy";
 import fs from "fs";
 import prettier from "prettier";
 import mkdirp from "mkdirp";
+import { OpenAPIObject } from "../generated/full";
 
 const unswitch = (o: any): any =>
   o === null
@@ -15,9 +16,7 @@ const unswitch = (o: any): any =>
         .map(([a, b]: [string, any]) =>
           a === "switch"
             ? {
-                anyOf: b
-                  .filter((i: any) => i.then !== undefined)
-                  .map((i: any) => unswitch(i.then))
+                anyOf: b.filter((i: any) => i.then !== undefined).map((i: any) => unswitch(i.then)),
               }
             : { [a]: unswitch(b) }
         )
@@ -35,15 +34,12 @@ const PathItemHack = (objName: string) => (o: any): any => ({
         ..."get|put|post|delete|options|head|patch|trace"
           .split("|")
           .map(i => ({
-            [i]:
-              o.definitions[objName].patternProperties[
-                "^(get|put|post|delete|options|head|patch|trace)$"
-              ]
+            [i]: o.definitions[objName].patternProperties["^(get|put|post|delete|options|head|patch|trace)$"],
           }))
-          .reduce((a, b) => ({ ...a, ...b }), {})
-      }
-    }
-  }
+          .reduce((a, b) => ({ ...a, ...b }), {}),
+      },
+    },
+  },
 });
 
 const ResponsesHack = (objName: string) => (o: any): any => ({
@@ -57,13 +53,12 @@ const ResponsesHack = (objName: string) => (o: any): any => ({
         ...new Array(501)
           .fill(null)
           .map((_, j) => ({
-            [`${j < 500 ? 100 + j : "default"}`]: o.definitions[objName]
-              .patternProperties["^[1-5](?:\\d{2}|XX)$"]
+            [`${j < 500 ? 100 + j : "default"}`]: o.definitions[objName].patternProperties["^[1-5](?:\\d{2}|XX)$"],
           }))
-          .reduce((a, b) => ({ ...a, ...b }), {})
-      }
-    }
-  }
+          .reduce((a, b) => ({ ...a, ...b }), {}),
+      },
+    },
+  },
 });
 
 const HTTPSecuritySchemeHack = (objName: string) => (o: any): any => ({
@@ -74,9 +69,9 @@ const HTTPSecuritySchemeHack = (objName: string) => (o: any): any => ({
       ...Object.entries(o.definitions[objName])
         .filter(([a]) => a !== "switch")
         .map(([a, b]) => ({ [a]: b }))
-        .reduce((a, b) => ({ ...a, ...b }), {})
-    }
-  }
+        .reduce((a, b) => ({ ...a, ...b }), {}),
+    },
+  },
 });
 
 interface NullSchema {
@@ -153,9 +148,7 @@ function getRequiredProperties(schema: ObjectSchema): { [key: string]: true } {
   return required;
 }
 
-function toInterfaceCombinator(
-  schema: ObjectSchema
-): t.InterfaceCombinator | t.BrandCombinator {
+function toInterfaceCombinator(schema: ObjectSchema): t.InterfaceCombinator | t.BrandCombinator {
   const required = getRequiredProperties(schema);
   // const acceptsX = schema.patternProperties && schema.patternProperties["^x-"] !== undefined;
   const out = t.interfaceCombinator(
@@ -169,17 +162,14 @@ function toInterfaceCombinator(
 const isBoolean = (u: unknown): u is BooleanSchema =>
   u && typeof u === "object" && (<BooleanSchema>u).type === "boolean";
 
-const isNumber = (u: unknown): u is NumberSchema =>
-  u && typeof u === "object" && (<NumberSchema>u).type === "number";
+const isNumber = (u: unknown): u is NumberSchema => u && typeof u === "object" && (<NumberSchema>u).type === "number";
 
 const isInteger = (u: unknown): u is IntegerSchema =>
   u && typeof u === "object" && (<IntegerSchema>u).type === "integer";
 
-const isNull = (u: unknown): u is IntegerSchema =>
-  u && typeof u === "object" && (<NullSchema>u).type === "null";
+const isNull = (u: unknown): u is IntegerSchema => u && typeof u === "object" && (<NullSchema>u).type === "null";
 
-const isArray = (u: unknown): u is ArraySchema =>
-  u && typeof u === "object" && (<ArraySchema>u).type === "array";
+const isArray = (u: unknown): u is ArraySchema => u && typeof u === "object" && (<ArraySchema>u).type === "array";
 
 const isRecord = (u: unknown): u is RecordSchema =>
   u &&
@@ -187,8 +177,7 @@ const isRecord = (u: unknown): u is RecordSchema =>
   (<ObjectSchema>u).properties === undefined &&
   typeof (<RecordSchema>u).additionalProperties === "object";
 
-const isEmpty = (u: unknown): u is EmptySchema =>
-  u && typeof u === "object" && Object.keys(<object>u).length === 0;
+const isEmpty = (u: unknown): u is EmptySchema => u && typeof u === "object" && Object.keys(<object>u).length === 0;
 
 const isPatternedRecord = (u: unknown): u is PatternedRecordSchema =>
   u &&
@@ -197,27 +186,18 @@ const isPatternedRecord = (u: unknown): u is PatternedRecordSchema =>
   typeof (<PatternedRecordSchema>u).patternProperties === "object";
 
 const isObject = (u: unknown): u is ObjectSchema =>
-  u &&
-  typeof u === "object" &&
-  (<ObjectSchema>u).type === "object" &&
-  (<ObjectSchema>u).properties !== undefined;
+  u && typeof u === "object" && (<ObjectSchema>u).type === "object" && (<ObjectSchema>u).properties !== undefined;
 
-const isRef = (u: unknown): u is RefSchema =>
-  u && typeof u === "object" && (<RefSchema>u).$ref !== undefined;
+const isRef = (u: unknown): u is RefSchema => u && typeof u === "object" && (<RefSchema>u).$ref !== undefined;
 
-const isAnyOf = (u: unknown): u is AnyOfSchema =>
-  u && typeof u === "object" && (<AnyOfSchema>u).anyOf !== undefined;
+const isAnyOf = (u: unknown): u is AnyOfSchema => u && typeof u === "object" && (<AnyOfSchema>u).anyOf !== undefined;
 
 const makeTypeGuard = (a: string, b: JSONSchema) => {
   const typeGuard =
-    isObject(b) &&
-    b.patternProperties &&
-    b.patternProperties["^x-"] !== undefined
+    isObject(b) && b.patternProperties && b.patternProperties["^x-"] !== undefined
       ? ` && new Set([...${JSON.stringify(
           Object.keys(b.properties)
-        )}, ...Object.keys(u).filter(i => i.slice(0, 2) !== "x-")]).size === ${
-          Object.keys(b.properties).length
-        }`
+        )}, ...Object.keys(u).filter(i => i.slice(0, 2) !== "x-")]).size === ${Object.keys(b.properties).length}`
       : "";
   return `export const is${a} = (u: unknown): u is ${a} => ${a}.is(u)${typeGuard};`;
 };
@@ -233,9 +213,7 @@ const to = (schema: JSONSchema): t.TypeReference =>
     : isPatternedRecord(schema)
     ? t.recordCombinator(
         t.stringType,
-        to(Object.entries(schema.patternProperties).filter(
-          ([a]) => a !== "^x-"
-        )[0][1] as JSONSchema)
+        to(Object.entries(schema.patternProperties).filter(([a]) => a !== "^x-")[0][1] as JSONSchema)
       )
     : isArray(schema)
     ? t.arrayCombinator(to(schema.items))
@@ -251,26 +229,25 @@ const to = (schema: JSONSchema): t.TypeReference =>
     ? t.arrayCombinator(t.identifier("L04$3"))
     : t.stringType; // no need for string schema
 
+/**
+ * Validates a schema by adding quotation marks next to number keys,
+ * and replaces internal empty array with `any` or `t.any`.
+ * Example: `500: { }` ==> `"500": { }`
+ * @param s schema
+ */
 const numberHack = (s: string) =>
-  new Array(500)
-    .fill(null)
-    .map((_, j) => j)
-    .reduce(
-      (a, b) =>
-        a
-          .replace(`${b + 100}:`, `"${b + 100}":`)
-          .replace(`${b + 100}?:`, `"${b + 100}"?:`)
-          .replace(/t.array\(L04\$3\)/g, "t.any")
-          .replace(/Array\<L04\$3\>/g, "any"),
-      s
-    );
+  s
+    .replace(/([1-5]\d\d)(\??):/g, '"$1:"$2')
+    .replace(/t.array\(L04\$3\)/g, "t.any")
+    .replace(/Array\<L04\$3\>/g, "any");
+
 const generateTypes = ({
   input,
   output,
   toplevel,
   responsesName,
   pathItemName,
-  httpSecuritySchemaName
+  httpSecuritySchemaName,
 }: {
   input: any;
   output: string;
@@ -286,9 +263,7 @@ const generateTypes = ({
       .join("/")
   );
   const full = unswitch(
-    HTTPSecuritySchemeHack(httpSecuritySchemaName)(
-      ResponsesHack(responsesName)(PathItemHack(pathItemName)(input))
-    )
+    HTTPSecuritySchemeHack(httpSecuritySchemaName)(ResponsesHack(responsesName)(PathItemHack(pathItemName)(input)))
   );
   const { definitions, ...fullObj } = full;
 
@@ -296,23 +271,22 @@ const generateTypes = ({
     .map(([a, b]) => t.typeDeclaration(a, to(b as JSONSchema)))
     .concat(t.typeDeclaration(toplevel, to(fullObj as JSONSchema)));
   const sorted = t.sort(declarations);
-  const typeGuards = Object.entries(definitions).map(([a, b]) =>
-    makeTypeGuard(a, b as JSONSchema)
-  );
+  const typeGuards = Object.entries(definitions).map(([a, b]) => makeTypeGuard(a, b as JSONSchema));
+  console.log(typeGuards);
   fs.writeFileSync(
     output,
     numberHack(
       prettier.format(
         [
           `import * as t from "io-ts";
-`
+`,
         ]
           .concat(sorted.map(d => t.printRuntime(d)))
           .concat(sorted.map(d => `export ${t.printStatic(d)}`))
           .concat(typeGuards)
           .join("\n"),
         {
-          parser: "typescript"
+          parser: "typescript",
         }
       )
     )
@@ -325,7 +299,7 @@ generateTypes({
   toplevel: "OpenAPIObject",
   responsesName: "Responses",
   pathItemName: "PathItem",
-  httpSecuritySchemaName: "HTTPSecurityScheme"
+  httpSecuritySchemaName: "HTTPSecurityScheme",
 });
 generateTypes({
   input: lazySpec,
@@ -333,5 +307,5 @@ generateTypes({
   toplevel: "$OpenAPIObject",
   responsesName: "$$Responses",
   pathItemName: "$$PathItem",
-  httpSecuritySchemaName: "$HTTPSecurityScheme"
+  httpSecuritySchemaName: "$HTTPSecurityScheme",
 });

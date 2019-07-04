@@ -1,7 +1,6 @@
 import Ajv from "ajv";
 import AjvErrors from "ajv-errors";
 import AjvKeywords from "ajv-keywords";
-import fs from "fs";
 import full from "../../schema/full";
 import lazy from "../../schema/lazy";
 
@@ -10,7 +9,7 @@ export default class Validator {
   constructor() {
     this.ajv = new Ajv({
       allErrors: true,
-      jsonPointers: true
+      jsonPointers: true,
     });
     AjvKeywords(this.ajv, "switch");
     AjvErrors(this.ajv);
