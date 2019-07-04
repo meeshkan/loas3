@@ -1264,6 +1264,11 @@ form-data@~2.3.2:
   resolved "https://registry.yarnpkg.com/fp-ts/-/fp-ts-1.19.1.tgz#24a1da8d42d82bc37add40100ab3763d21eddd69"
   integrity sha512-F8wXEu9y5YeVavmho68AyhaZcJcc01OOxGg19ZPUqpwOINFo+h3BDRiye0gpyVh75UvR/GNOjLIEE6xZTVPM7w==
 
+fp-ts@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/fp-ts/-/fp-ts-2.0.0.tgz#7db4d68ea95c0c2efedaafc02e0579e47a46cbeb"
+  integrity sha512-oz8L+EZiztqGVLhgdL+63b4hpfdJkEKH/4vRoS/AuUwYqmn7vHAzWMu1jtoYfB0pPxo5UioWVT2XOuftyivUSQ==
+
 fragment-cache@^0.2.1:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/fragment-cache/-/fragment-cache-0.2.1.tgz#4290fad27f13e89be7f33799c6bc5a0abfff0d19"

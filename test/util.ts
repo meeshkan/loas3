@@ -1,12 +1,11 @@
-import { LazyResult } from "../src/index";
+import { Either, isLeft } from 'fp-ts/lib/Either';
+import { ErrorObject } from "ajv";
 import { OpenAPIObject } from "../src/generated/full";
-export const lazy = (res: LazyResult, f: (val: OpenAPIObject) => void) => {
-  const { errors, val } = res;
-  if (val) {
-    f(val);
-  } else {
+export const lazy = (res: Either<ErrorObject[], OpenAPIObject>, f: (val: OpenAPIObject) => void) => {
+  if (isLeft(res)) {
     throw new Error(
-      errors ? errors.map(i => i.message).join("\n") : "inconsistent state"
+      res.left.map(i => i.message).join("\n")
     );
   }
+  return f(res.right);
 };
