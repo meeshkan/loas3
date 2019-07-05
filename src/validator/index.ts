@@ -1,7 +1,6 @@
 import Ajv from "ajv";
 import AjvErrors from "ajv-errors";
 import AjvKeywords from "ajv-keywords";
-import fs from "fs";
 import full from "../../schema/full";
 import lazy from "../../schema/lazy";
 

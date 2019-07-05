@@ -4,6 +4,7 @@ import lazySpec from "../../schema/lazy";
 import fs from "fs";
 import prettier from "prettier";
 import mkdirp from "mkdirp";
+import path from "path";
 
 const unswitch = (o: any): any =>
   o === null
@@ -24,47 +25,62 @@ const unswitch = (o: any): any =>
         .reduce((a, b) => ({ ...a, ...b }), {})
     : o;
 
-const PathItemHack = (objName: string) => (o: any): any => ({
-  ...o,
-  definitions: {
-    ...o.definitions,
-    [objName]: {
-      ...o.definitions[objName],
-      properties: {
-        ...o.definitions[objName].properties,
-        ..."get|put|post|delete|options|head|patch|trace"
-          .split("|")
-          .map(i => ({
-            [i]:
-              o.definitions[objName].patternProperties[
-                "^(get|put|post|delete|options|head|patch|trace)$"
-              ]
-          }))
-          .reduce((a, b) => ({ ...a, ...b }), {})
+const HTTP_METHODS = [
+  "get",
+  "put",
+  "post",
+  "delete",
+  "options",
+  "head",
+  "patch",
+  "trace"
+];
+const HTTP_METHODS_REGEX = `^(${HTTP_METHODS.join("|")})$`;
+const PathItemHack = (objName: string) => (o: any): any => {
+  const pi = o.definitions[objName];
+  const opRef = pi.patternProperties[HTTP_METHODS_REGEX];
+  const methods = HTTP_METHODS.reduce(
+    (a, method) => ({ ...a, ...{ [method]: opRef } }),
+    {}
+  );
+  return {
+    ...o,
+    definitions: {
+      ...o.definitions,
+      [objName]: {
+        ...pi,
+        properties: {
+          ...pi.properties,
+          ...methods
+        }
       }
     }
-  }
-});
+  };
+};
 
-const ResponsesHack = (objName: string) => (o: any): any => ({
-  ...o,
-  definitions: {
-    ...o.definitions,
-    [objName]: {
-      ...o.definitions[objName],
-      properties: {
-        ...o.definitions[objName].properties,
-        ...new Array(501)
-          .fill(null)
-          .map((_, j) => ({
-            [`${j < 500 ? 100 + j : "default"}`]: o.definitions[objName]
-              .patternProperties["^[1-5](?:\\d{2}|XX)$"]
-          }))
-          .reduce((a, b) => ({ ...a, ...b }), {})
+const ResponsesHack = (objName: string) => (o: any): any => {
+  const pi = o.definitions[objName];
+  const respRef = pi.patternProperties["^[1-5](?:\\d{2}|XX)$"];
+  const responses = [...Array(500).keys()].reduce(
+    (a, code) => ({ ...a, ...{ [code + 100]: respRef } }),
+    {
+      default: respRef
+    }
+  );
+  return {
+    ...o,
+    definitions: {
+      ...o.definitions,
+      [objName]: {
+        ...pi,
+        properties: {
+          ...pi.properties,
+          ...responses
+        }
       }
     }
-  }
-});
+  };
+};
 
 const HTTPSecuritySchemeHack = (objName: string) => (o: any): any => ({
   ...o,
@@ -73,8 +89,7 @@ const HTTPSecuritySchemeHack = (objName: string) => (o: any): any => ({
     [objName]: {
       ...Object.entries(o.definitions[objName])
         .filter(([a]) => a !== "switch")
-        .map(([a, b]) => ({ [a]: b }))
-        .reduce((a, b) => ({ ...a, ...b }), {})
+        .reduce((a, [b, c]) => ({ ...a, ...{ [b]: c } }), {})
     }
   }
 });
@@ -251,19 +266,18 @@ const to = (schema: JSONSchema): t.TypeReference =>
     ? t.arrayCombinator(t.identifier("L04$3"))
     : t.stringType; // no need for string schema
 
+/**
+ * Validates a schema by adding quotation marks next to number keys,
+ * and replaces internal empty array with `any` or `t.any`.
+ * Example: `500: { }` ==> `"500": { }`
+ * @param s schema
+ */
 const numberHack = (s: string) =>
-  new Array(500)
-    .fill(null)
-    .map((_, j) => j)
-    .reduce(
-      (a, b) =>
-        a
-          .replace(`${b + 100}:`, `"${b + 100}":`)
-          .replace(`${b + 100}?:`, `"${b + 100}"?:`)
-          .replace(/t.array\(L04\$3\)/g, "t.any")
-          .replace(/Array\<L04\$3\>/g, "any"),
-      s
-    );
+  s
+    .replace(/([1-5]\d\d)(\??):/g, '"$1"$2:')
+    .replace(/t.array\(L04\$3\)/g, "t.any")
+    .replace(/Array\<L04\$3\>/g, "any");
+
 const generateTypes = ({
   input,
   output,
@@ -279,19 +293,13 @@ const generateTypes = ({
   httpSecuritySchemaName: string;
   pathItemName: string;
 }) => {
-  mkdirp.sync(
-    output
-      .split("/")
-      .slice(0, -1)
-      .join("/")
-  );
+  mkdirp.sync(path.dirname(output));
   const full = unswitch(
     HTTPSecuritySchemeHack(httpSecuritySchemaName)(
       ResponsesHack(responsesName)(PathItemHack(pathItemName)(input))
     )
   );
   const { definitions, ...fullObj } = full;
-
   const declarations = Object.entries(definitions)
     .map(([a, b]) => t.typeDeclaration(a, to(b as JSONSchema)))
     .concat(t.typeDeclaration(toplevel, to(fullObj as JSONSchema)));
@@ -299,6 +307,7 @@ const generateTypes = ({
   const typeGuards = Object.entries(definitions).map(([a, b]) =>
     makeTypeGuard(a, b as JSONSchema)
   );
+  typeGuards.push(makeTypeGuard(toplevel, fullObj));
   fs.writeFileSync(
     output,
     numberHack(
