@@ -4,6 +4,7 @@ import lazySpec from "../../schema/lazy";
 import fs from "fs";
 import prettier from "prettier";
 import mkdirp from "mkdirp";
+import path from "path";
 
 const unswitch = (o: any): any =>
   o === null
@@ -292,12 +293,7 @@ const generateTypes = ({
   httpSecuritySchemaName: string;
   pathItemName: string;
 }) => {
-  mkdirp.sync(
-    output
-      .split("/")
-      .slice(0, -1)
-      .join("/")
-  );
+  mkdirp.sync(path.dirname(output));
   const full = unswitch(
     HTTPSecuritySchemeHack(httpSecuritySchemaName)(
       ResponsesHack(responsesName)(PathItemHack(pathItemName)(input))
