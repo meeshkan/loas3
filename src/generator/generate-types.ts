@@ -268,12 +268,12 @@ const generateTypes = ({
     HTTPSecuritySchemeHack(httpSecuritySchemaName)(ResponsesHack(responsesName)(PathItemHack(pathItemName)(input)))
   );
   const { definitions, ...fullObj } = full;
-
   const declarations = Object.entries(definitions)
     .map(([a, b]) => t.typeDeclaration(a, to(b as JSONSchema)))
     .concat(t.typeDeclaration(toplevel, to(fullObj as JSONSchema)));
   const sorted = t.sort(declarations);
   const typeGuards = Object.entries(definitions).map(([a, b]) => makeTypeGuard(a, b as JSONSchema));
+  typeGuards.push(makeTypeGuard(toplevel, fullObj));
   fs.writeFileSync(
     output,
     numberHack(
