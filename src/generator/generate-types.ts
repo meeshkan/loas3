@@ -43,24 +43,26 @@ const PathItemHack = (objName: string) => (o: any): any => {
   };
 };
 
-const ResponsesHack = (objName: string) => (o: any): any => ({
-  ...o,
-  definitions: {
-    ...o.definitions,
-    [objName]: {
-      ...o.definitions[objName],
-      properties: {
-        ...o.definitions[objName].properties,
-        ...new Array(501)
-          .fill(null)
-          .map((_, j) => ({
-            [`${j < 500 ? 100 + j : "default"}`]: o.definitions[objName].patternProperties["^[1-5](?:\\d{2}|XX)$"],
-          }))
-          .reduce((a, b) => ({ ...a, ...b }), {}),
+const ResponsesHack = (objName: string) => (o: any): any => {
+  const pi = o.definitions[objName];
+  const respRef = pi.patternProperties["^[1-5](?:\\d{2}|XX)$"];
+  const responses = [...Array(500).keys()].reduce((a, code) => ({ ...a, ...{ [code + 100]: respRef } }), {
+    default: respRef,
+  });
+  return {
+    ...o,
+    definitions: {
+      ...o.definitions,
+      [objName]: {
+        ...pi,
+        properties: {
+          ...pi.properties,
+          ...responses,
+        },
       },
     },
-  },
-});
+  };
+};
 
 const HTTPSecuritySchemeHack = (objName: string) => (o: any): any => ({
   ...o,
@@ -69,8 +71,7 @@ const HTTPSecuritySchemeHack = (objName: string) => (o: any): any => ({
     [objName]: {
       ...Object.entries(o.definitions[objName])
         .filter(([a]) => a !== "switch")
-        .map(([a, b]) => ({ [a]: b }))
-        .reduce((a, b) => ({ ...a, ...b }), {}),
+        .reduce((a, [b, c]) => ({ ...a, ...{ [b]: c } }), {}),
     },
   },
 });
