@@ -4,7 +4,6 @@ import lazySpec from "../../schema/lazy";
 import fs from "fs";
 import prettier from "prettier";
 import mkdirp from "mkdirp";
-import { OpenAPIObject } from "../generated/full";
 
 const unswitch = (o: any): any =>
   o === null
@@ -27,6 +26,8 @@ const HTTP_METHODS = ["get", "put", "post", "delete", "options", "head", "patch"
 const HTTP_METHODS_REGEX = `^(${HTTP_METHODS.join("|")})$`;
 const PathItemHack = (objName: string) => (o: any): any => {
   const pi = o.definitions[objName];
+  const opRef = pi.patternProperties[HTTP_METHODS_REGEX];
+  const methods = HTTP_METHODS.reduce((a, method) => ({ ...a, ...{ [method]: opRef } }), {});
   return {
     ...o,
     definitions: {
@@ -35,9 +36,7 @@ const PathItemHack = (objName: string) => (o: any): any => {
         ...pi,
         properties: {
           ...pi.properties,
-          ...HTTP_METHODS.map(i => ({
-            [i]: pi.patternProperties[HTTP_METHODS_REGEX],
-          })).reduce((a, b) => ({ ...a, ...b }), {}),
+          ...methods,
         },
       },
     },
