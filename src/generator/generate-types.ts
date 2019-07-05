@@ -23,24 +23,26 @@ const unswitch = (o: any): any =>
         .reduce((a, b) => ({ ...a, ...b }), {})
     : o;
 
-const PathItemHack = (objName: string) => (o: any): any => ({
-  ...o,
-  definitions: {
-    ...o.definitions,
-    [objName]: {
-      ...o.definitions[objName],
-      properties: {
-        ...o.definitions[objName].properties,
-        ..."get|put|post|delete|options|head|patch|trace"
-          .split("|")
-          .map(i => ({
-            [i]: o.definitions[objName].patternProperties["^(get|put|post|delete|options|head|patch|trace)$"],
-          }))
-          .reduce((a, b) => ({ ...a, ...b }), {}),
+const HTTP_METHODS = ["get", "put", "post", "delete", "options", "head", "patch", "trace"];
+const HTTP_METHODS_REGEX = `^(${HTTP_METHODS.join("|")})$`;
+const PathItemHack = (objName: string) => (o: any): any => {
+  const pi = o.definitions[objName];
+  return {
+    ...o,
+    definitions: {
+      ...o.definitions,
+      [objName]: {
+        ...pi,
+        properties: {
+          ...pi.properties,
+          ...HTTP_METHODS.map(i => ({
+            [i]: pi.patternProperties[HTTP_METHODS_REGEX],
+          })).reduce((a, b) => ({ ...a, ...b }), {}),
+        },
       },
     },
-  },
-});
+  };
+};
 
 const ResponsesHack = (objName: string) => (o: any): any => ({
   ...o,
@@ -237,7 +239,7 @@ const to = (schema: JSONSchema): t.TypeReference =>
  */
 const numberHack = (s: string) =>
   s
-    .replace(/([1-5]\d\d)(\??):/g, '"$1:"$2')
+    .replace(/([1-5]\d\d)(\??):/g, '"$1"$2:')
     .replace(/t.array\(L04\$3\)/g, "t.any")
     .replace(/Array\<L04\$3\>/g, "any");
 
@@ -272,7 +274,6 @@ const generateTypes = ({
     .concat(t.typeDeclaration(toplevel, to(fullObj as JSONSchema)));
   const sorted = t.sort(declarations);
   const typeGuards = Object.entries(definitions).map(([a, b]) => makeTypeGuard(a, b as JSONSchema));
-  console.log(typeGuards);
   fs.writeFileSync(
     output,
     numberHack(
