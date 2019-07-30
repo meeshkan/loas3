@@ -1,17 +1,8 @@
-import fs from "fs";
-import loas from "../src";
 import jsYaml from "js-yaml";
-import { Either, fold } from "fp-ts/lib/either";
-import { ErrorObject } from "ajv";
 import { OpenAPIObject } from "../src/generated/full";
+import expand from "./expand-spec-file";
 
-function parse(pathToFile: string): Either<ErrorObject[], OpenAPIObject> {
-  const contents = fs.readFileSync(pathToFile, "utf-8");
-  const parsed = jsYaml.safeLoad(contents);
-  return loas(parsed);
-}
-
-function main(): void {
+function main() {
   const args = process.argv.slice(2);
 
   if (args.length !== 1) {
@@ -20,16 +11,8 @@ function main(): void {
 
   const pathToFile = args[0];
 
-  const specOrErrors = parse(pathToFile);
-
-  fold(
-    (err: any) => {
-      throw err;
-    },
-    (openApiObject: OpenAPIObject) => {
-      console.log(jsYaml.safeDump(openApiObject));
-    }
-  )(specOrErrors);
+  const expandedSpec: OpenAPIObject = expand(pathToFile);
+  console.log(jsYaml.safeDump(expandedSpec));
 }
 
 (() => {
