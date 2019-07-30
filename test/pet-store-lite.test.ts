@@ -1,16 +1,17 @@
 import fs from "fs";
 import yaml from "js-yaml";
-import { lazy } from "./util";
+import { mapRightOrThrow } from "./util";
 import loas from "../src";
 
 test("highly condensed schema validates", () => {
-  const instance = yaml.load(
+  const loasSpec = yaml.load(
     fs.readFileSync("./test/pet-store-lite.loas3.yml").toString()
   );
-  const expanded = yaml.load(
+  const expandedSpecExpected = yaml.load(
     fs.readFileSync("./test/pet-store-lite.full.yml").toString()
   );
-  lazy(loas(instance), val => {
-    expect(val).toEqual(expanded);
+  const expandedSpec = loas(loasSpec);
+  mapRightOrThrow(expandedSpec, spec => {
+    expect(spec).toEqual(expandedSpecExpected);
   });
 });

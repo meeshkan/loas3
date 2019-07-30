@@ -1,11 +1,12 @@
 import fs from "fs";
 import yaml from "js-yaml";
 import loas from "../src";
-import { lazy } from "./util";
+import { mapRightOrThrow } from "./util";
 
 test("slack in, slack out", () => {
-  const instance = yaml.load(fs.readFileSync("./test/slack.yml").toString());
-  lazy(loas(instance), val => {
-    expect(val).toEqual(instance);
+  const spec = yaml.load(fs.readFileSync("./test/slack.yml").toString());
+  const expandedSpecOrErrors = loas(spec);
+  mapRightOrThrow(expandedSpecOrErrors, spec => {
+    expect(spec).toEqual(spec);
   });
 });

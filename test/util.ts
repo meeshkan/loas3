@@ -1,12 +1,12 @@
-import { Either, isLeft } from "fp-ts/lib/Either";
+import { Either, fold, isLeft } from "fp-ts/lib/Either";
 import { ErrorObject } from "ajv";
 import { OpenAPIObject } from "../src/generated/full";
-export const lazy = (
+
+export const mapRightOrThrow = (
   res: Either<ErrorObject[], OpenAPIObject>,
   f: (val: OpenAPIObject) => void
 ) => {
-  if (isLeft(res)) {
-    throw new Error(res.left.map(i => i.message).join("\n"));
-  }
-  return f(res.right);
+  return fold((errs: ErrorObject[]) => {
+    throw new Error(errs.map(i => i.message).join("\n"));
+  }, f)(res);
 };
