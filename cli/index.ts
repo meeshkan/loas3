@@ -1,10 +1,17 @@
 import fs from "fs";
 import loas from "../src";
 import jsYaml from "js-yaml";
-import { fold } from "fp-ts/lib/either";
+import { Either, fold } from "fp-ts/lib/either";
+import { ErrorObject } from "ajv";
 import { OpenAPIObject } from "../src/generated/full";
 
-async function main() {
+function parse(pathToFile: string): Either<ErrorObject[], OpenAPIObject> {
+  const contents = fs.readFileSync(pathToFile, "utf-8");
+  const parsed = jsYaml.safeLoad(contents);
+  return loas(parsed);
+}
+
+function main(): void {
   const args = process.argv.slice(2);
 
   if (args.length !== 1) {
@@ -13,23 +20,21 @@ async function main() {
 
   const pathToFile = args[0];
 
-  const contents = fs.readFileSync(pathToFile, "utf-8");
-  const parsed = jsYaml.safeLoad(contents);
-  const expandedSpecOrErrors = loas(parsed);
+  const specOrErrors = parse(pathToFile);
 
   fold(
     (err: any) => {
       throw err;
     },
     (openApiObject: OpenAPIObject) => {
-      console.log(openApiObject);
+      console.log(jsYaml.safeDump(openApiObject));
     }
-  )(expandedSpecOrErrors);
+  )(specOrErrors);
 }
 
-(async () => {
+(() => {
   try {
-    await main();
+    main();
   } catch (err) {
     console.error(err);
   }
