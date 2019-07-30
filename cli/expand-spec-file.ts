@@ -34,18 +34,15 @@ const expandSpec = (spec: any): Try<OpenAPIObject> =>
   );
 
 export default function expand(pathToFile: string): OpenAPIObject {
-  const specOrErrors: Try<OpenAPIObject> = pipe(
+  return pipe(
     pathToFile,
     parseYamlFileToObject,
-    chain(expandSpec)
+    chain(expandSpec),
+    fold(
+      (e: ILoasError) => {
+        throw Error(`Something went wrong: ${JSON.stringify(e)}`);
+      },
+      (openApiObject: OpenAPIObject) => openApiObject
+    )
   );
-
-  return fold(
-    (e: ILoasError) => {
-      throw Error(`Something went wrong: ${JSON.stringify(e)}`);
-    },
-    (openApiObject: OpenAPIObject) => {
-      return openApiObject;
-    }
-  )(specOrErrors);
 }
