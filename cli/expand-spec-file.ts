@@ -1,7 +1,7 @@
 import fs from "fs";
 import loas from "../src";
 import jsYaml from "js-yaml";
-import { either, Either, fold, tryCatch } from "fp-ts/lib/either";
+import { either, Either, fold, tryCatch } from "fp-ts/lib/Either";
 import { OpenAPIObject } from "../src/generated/full";
 import { pipeable, pipe } from "fp-ts/lib/pipeable";
 import { ErrorObject } from "ajv";
