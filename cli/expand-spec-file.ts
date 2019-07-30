@@ -1,14 +1,19 @@
 import fs from "fs";
 import loas from "../src";
 import jsYaml from "js-yaml";
-import { either, Either, fold, isLeft, tryCatch } from "fp-ts/lib/either";
+import { either, Either, fold, tryCatch } from "fp-ts/lib/either";
 import { OpenAPIObject } from "../src/generated/full";
+import { pipeable, pipe } from "fp-ts/lib/pipeable";
+import { ErrorObject } from "ajv";
 
-interface IError {
+// Generic error in CLI
+interface ILoasError {
   message: string;
 }
 
-type Try<T> = Either<IError, T>;
+type Try<T> = Either<ILoasError, T>;
+
+const _ = pipeable(either);
 
 function parseYamlFileToObject(pathToFile: string): Try<any> {
   return tryCatch(
@@ -20,20 +25,25 @@ function parseYamlFileToObject(pathToFile: string): Try<any> {
   );
 }
 
-// Need to define a helper with `mapLeft` to make errors compatible
 const expandSpec = (spec: any): Try<OpenAPIObject> =>
-  either.mapLeft(loas(spec), (error: any) => ({
-    message: `Error parsing spec: ${JSON.stringify(error)}`,
-  }));
+  pipe(
+    spec,
+    loas,
+    // Map error to be compatible with IError
+    _.mapLeft((error: ErrorObject[]) => ({
+      message: `Error parsing spec: ${JSON.stringify(error)}`,
+    }))
+  );
 
-// TODO Do piping with one `pipe(...)(pathToFile)`?
 export default function expand(pathToFile: string): OpenAPIObject {
-  const parsedSpec: Try<any> = parseYamlFileToObject(pathToFile);
-
-  const specOrErrors: Try<OpenAPIObject> = either.chain(parsedSpec, expandSpec);
+  const specOrErrors: Try<OpenAPIObject> = pipe(
+    pathToFile,
+    parseYamlFileToObject,
+    _.chain(spec => expandSpec(spec))
+  );
 
   return fold(
-    (e: IError) => {
+    (e: ILoasError) => {
       throw Error(`Something went wrong: ${JSON.stringify(e)}`);
     },
     (openApiObject: OpenAPIObject) => {
