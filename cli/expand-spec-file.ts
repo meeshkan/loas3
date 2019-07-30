@@ -39,7 +39,7 @@ export default function expand(pathToFile: string): OpenAPIObject {
   const specOrErrors: Try<OpenAPIObject> = pipe(
     pathToFile,
     parseYamlFileToObject,
-    _.chain(spec => expandSpec(spec))
+    _.chain(expandSpec)
   );
 
   return fold(
