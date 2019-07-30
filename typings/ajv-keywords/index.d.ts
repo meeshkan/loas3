@@ -1,1 +1,1 @@
-declare module 'ajv-keywords';
+declare module "ajv-keywords";
