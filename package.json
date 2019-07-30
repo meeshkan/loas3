@@ -32,6 +32,7 @@
     "prettier": "^1.18.2"
   },
   "scripts": {
+    "cli": "ts-node ./cli/index.ts",
     "compile": "ts-node ./src/generator/generate-types.ts && tsc --outDir dist",
     "lint:fix": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "lint": "prettier --check \"src/**/*.ts\" \"test/**/*.ts\"",
