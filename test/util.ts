@@ -1,4 +1,4 @@
-import { Either, fold, isLeft } from "fp-ts/lib/Either";
+import { Either, fold } from "fp-ts/lib/Either";
 import { ErrorObject } from "ajv";
 import { OpenAPIObject } from "../src/generated/full";
 
