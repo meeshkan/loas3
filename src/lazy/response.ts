@@ -4,7 +4,7 @@ import {
   $$Response,
   is$Header,
   is$MediaType,
-  is$Reference,
+  is$Reference
 } from "../generated/lazy";
 import { Response } from "../generated/full";
 import _mediaType from "./mediaType";
@@ -22,16 +22,16 @@ const __ = ({
     ? {
         headers: Object.entries(headers)
           .map(([a, b]) => ({ [a]: is$Reference(b) ? b : _header(b) }))
-          .reduce((a, b) => ({ ...a, ...b }), {}),
+          .reduce((a, b) => ({ ...a, ...b }), {})
       }
     : {}),
   ...(content
     ? {
         content: Object.entries(content)
           .map(([a, b]) => ({ [a]: _mediaType(b) }))
-          .reduce((a, b) => ({ ...a, ...b }), {}),
+          .reduce((a, b) => ({ ...a, ...b }), {})
       }
-    : {}),
+    : {})
 });
 
 export default (o: $Response): Response =>
@@ -39,5 +39,5 @@ export default (o: $Response): Response =>
     ? __(o)
     : {
         description: "too lazy",
-        content: { "application/json": _mediaType(o) },
+        content: { "application/json": _mediaType(o) }
       };

@@ -2,7 +2,7 @@ import {
   $Operation,
   is$$Operation,
   $$Operation,
-  is$Reference,
+  is$Reference
 } from "../generated/lazy";
 import { Operation } from "../generated/full";
 import _responses from "./responses";
@@ -23,9 +23,9 @@ const __ = (
               ? b
               : Object.entries(b)
                   .map(([c, d]) => ({ [c]: _path(d, c) }))
-                  .reduce((c, d) => ({ ...c, ...d }), {}),
+                  .reduce((c, d) => ({ ...c, ...d }), {})
           }))
-          .reduce((a, b) => ({ ...a, ...b }), {}),
+          .reduce((a, b) => ({ ...a, ...b }), {})
       }
     : {}),
   responses: _responses(responses),
@@ -33,10 +33,10 @@ const __ = (
     ? {
         requestBody: is$Reference(requestBody)
           ? requestBody
-          : _requestBody(requestBody),
+          : _requestBody(requestBody)
       }
     : {}),
-  ...(parameters ? { parameters: _parameters(parameters, path) } : {}),
+  ...(parameters ? { parameters: _parameters(parameters, path) } : {})
 });
 
 export default (o: $Operation, path: string): Operation =>

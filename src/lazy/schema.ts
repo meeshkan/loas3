@@ -8,7 +8,7 @@ import {
   is$SimpleObjectSchema,
   is$$Schema,
   is$Reference,
-  $$Schema,
+  $$Schema
 } from "../generated/lazy";
 import { Schema } from "../generated/full";
 
@@ -27,32 +27,32 @@ const __ = ({
     ? {
         properties: Object.entries(properties)
           .map(([a, b]) => ({ [a]: is$Reference(b) ? b : _(b) }))
-          .reduce((a, b) => ({ ...a, ...b }), {}),
+          .reduce((a, b) => ({ ...a, ...b }), {})
       }
     : {}),
   ...(items
     ? {
-        items: is$Reference(items) ? items : _(items),
+        items: is$Reference(items) ? items : _(items)
       }
     : {}),
   ...(not
     ? {
-        not: is$Reference(not) ? not : _(not),
+        not: is$Reference(not) ? not : _(not)
       }
     : {}),
   ...(allOf
     ? {
-        allOf: allOf.map(i => (is$Reference(i) ? i : _(i))),
+        allOf: allOf.map(i => (is$Reference(i) ? i : _(i)))
       }
     : {}),
   ...(anyOf
     ? {
-        anyOf: anyOf.map(i => (is$Reference(i) ? i : _(i))),
+        anyOf: anyOf.map(i => (is$Reference(i) ? i : _(i)))
       }
     : {}),
   ...(oneOf
     ? {
-        oneOf: oneOf.map(i => (is$Reference(i) ? i : _(i))),
+        oneOf: oneOf.map(i => (is$Reference(i) ? i : _(i)))
       }
     : {}),
   ...(additionalProperties !== undefined
@@ -61,9 +61,9 @@ const __ = ({
           ? additionalProperties
           : typeof additionalProperties === "boolean"
           ? additionalProperties
-          : _(additionalProperties),
+          : _(additionalProperties)
       }
-    : {}),
+    : {})
 });
 
 const un_x = (o: $Schema): $Schema =>
@@ -82,34 +82,34 @@ const _ = (o: $Schema): Schema =>
     ? {
         type: "boolean",
         default: o,
-        example: o,
+        example: o
       }
     : is$SimpleIntegerSchema(o)
     ? {
         type: "integer",
         format: "int64",
         default: o,
-        example: o,
+        example: o
       }
     : is$SimpleNumberSchema(o)
     ? {
         type: "number",
         format: "double",
         default: o,
-        example: o,
+        example: o
       }
     : is$SimpleStringSchema(o)
     ? {
         type: "string",
         default: o,
-        example: o,
+        example: o
       }
     : is$SimpleArraySchema(o)
     ? {
         type: "array",
         ...(o.length > 0 ? { items: _(o[0]) } : {}),
         default: o,
-        example: o,
+        example: o
       }
     : is$$Schema(o)
     ? __(o)
@@ -121,7 +121,7 @@ const _ = (o: $Schema): Schema =>
           .reduce((a, b) => ({ ...a, ...b }), {}),
         example: un_x(o),
         default: un_x(o),
-        ...x(o),
+        ...x(o)
       }
     : {};
 

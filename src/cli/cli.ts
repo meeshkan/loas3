@@ -53,7 +53,7 @@ const expandSpec = (spec: any): Try<OpenAPIObject> =>
     loas,
     // Map error to be compatible with IError
     mapLeft((error: ErrorObject[]) => ({
-      message: `Error parsing spec: ${JSON.stringify(error)}`,
+      message: `Error parsing spec: ${JSON.stringify(error)}`
     }))
   );
 
