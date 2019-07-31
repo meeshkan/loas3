@@ -5,11 +5,7 @@ import { chain, mapLeft, Either, fold, tryCatch } from "fp-ts/lib/Either";
 import { OpenAPIObject } from "../generated/full";
 import { pipe } from "fp-ts/lib/pipeable";
 import { ErrorObject } from "ajv";
-
-// Generic error in CLI
-interface ILoasError {
-  message: string;
-}
+import { ILoasError } from "./interfaces";
 
 type Try<T> = Either<ILoasError, T>;
 
@@ -29,20 +25,16 @@ const expandSpec = (spec: any): Try<OpenAPIObject> =>
     loas,
     // Map error to be compatible with IError
     mapLeft((error: ErrorObject[]) => ({
-      message: `Error parsing spec: ${JSON.stringify(error)}`
+      message: `Error parsing spec: ${JSON.stringify(error)}`,
     }))
   );
 
-export default function expand(pathToFile: string): OpenAPIObject {
+export default function expand(
+  pathToFile: string
+): Either<ILoasError, OpenAPIObject> {
   return pipe(
     pathToFile,
     parseYamlFileToObject,
-    chain(expandSpec),
-    fold(
-      (e: ILoasError) => {
-        throw Error(`Something went wrong: ${JSON.stringify(e)}`);
-      },
-      (openApiObject: OpenAPIObject) => openApiObject
-    )
+    chain(expandSpec)
   );
 }
