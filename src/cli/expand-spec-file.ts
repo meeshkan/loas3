@@ -1,8 +1,8 @@
 import fs from "fs";
-import loas from "../src";
+import loas from "..";
 import jsYaml from "js-yaml";
 import { chain, mapLeft, Either, fold, tryCatch } from "fp-ts/lib/Either";
-import { OpenAPIObject } from "../src/generated/full";
+import { OpenAPIObject } from "../generated/full";
 import { pipe } from "fp-ts/lib/pipeable";
 import { ErrorObject } from "ajv";
 

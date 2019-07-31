@@ -35,7 +35,7 @@
     "loas3": "dist/cli/index.js"
   },
   "scripts": {
-    "cli": "ts-node ./cli/index.ts",
+    "cli": "ts-node ./src/cli/index.ts",
     "compile": "ts-node ./src/generator/generate-types.ts && tsc --outDir dist",
     "lint:fix": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "lint": "prettier --check \"src/**/*.ts\" \"test/**/*.ts\"",

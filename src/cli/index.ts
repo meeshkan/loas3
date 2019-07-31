@@ -1,5 +1,5 @@
 import jsYaml from "js-yaml";
-import { OpenAPIObject } from "../src/generated/full";
+import { OpenAPIObject } from "../generated/full";
 import expand from "./expand-spec-file";
 
 function main() {
