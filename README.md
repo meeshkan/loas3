@@ -51,7 +51,7 @@ Lazy JSON schema is defined in [schema/lazy.ts](schema/lazy.ts). These, along wi
 
 See the [tests](test/).
 
-## CLI
+## Command-line usage
 
 ### [yarn](https://yarnpkg.com/en/)
 
