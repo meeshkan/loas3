@@ -31,7 +31,11 @@
     "io-ts": "^1.10.2",
     "prettier": "^1.18.2"
   },
+  "bin": {
+    "loas3": "dist/src/cli/index.js"
+  },
   "scripts": {
+    "cli": "ts-node ./src/cli/index.ts",
     "compile": "ts-node ./src/generator/generate-types.ts && tsc --outDir dist",
     "lint:fix": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "lint": "prettier --check \"src/**/*.ts\" \"test/**/*.ts\"",

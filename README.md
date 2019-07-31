@@ -7,6 +7,7 @@ OpenAPI 3 for lazy people.
 ## tl;dr
 
 This:
+
 ```yaml
 paths:
   /foo: 1
@@ -44,8 +45,44 @@ Because sometimes you need to write an OpenAPI spec.
 
 ## How does it work?
 
-Lazy types are identified in [schema/lazy.yml](schema/lazy.yml). These, along with the "un"-lazy types from the [official OpenAPI 3.0 Specification](schema/full.yml) are translated into TypeScript types and validators. The lazy OAS3 is expanded into full OAS 3 based on various sensible conventions.
+Lazy JSON schema is defined in [schema/lazy.ts](schema/lazy.ts). These, along with the "un"-lazy types from the JSON schema for the [official OpenAPI 3.0 Specification](schema/full.ts) are translated into TypeScript types and validators. The lazy OAS3 is expanded into full OAS 3 based on various sensible conventions.
 
 ## Examples
 
-See the [tests](test/lazy/).
+See the [tests](test/).
+
+## Command-line usage
+
+### [yarn](https://yarnpkg.com/en/)
+
+```bash
+// Install loas3
+yarn add loas3
+
+// Convert a lazy specification into OpenAPI
+yarn loas3 /path/to/lazy-spec.yaml
+```
+
+### [npx](https://www.npmjs.com/package/npx)
+
+```bash
+// Install loas3
+npm i loas3
+
+// Convert a lazy specification into OpenAPI
+npx loas3 /path/to/lazy-spec.yaml
+```
+
+## Development
+
+Install dependencies and run tests:
+
+```bash
+yarn
+```
+
+Run the CLI
+
+```bash
+yarn cli /path/to/lazy-spec.yml
+```
