@@ -13,6 +13,10 @@ describe("Parsing example spec", () => {
       },
       (val: OpenAPIObject) => {
         expect(val).toHaveProperty("openapi");
+        expect(val).toHaveProperty(
+          ["paths", "/user", "get", "responses", "404", "description"],
+          "Not found"
+        );
       }
     )(expanded);
   });

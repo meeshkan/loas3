@@ -3,42 +3,15 @@ servers:
 - url: https://example.com
 
 paths:
-  /prefetch:
-    options:
-      responses:
-        204:
-          headers:
-            access-control-allow-headers:
-              schema:
-                type: array
-                items:
-                  type: string
-                default:
-                  - filestack-source
-            access-control-allow-methods:
-              schema:
-                type: string
-                default: "*"
-            access-control-allow-origin:
-              schema:
-                type: string
-                default: "*"
-          content:
-            text/plain:
-              schema:
-                type: string
+  /user:
     get:
-      summary: Prefetch
-      parameters:
-        - name: apikey
-          in: query
-          required: true
-          schema:
-            type: string
+      summary: List user
       responses:
-        '200':
-          description: Prefetch
+        '404':
+          # description: Not found
           content:
             text/plain:
               schema:
                 type: string
+                default: "Not found"
+

@@ -17,7 +17,7 @@ export const loadYaml = (pathToFile: string): object => {
   return yaml.load(fs.readFileSync(pathToFile, "utf-8"));
 };
 
-export const loadYamlSafe = (pathToFile: string): Either<Error, any> => {
+export const loadYamlSafe = (pathToFile: string): Either<Error, object> => {
   return tryCatch(
     () => yaml.load(fs.readFileSync(pathToFile, "utf-8")),
     (err: unknown) =>
