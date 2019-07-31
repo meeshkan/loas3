@@ -1,6 +1,6 @@
 import * as t from "io-ts-codegen";
-import fullSpec from "../../schema/full";
-import lazySpec from "../../schema/lazy";
+import fullSpec from "../schema/full";
+import lazySpec from "../schema/lazy";
 import fs from "fs";
 import prettier from "prettier";
 import mkdirp from "mkdirp";

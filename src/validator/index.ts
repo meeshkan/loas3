@@ -1,8 +1,8 @@
 import Ajv from "ajv";
 import AjvErrors from "ajv-errors";
 import AjvKeywords from "ajv-keywords";
-import full from "../../schema/full";
-import lazy from "../../schema/lazy";
+import full from "../schema/full";
+import lazy from "../schema/lazy";
 
 export default class Validator {
   public ajv: Ajv.Ajv;

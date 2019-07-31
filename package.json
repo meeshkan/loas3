@@ -2,7 +2,7 @@
   "name": "loas3",
   "version": "0.0.5",
   "description": "OpenAPI 3.0.0 for lazy people",
-  "main": "dist/src/index.js",
+  "main": "dist/index.js",
   "repository": "https://github.com/unmock/loas3",
   "author": "Mike Solomon",
   "license": "MIT",
@@ -32,11 +32,11 @@
     "prettier": "^1.18.2"
   },
   "bin": {
-    "loas3": "dist/src/cli/index.js"
+    "loas3": "dist/cli/index.js"
   },
   "scripts": {
     "cli": "ts-node ./src/cli/index.ts",
-    "compile": "ts-node ./src/generator/generate-types.ts && tsc --outDir dist",
+    "compile": "ts-node ./src/generator/generate-types.ts && tsc",
     "lint:fix": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "lint": "prettier --check \"src/**/*.ts\" \"test/**/*.ts\"",
     "test": "jest",
