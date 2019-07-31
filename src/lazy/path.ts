@@ -6,7 +6,7 @@ import {
   is$LazyLazyParams,
   is$LazyParams,
   $$PathItem,
-  is$Parameter
+  is$Parameter,
 } from "../generated/lazy";
 import _parameters from "./parameters";
 import { _lazy, _lazylazy } from "./parameter";
@@ -33,7 +33,7 @@ const __ = (
   ...rest,
   ...(parameters
     ? {
-        parameters: _parameters(parameters, path)
+        parameters: _parameters(parameters, path),
       }
     : {}),
   ...(get ? { get: _operation(get, path) } : {}),
@@ -43,7 +43,7 @@ const __ = (
   ...(options ? { options: _operation(options, path) } : {}),
   ...(head ? { head: _operation(head, path) } : {}),
   ...(patch ? { patch: _operation(patch, path) } : {}),
-  ...(trace ? { trace: _operation(trace, path) } : {})
+  ...(trace ? { trace: _operation(trace, path) } : {}),
 });
 
 export default (o: $PathItem, path: string): PathItem =>

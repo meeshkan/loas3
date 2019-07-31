@@ -2,7 +2,7 @@ import {
   $MediaType,
   is$$MediaType,
   is$Reference,
-  $$MediaType
+  $$MediaType,
 } from "../generated/lazy";
 import _encoding from "./encoding";
 import { MediaType } from "../generated/full";
@@ -14,14 +14,14 @@ const __ = ({ encoding, schema, ...rest }: $$MediaType) => ({
     ? {
         encoding: Object.entries(encoding)
           .map(([a, b]) => ({ [a]: _encoding(b) }))
-          .reduce((a, b) => ({ ...a, ...b }), {})
+          .reduce((a, b) => ({ ...a, ...b }), {}),
       }
     : {}),
   ...(schema
     ? {
-        schema: is$Reference(schema) ? schema : _schema(schema)
+        schema: is$Reference(schema) ? schema : _schema(schema),
       }
-    : {})
+    : {}),
 });
 
 export default (o: $MediaType): MediaType =>

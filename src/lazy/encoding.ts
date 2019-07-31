@@ -8,7 +8,7 @@ export default ({ headers, ...rest }: $Encoding): Encoding => ({
     ? {
         headers: Object.entries(headers)
           .map(([a, b]) => ({ [a]: _header(b) }))
-          .reduce((a, b) => ({ ...a, ...b }), {})
+          .reduce((a, b) => ({ ...a, ...b }), {}),
       }
-    : {})
+    : {}),
 });

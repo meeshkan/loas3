@@ -16,7 +16,7 @@ const _components = ({
   requestBodies,
   headers,
   securitySchemes,
-  links
+  links,
 }: $Components): Components => ({
   ...(securitySchemes ? { securitySchemes } : {}),
   ...(links ? { links } : {}),
@@ -25,37 +25,37 @@ const _components = ({
     ? {
         responses: Object.entries(responses)
           .map(([a, b]) => ({ [a]: is$Reference(b) ? b : _response(b) }))
-          .reduce((a, b) => ({ ...a, ...b }), {})
+          .reduce((a, b) => ({ ...a, ...b }), {}),
       }
     : {}),
   ...(parameters
     ? {
         parameters: Object.entries(parameters)
           .map(([a, b]) => ({ [a]: is$Reference(b) ? b : _parameter(b) }))
-          .reduce((a, b) => ({ ...a, ...b }), {})
+          .reduce((a, b) => ({ ...a, ...b }), {}),
       }
     : {}),
   ...(requestBodies
     ? {
         requestBodies: Object.entries(requestBodies)
           .map(([a, b]) => ({ [a]: is$Reference(b) ? b : _requestBody(b) }))
-          .reduce((a, b) => ({ ...a, ...b }), {})
+          .reduce((a, b) => ({ ...a, ...b }), {}),
       }
     : {}),
   ...(headers
     ? {
         headers: Object.entries(headers)
           .map(([a, b]) => ({ [a]: is$Reference(b) ? b : _header(b) }))
-          .reduce((a, b) => ({ ...a, ...b }), {})
+          .reduce((a, b) => ({ ...a, ...b }), {}),
       }
     : {}),
   ...(schemas
     ? {
         schemas: Object.entries(schemas)
           .map(([a, b]) => ({ [a]: is$Reference(b) ? b : _schema(b) }))
-          .reduce((a, b) => ({ ...a, ...b }), {})
+          .reduce((a, b) => ({ ...a, ...b }), {}),
       }
-    : {})
+    : {}),
 });
 
 export default ({
@@ -71,7 +71,7 @@ export default ({
   ...(paths ? { paths: _paths(paths) } : { paths: {} }),
   ...(components
     ? {
-        components: _components(components)
+        components: _components(components),
       }
-    : {})
+    : {}),
 });

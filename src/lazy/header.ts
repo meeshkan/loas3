@@ -9,8 +9,10 @@ export default ({ content, schema, ...rest }: $Header): Header => ({
     ? {
         content: Object.entries(content)
           .map(([a, b]) => ({ [a]: _mediaType(b) }))
-          .reduce((a, b) => ({ ...a, ...b }), {})
+          .reduce((a, b) => ({ ...a, ...b }), {}),
       }
     : {}),
-  ...(schema ? { schema: is$Reference(schema) ? schema : _schema(schema) } : {})
+  ...(schema
+    ? { schema: is$Reference(schema) ? schema : _schema(schema) }
+    : {}),
 });

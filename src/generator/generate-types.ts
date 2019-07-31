@@ -18,7 +18,7 @@ const unswitch = (o: any): any =>
             ? {
                 anyOf: b
                   .filter((i: any) => i.then !== undefined)
-                  .map((i: any) => unswitch(i.then))
+                  .map((i: any) => unswitch(i.then)),
               }
             : { [a]: unswitch(b) }
         )
@@ -33,7 +33,7 @@ const HTTP_METHODS = [
   "options",
   "head",
   "patch",
-  "trace"
+  "trace",
 ];
 const HTTP_METHODS_REGEX = `^(${HTTP_METHODS.join("|")})$`;
 const PathItemHack = (objName: string) => (o: any): any => {
@@ -51,10 +51,10 @@ const PathItemHack = (objName: string) => (o: any): any => {
         ...pi,
         properties: {
           ...pi.properties,
-          ...methods
-        }
-      }
-    }
+          ...methods,
+        },
+      },
+    },
   };
 };
 
@@ -64,7 +64,7 @@ const ResponsesHack = (objName: string) => (o: any): any => {
   const responses = [...Array(500).keys()].reduce(
     (a, code) => ({ ...a, ...{ [code + 100]: respRef } }),
     {
-      default: respRef
+      default: respRef,
     }
   );
   return {
@@ -75,10 +75,10 @@ const ResponsesHack = (objName: string) => (o: any): any => {
         ...pi,
         properties: {
           ...pi.properties,
-          ...responses
-        }
-      }
-    }
+          ...responses,
+        },
+      },
+    },
   };
 };
 
@@ -89,9 +89,9 @@ const HTTPSecuritySchemeHack = (objName: string) => (o: any): any => ({
     [objName]: {
       ...Object.entries(o.definitions[objName])
         .filter(([a]) => a !== "switch")
-        .reduce((a, [b, c]) => ({ ...a, ...{ [b]: c } }), {})
-    }
-  }
+        .reduce((a, [b, c]) => ({ ...a, ...{ [b]: c } }), {}),
+    },
+  },
 });
 
 interface NullSchema {
@@ -284,7 +284,7 @@ const generateTypes = ({
   toplevel,
   responsesName,
   pathItemName,
-  httpSecuritySchemaName
+  httpSecuritySchemaName,
 }: {
   input: any;
   output: string;
@@ -314,14 +314,14 @@ const generateTypes = ({
       prettier.format(
         [
           `import * as t from "io-ts";
-`
+`,
         ]
           .concat(sorted.map(d => t.printRuntime(d)))
           .concat(sorted.map(d => `export ${t.printStatic(d)}`))
           .concat(typeGuards)
           .join("\n"),
         {
-          parser: "typescript"
+          parser: "typescript",
         }
       )
     )
@@ -334,7 +334,7 @@ generateTypes({
   toplevel: "OpenAPIObject",
   responsesName: "Responses",
   pathItemName: "PathItem",
-  httpSecuritySchemaName: "HTTPSecurityScheme"
+  httpSecuritySchemaName: "HTTPSecurityScheme",
 });
 generateTypes({
   input: lazySpec,
@@ -342,5 +342,5 @@ generateTypes({
   toplevel: "$OpenAPIObject",
   responsesName: "$$Responses",
   pathItemName: "$$PathItem",
-  httpSecuritySchemaName: "$HTTPSecurityScheme"
+  httpSecuritySchemaName: "$HTTPSecurityScheme",
 });

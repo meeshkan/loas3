@@ -9,7 +9,7 @@ export default class Validator {
   constructor() {
     this.ajv = new Ajv({
       allErrors: true,
-      jsonPointers: true
+      jsonPointers: true,
     });
     AjvKeywords(this.ajv, "switch");
     AjvErrors(this.ajv);

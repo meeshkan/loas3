@@ -5,7 +5,7 @@ import {
   is$LazyLazyParams,
   is$LazyParams,
   $LazyLazyParams,
-  is$Reference
+  is$Reference,
 } from "../generated/lazy";
 import { Parameter, Reference } from "../generated/full";
 import { _lazylazy, _lazy } from "./parameter";
@@ -18,14 +18,14 @@ export const _parameter = ({ schema, content, ...rest }: $Parameter) => ({
     ? {
         content: Object.entries(content)
           .map(([a, b]) => ({ [a]: _mediaType(b) }))
-          .reduce((a, b) => ({ ...a, ...b }), {})
+          .reduce((a, b) => ({ ...a, ...b }), {}),
       }
     : {}),
   ...(schema
     ? {
-        schema: is$Reference(schema) ? schema : _schema(schema)
+        schema: is$Reference(schema) ? schema : _schema(schema),
       }
-    : {})
+    : {}),
 });
 
 export default (
