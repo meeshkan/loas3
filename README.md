@@ -45,7 +45,7 @@ Because sometimes you need to write an OpenAPI spec.
 
 ## How does it work?
 
-Lazy JSON schema is defined in [schema/lazy.ts](schema/lazy.ts). These, along with the "un"-lazy types from the JSON schema for the [official OpenAPI 3.0 Specification](schema/full.ts) are translated into TypeScript types and validators. The lazy OAS3 is expanded into full OAS 3 based on various sensible conventions.
+Lazy JSON schema is defined in [src/schema/lazy.ts](src/schema/lazy.ts). These, along with the "un"-lazy types from the JSON schema for the [official OpenAPI 3.0 Specification](src/schema/full.ts) are translated into TypeScript types and validators. The lazy OAS3 is expanded into full OAS 3 based on various sensible conventions.
 
 ## Examples
 
