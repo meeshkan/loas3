@@ -32,7 +32,7 @@
     "prettier": "^1.18.2"
   },
   "bin": {
-    "loas3": "dist/cli/index.js"
+    "loas3": "dist/src/cli/index.js"
   },
   "scripts": {
     "cli": "ts-node ./src/cli/index.ts",
