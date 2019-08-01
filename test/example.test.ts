@@ -17,6 +17,20 @@ describe("Parsing example spec", () => {
           ["paths", "/user", "get", "responses", "404", "description"],
           "too lazy"
         );
+        expect(val).toHaveProperty(
+          [
+            "paths",
+            "/user",
+            "get",
+            "responses",
+            "404",
+            "content",
+            "text/plain",
+            "schema",
+            "default"
+          ],
+          "Not found"
+        );
       }
     )(expanded);
   });
