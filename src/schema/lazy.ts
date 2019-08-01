@@ -423,7 +423,7 @@ export default {
     },
     $$Response: {
       type: "object",
-      required: ["description"],
+      // required: ["description"],
       properties: {
         description: {
           type: "string"
