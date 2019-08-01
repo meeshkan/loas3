@@ -17,7 +17,7 @@ const __ = ({
   ...rest
 }: $$Response): Response => ({
   ...rest,
-  description,
+  ...(description ? { description } : { description: "too lazy" }),
   ...(headers
     ? {
         headers: Object.entries(headers)
