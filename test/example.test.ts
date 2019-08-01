@@ -15,7 +15,7 @@ describe("Parsing example spec", () => {
         expect(val).toHaveProperty("openapi");
         expect(val).toHaveProperty(
           ["paths", "/user", "get", "responses", "404", "description"],
-          "Not found"
+          "too lazy"
         );
       }
     )(expanded);
