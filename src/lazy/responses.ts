@@ -6,10 +6,7 @@ export default (o: $Responses): Responses =>
   is$$Responses(o)
     ? Object.entries(o)
         .map(([a, b]) => ({
-          [a]:
-            is$Reference(b) && b.$ref.startsWith("#/components/responses/")
-              ? b
-              : _response(b)
+          [a]: is$Reference(b) ? b : _response(b)
         }))
         .reduce((a, b) => ({ ...a, ...b }), {})
     : {
