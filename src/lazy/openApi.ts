@@ -1,5 +1,5 @@
 import { $OpenAPIObject, $Components, is$Reference } from "../generated/lazy";
-import { OpenAPIObject, Schema, Components } from "../generated/full";
+import { OpenAPIObject, Components } from "../generated/full";
 import _info from "./info";
 import _paths from "./paths";
 import _schema from "./schema";

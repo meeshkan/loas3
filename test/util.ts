@@ -1,4 +1,4 @@
-import { Either, fold, tryCatch } from "fp-ts/lib/Either";
+import { Either, fold } from "fp-ts/lib/Either";
 import { ErrorObject } from "ajv";
 import { OpenAPIObject } from "../src/generated/full";
 import yaml from "js-yaml";
@@ -15,12 +15,4 @@ export const mapRightOrThrow = (
 
 export const loadYaml = (pathToFile: string): object => {
   return yaml.load(fs.readFileSync(pathToFile, "utf-8"));
-};
-
-export const loadYamlSafe = (pathToFile: string): Either<Error, object> => {
-  return tryCatch(
-    () => yaml.load(fs.readFileSync(pathToFile, "utf-8")),
-    (err: unknown) =>
-      new Error(`Failed reading ${pathToFile}: ${JSON.stringify(err)}`)
-  );
 };
