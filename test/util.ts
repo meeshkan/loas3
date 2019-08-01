@@ -16,11 +16,3 @@ export const mapRightOrThrow = (
 export const loadYaml = (pathToFile: string): object => {
   return yaml.load(fs.readFileSync(pathToFile, "utf-8"));
 };
-
-export const loadYamlSafe = (pathToFile: string): Either<Error, object> => {
-  return tryCatch(
-    () => yaml.load(fs.readFileSync(pathToFile, "utf-8")),
-    (err: unknown) =>
-      new Error(`Failed reading ${pathToFile}: ${JSON.stringify(err)}`)
-  );
-};
