@@ -2,8 +2,6 @@ import {
   $Response,
   is$$Response,
   $$Response,
-  is$Header,
-  is$MediaType,
   is$Reference
 } from "../generated/lazy";
 import { Response } from "../generated/full";

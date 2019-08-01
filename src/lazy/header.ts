@@ -1,4 +1,4 @@
-import { $Header, is$Schema, is$Reference } from "../generated/lazy";
+import { $Header, is$Reference } from "../generated/lazy";
 import { Header } from "../generated/full";
 import _schema from "./schema";
 import _mediaType from "./mediaType";
