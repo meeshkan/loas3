@@ -1,9 +1,4 @@
-import {
-  $Responses,
-  $$Responses,
-  is$$Responses,
-  is$Reference
-} from "../generated/lazy";
+import { $Responses, is$$Responses, is$Reference } from "../generated/lazy";
 import { Responses } from "../generated/full";
 import _response from "./response";
 
@@ -12,7 +7,8 @@ export default (o: $Responses): Responses =>
     ? Object.entries(o)
         .map(([a, b]) => ({
           [a]:
-            is$Reference(b) && b.$ref.substring(0, 11) === "#/responses"
+            is$Reference(b) &&
+            b.$ref.replace(/^[^#]+/, "").startsWith("#/components/responses")
               ? b
               : _response(b)
         }))

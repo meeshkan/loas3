@@ -1,13 +1,4 @@
-import {
-  $PathItem,
-  is$$PathItem,
-  is$Schema,
-  is$Operation,
-  is$LazyLazyParams,
-  is$LazyParams,
-  $$PathItem,
-  is$Parameter
-} from "../generated/lazy";
+import { $PathItem, is$$PathItem, $$PathItem } from "../generated/lazy";
 import _parameters from "./parameters";
 import { _lazy, _lazylazy } from "./parameter";
 import { PathItem } from "../generated/full";
