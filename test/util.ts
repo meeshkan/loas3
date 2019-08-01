@@ -1,4 +1,4 @@
-import { Either, fold, tryCatch } from "fp-ts/lib/Either";
+import { Either, fold } from "fp-ts/lib/Either";
 import { ErrorObject } from "ajv";
 import { OpenAPIObject } from "../src/generated/full";
 import yaml from "js-yaml";
