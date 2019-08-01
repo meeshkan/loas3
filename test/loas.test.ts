@@ -34,8 +34,8 @@ describe("loas", () => {
     const expandedSpecOrErrors = loas(specWithResponseRef);
     mapRightOrThrow(expandedSpecOrErrors, spec => {
       expect(spec).toHaveProperty(
-        ["paths", "/users", "options", "responses", 204, "description"],
-        "Options response"
+        ["paths", "/users", "options", "responses", 204, "$ref"],
+        "#/components/responses/Options"
       );
     });
   });
