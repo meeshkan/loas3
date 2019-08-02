@@ -1,6 +1,6 @@
 {
   "name": "loas3",
-  "version": "0.0.5",
+  "version": "0.1.0",
   "description": "OpenAPI 3.0.0 for lazy people",
   "main": "dist/index.js",
   "repository": "https://github.com/unmock/loas3",
