@@ -253,7 +253,7 @@ const to = (schema: JSONSchema): t.TypeReference =>
         )[0][1] as JSONSchema)
       )
     : isArray(schema)
-    ? t.arrayCombinator(to(schema.items))
+    ? t.arrayCombinator(schema.items ? to(schema.items) : t.arrayCombinator(t.identifier("L04$3")))
     : isNumber(schema)
     ? t.numberType
     : isInteger(schema)
