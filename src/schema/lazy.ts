@@ -673,7 +673,12 @@ export default {
             {
               type: "array",
               items: {
-                $ref: "#/definitions/$Schema"
+                anyOf: [
+                  { $ref: "#/definitions/$Reference" },
+                  {
+                    $ref: "#/definitions/$Schema"
+                  }
+                ]
               }
             }
           ]
