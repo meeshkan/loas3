@@ -531,17 +531,14 @@ export default {
           }
         },
         items: {
-          switch: [
+          anyOf: [
+            { $ref: "#/definitions/Reference" },
             {
-              if: {
-                required: ["$ref"]
-              },
-              then: {
-                $ref: "#/definitions/Reference"
-              }
+              $ref: "#/definitions/Schema"
             },
             {
-              then: {
+              type: "array",
+              items: {
                 $ref: "#/definitions/Schema"
               }
             }

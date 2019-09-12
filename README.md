@@ -86,3 +86,7 @@ Run the CLI
 ```bash
 yarn cli /path/to/lazy-spec.yml
 ```
+
+## ACHTUNG!
+
+There is one important difference between our flavor of OpenAPI and the real OpenAPI spec. Here, `items` can be **either** a Schema **or** an array of schemas.
