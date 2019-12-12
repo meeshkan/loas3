@@ -70,6 +70,8 @@ npx loas3 /path/to/lazy-spec.yaml
 
 ## Development
 
+Before starting, make sure that you have [Git Large File Storage (LFS)](https://git-lfs.github.com/) installed. We use this to store the API schemas and it's required for the tests to pass locally.
+
 Install dependencies and run tests:
 
 ```bash
