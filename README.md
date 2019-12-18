@@ -1,6 +1,8 @@
-[![CircleCI](https://circleci.com/gh/unmock/loas3.svg?style=svg)](https://circleci.com/gh/unmock/loas3)
-
 # loas3
+
+[![CircleCI](https://circleci.com/gh/unmock/loas3.svg?style=svg)](https://circleci.com/gh/unmock/loas3)
+[![Known Vulnerabilities](https://snyk.io/test/github/unmock/loas3/badge.svg?targetFile=package.json)](https://snyk.io/test/github/unmock/loas3?targetFile=package.json)
+[![Chat on Gitter](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/unmock/community)
 
 OpenAPI 3 for lazy people.
 
