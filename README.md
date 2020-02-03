@@ -93,7 +93,7 @@ There is one important difference between our flavor of OpenAPI and the real Ope
 ## Contributing
 
 Thanks for wanting to contribute! We will soon have a contributing page
-detaling how to contribute. Meanwhile, there are plenty of features that haven't been implemented yet. Please check out our [open issues](https://github.com/unmock/loas3/issues). We'd really appreciate your help!
+detaling how to contribute. Meanwhile, there are plenty of features that haven't been implemented yet. Please check out our [open issues](https://github.com/meeshkan/loas3/issues). We'd really appreciate your help!
 
 
-Please note that this project is governed by the [Unmock Community Code of Conduct](https://github.com/unmock/code-of-conduct). By participating in this project, you agree to abide by its terms.
+Please note that this project is governed by the [Meeshkan Community Code of Conduct](https://github.com/meeshkan/code-of-conduct). By participating in this project, you agree to abide by its terms.
